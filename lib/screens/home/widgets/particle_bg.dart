@@ -191,7 +191,7 @@ class ParticlePainter extends CustomPainter {
     if (size.isEmpty) return;
 
     final cellWidth = size.width / 16;
-    final cellHeight = size.height / 14;
+    final cellHeight = size.height / 12;
 
     // Calculate mouse position
     final Offset? mouseAbsolute = mousePosition != null
@@ -200,7 +200,7 @@ class ParticlePainter extends CustomPainter {
         : null;
 
     // Draw horizontal grid lines
-    for (int i = 0; i <= 14; i++) {
+    for (int i = 0; i <= 12; i++) {
       final y = i * cellHeight;
 
       // Draw vertical grid lines
@@ -215,7 +215,7 @@ class ParticlePainter extends CustomPainter {
         // Check if mouse is near this grid cell
         final gridPaint = Paint()
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.0;
+          ..strokeWidth = 2;
 
         if (mouseAbsolute != null) {
           // Calculate distance from mouse to center of this grid cell

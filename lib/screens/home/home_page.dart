@@ -3,19 +3,19 @@ import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/home/widgets/slogan_text.dart';
 import 'package:e_cell_website/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 import 'widgets/particle_bg.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-  static const String homePageRoute = "/home";
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+  static const String homeScreenRoute = "/home";
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage>
+class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
@@ -75,93 +75,87 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(250),
-        child: CustomAppBar(),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: size.height * 0.8,
-              child: ParticleBackground(
-                primaryColor: const Color(0xFF404040),
-                secondaryColor: const Color(0xFFC79200),
-                highlightColor: const Color(0xFFC79200),
-                baseColor: backgroundColor,
-                particleCount: 72,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SlideTransition(
-                        position: _offsetAnimation,
-                        child: ShaderMask(
-                          blendMode: BlendMode.srcIn,
-                          shaderCallback: (Rect bounds) {
-                            return const LinearGradient(
-                              colors: linerGradient,
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ).createShader(bounds);
-                          },
-                          child: Text(
-                            'E-CELL',
-                            // style: GoogleFonts.markaziText(
-                            //   fontSize: size.width * 0.14,
-                            //   fontWeight: FontWeight.w600,
-                            //   letterSpacing: 2,
-                            //   color: primaryColor,
-                            // )
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: size.width * 0.14,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 2,
-                              color: primaryColor,
-                              shadows: const [
-                                // Shadow(
-                                //   color: Color.fromRGBO(32, 32, 32, 0.6),
-                                //   offset: Offset(2, 4),
-                                //   blurRadius: 2,
-                                // ),
-                              ],
-                            ),
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: size.height * 0.85,
+            child: ParticleBackground(
+              primaryColor: const Color(0xFF404040),
+              secondaryColor: const Color(0xFFC79200),
+              highlightColor: const Color(0xFFC79200),
+              baseColor: backgroundColor,
+              particleCount: 72,
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SlideTransition(
+                      position: _offsetAnimation,
+                      child: ShaderMask(
+                        blendMode: BlendMode.srcIn,
+                        shaderCallback: (Rect bounds) {
+                          return const LinearGradient(
+                            colors: linerGradient,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ).createShader(bounds);
+                        },
+                        child: Text(
+                          'E-CELL',
+                          // style: GoogleFonts.markaziText(
+                          //   fontSize: size.width * 0.14,
+                          //   fontWeight: FontWeight.w600,
+                          //   letterSpacing: 2,
+                          //   color: primaryColor,
+                          // )
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: size.width * 0.14,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 2,
+                            color: primaryColor,
+                            shadows: const [
+                              // Shadow(
+                              //   color: Color.fromRGBO(32, 32, 32, 0.6),
+                              //   offset: Offset(2, 4),
+                              //   blurRadius: 2,
+                              // ),
+                            ],
                           ),
                         ),
                       ),
-                      Text(
-                        clgName.toUpperCase(),
-                        key: _clgNameKey,
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: size.width * 0.04,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 2,
-                          color: primaryColor,
-                          shadows: const [
-                            Shadow(
-                              color: Color.fromRGBO(32, 32, 32, 0.6),
-                              offset: Offset(2, 4),
-                              blurRadius: 2,
-                            ),
-                          ],
-                        ),
+                    ),
+                    Text(
+                      clgName.toUpperCase(),
+                      key: _clgNameKey,
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: size.width * 0.04,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 2,
+                        color: primaryColor,
+                        shadows: const [
+                          Shadow(
+                            color: Color.fromRGBO(32, 32, 32, 0.6),
+                            offset: Offset(2, 4),
+                            blurRadius: 2,
+                          ),
+                        ],
                       ),
-                      SloganText(size: size),
-                    ],
-                  ),
+                    ),
+                    SloganText(size: size),
+                  ],
                 ),
               ),
             ),
-            Container(
-              height: size.height,
-              color: secondaryColor,
-            )
-          ],
-        ),
+          ),
+          Container(
+            height: size.height,
+            color: secondaryColor,
+          )
+        ],
       ),
     );
   }
