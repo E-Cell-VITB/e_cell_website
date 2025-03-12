@@ -44,3 +44,10 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+linux/flutter/generated_plugin_registrant.h
+windows/flutter/generated_plugins.cmake
+linux/flutter/generated_plugins.cmake
+windows/flutter/generated_plugin_registrant.cc
+macos/Flutter/GeneratedPluginRegistrant.swift
+windows/flutter/generated_plugin_registrant.h
