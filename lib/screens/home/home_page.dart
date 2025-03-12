@@ -3,6 +3,7 @@ import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/home/widgets/slogan_text.dart';
 import 'package:e_cell_website/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'widgets/particle_bg.dart';
 
@@ -84,7 +85,7 @@ class _HomePageState extends State<HomePage>
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              height: size.height,
+              height: size.height * 0.8,
               child: ParticleBackground(
                 primaryColor: const Color(0xFF404040),
                 secondaryColor: const Color(0xFFC79200),
@@ -100,29 +101,32 @@ class _HomePageState extends State<HomePage>
                         child: ShaderMask(
                           blendMode: BlendMode.srcIn,
                           shaderCallback: (Rect bounds) {
-                            return LinearGradient(
-                              colors: [
-                                Colors.yellow[700]!,
-                                Colors.orange[600]!,
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
+                            return const LinearGradient(
+                              colors: linerGradient,
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ).createShader(bounds);
                           },
                           child: Text(
                             'E-CELL',
+                            // style: GoogleFonts.markaziText(
+                            //   fontSize: size.width * 0.14,
+                            //   fontWeight: FontWeight.w600,
+                            //   letterSpacing: 2,
+                            //   color: primaryColor,
+                            // )
                             style: TextStyle(
                               fontFamily: 'Montserrat',
-                              fontSize: size.width * 0.15,
+                              fontSize: size.width * 0.14,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 2,
                               color: primaryColor,
                               shadows: const [
-                                Shadow(
-                                  color: Color.fromRGBO(32, 32, 32, 0.6),
-                                  offset: Offset(2, 4),
-                                  blurRadius: 2,
-                                ),
+                                // Shadow(
+                                //   color: Color.fromRGBO(32, 32, 32, 0.6),
+                                //   offset: Offset(2, 4),
+                                //   blurRadius: 2,
+                                // ),
                               ],
                             ),
                           ),
