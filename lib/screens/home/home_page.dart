@@ -1,14 +1,13 @@
 import 'package:e_cell_website/const/const_labels.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/home/widgets/slogan_text.dart';
-import 'package:e_cell_website/widgets/custom_appbar.dart';
+import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
-
 import 'widgets/particle_bg.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final String? section;
+  const HomeScreen({this.section, super.key});
   static const String homeScreenRoute = "/home";
 
   @override
@@ -20,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen>
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
   final GlobalKey _clgNameKey = GlobalKey();
+  final GlobalKey _aboutSectionKey = GlobalKey();
 
   @override
   void initState() {
@@ -40,6 +40,11 @@ class _HomeScreenState extends State<HomeScreen>
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _adjustAnimationStart();
+
+      // Check if we need to scroll to the about section
+      if (widget.section == 'about') {
+        _scrollToAboutSection();
+      }
     });
   }
 
@@ -62,6 +67,16 @@ class _HomeScreenState extends State<HomeScreen>
       });
 
       _controller.forward();
+    }
+  }
+
+  void _scrollToAboutSection() {
+    if (_aboutSectionKey.currentContext != null) {
+      Scrollable.ensureVisible(
+        _aboutSectionKey.currentContext!,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+      );
     }
   }
 
@@ -93,36 +108,15 @@ class _HomeScreenState extends State<HomeScreen>
                   children: [
                     SlideTransition(
                       position: _offsetAnimation,
-                      child: ShaderMask(
-                        blendMode: BlendMode.srcIn,
-                        shaderCallback: (Rect bounds) {
-                          return const LinearGradient(
-                            colors: linerGradient,
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ).createShader(bounds);
-                        },
+                      child: LinearGradientText(
                         child: Text(
                           'E-CELL',
-                          // style: GoogleFonts.markaziText(
-                          //   fontSize: size.width * 0.14,
-                          //   fontWeight: FontWeight.w600,
-                          //   letterSpacing: 2,
-                          //   color: primaryColor,
-                          // )
                           style: TextStyle(
                             fontFamily: 'Montserrat',
                             fontSize: size.width * 0.14,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 2,
                             color: primaryColor,
-                            shadows: const [
-                              // Shadow(
-                              //   color: Color.fromRGBO(32, 32, 32, 0.6),
-                              //   offset: Offset(2, 4),
-                              //   blurRadius: 2,
-                              // ),
-                            ],
                           ),
                         ),
                       ),
@@ -151,9 +145,27 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-          Container(
+          SizedBox(
+            key: _aboutSectionKey,
             height: size.height,
-            color: secondaryColor,
+            width: size.width,
+            // color: secondaryColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                LinearGradientText(
+                  child: Text(
+                    "About Us".toUpperCase(),
+                    style: TextStyle(
+                      fontSize: size.width * 0.02,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                      color: primaryColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           )
         ],
       ),

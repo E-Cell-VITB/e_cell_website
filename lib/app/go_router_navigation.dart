@@ -12,7 +12,6 @@ final GoRouter appRouter = GoRouter(
   routes: [
     ShellRoute(
       builder: (context, state, child) {
-        // final size = MediaQuery.of(context).size;
         return Scaffold(
           appBar: const PreferredSize(
             preferredSize: Size.fromHeight(250),
@@ -28,7 +27,7 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/about',
-          builder: (context, state) => const HomeScreen(),
+          builder: (context, state) => const HomeScreen(section: 'about'),
         ),
         GoRoute(
           path: '/gallery',
