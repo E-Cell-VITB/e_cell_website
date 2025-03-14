@@ -1,4 +1,4 @@
-import 'package:e_cell_website/screens/contact/contact_screen.dart';
+import 'package:e_cell_website/screens/blogs/blogs_screen.dart';
 import 'package:e_cell_website/screens/events/events_screen.dart';
 import 'package:e_cell_website/screens/gallery/gallery_screen.dart';
 import 'package:e_cell_website/screens/home/home_page.dart';
@@ -42,8 +42,8 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) => const TeamScreen(),
         ),
         GoRoute(
-          path: '/contact',
-          builder: (context, state) => const ContactScreen(),
+          path: '/blogs',
+          builder: (context, state) => const BlogsScreen(),
         ),
       ],
     ),

@@ -34,7 +34,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 _navItem("Events", context, "/events"),
                 _navItem("Gallery", context, "/gallery"),
                 _navItem("Team", context, "/team"),
-                _navItem("Contact", context, "/contact"),
+                _navItem("Blogs", context, "/blogs"),
               ],
             ),
             ElevatedButton(

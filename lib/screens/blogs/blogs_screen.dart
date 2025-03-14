@@ -3,10 +3,8 @@ import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
 
-class GalleryScreen extends StatelessWidget {
-  const GalleryScreen({super.key});
-
-  static const String galleryScreenRoute = "/gallery";
+class BlogsScreen extends StatelessWidget {
+  const BlogsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +25,7 @@ class GalleryScreen extends StatelessWidget {
               children: [
                 LinearGradientText(
                   child: Text(
-                    "Gallery",
+                    "Blogs",
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
                 ),

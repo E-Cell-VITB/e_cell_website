@@ -104,7 +104,7 @@ ThemeData getAppTheme() {
 const backgroundColor = Color(0xFF202020);
 const primaryColor = Color(0xFFFFFFFF);
 const secondaryColor = Color(0xFFC79200);
-
+const containerBgColor = Color(0xff1A1A1A);
 const List<Color> linerGradient = [
   Color(0xffC79200),
   Color(0xffFFE8A9),

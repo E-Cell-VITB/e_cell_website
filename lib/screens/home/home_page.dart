@@ -2,8 +2,8 @@ import 'package:e_cell_website/const/const_labels.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/home/widgets/slogan_text.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
+import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
-import 'widgets/particle_bg.dart';
 
 class HomeScreen extends StatefulWidget {
   final String? section;
