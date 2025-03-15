@@ -105,6 +105,12 @@ const backgroundColor = Color(0xFF202020);
 const primaryColor = Color(0xFFFFFFFF);
 const secondaryColor = Color(0xFFC79200);
 
+const List<Color> eventBoxLinearGradient=[
+  Color(0xFF0D0D0D),
+  Color(0xFF1F1E1E),
+  Color(0xFF000000)
+];
+
 const List<Color> linerGradient = [
   Color(0xffC79200),
   Color(0xffFFE8A9),
