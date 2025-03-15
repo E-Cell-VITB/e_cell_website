@@ -4,7 +4,7 @@ import 'package:e_cell_website/const/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-double screensize=0;
+double? screensize;
 void main() {
   runApp(const MyApp());
 }
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    final screensize=MediaQuery.of(context).size.width;
+     screensize=MediaQuery.of(context).size.width;
     return MultiProvider(
       providers: AppProviders.providers,
       child: MaterialApp.router(

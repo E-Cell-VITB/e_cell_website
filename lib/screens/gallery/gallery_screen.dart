@@ -1,4 +1,5 @@
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/screens/gallery/widget/eventgallery.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class GalleryScreen extends StatelessWidget {
             const ClampingScrollPhysics(), // Provides more web-like scrolling
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            vertical: 24.0,
+            vertical: 18.0,
             horizontal: 16,
           ),
           child: SizedBox(
@@ -51,9 +52,15 @@ class GalleryScreen extends StatelessWidget {
                   ],
                 )),
                 const SizedBox(
-                  height: 40,
+                  height: 20,
                 ),
-                const SizedBox(height: 40),
+                
+                Eventgallery(eventname: "Techsprouts",noofphotos: 10,),
+                SizedBox(height: 60,),
+                Eventgallery(eventname: "InnoVit 2k25",noofphotos: 7,),
+                SizedBox(height: 60,),
+                Eventgallery(eventname: "Techsprouts",noofphotos: 5,),
+
               ],
             ),
           ),
