@@ -1,3 +1,3 @@
 const String clgName = "Vishnu Institute of Technology";
 const String ecell = "E-Cell";
-const slogan = "Innovate - Create - Lead";
+const String slogan = "Innovate - Create - Lead";

@@ -1,4 +1,4 @@
-import 'package:e_cell_website/screens/contact/contact_screen.dart';
+import 'package:e_cell_website/screens/blogs/blogs_screen.dart';
 import 'package:e_cell_website/screens/events/events_screen.dart';
 import 'package:e_cell_website/screens/gallery/gallery_screen.dart';
 import 'package:e_cell_website/screens/home/home_page.dart';
@@ -12,7 +12,6 @@ final GoRouter appRouter = GoRouter(
   routes: [
     ShellRoute(
       builder: (context, state, child) {
-        // final size = MediaQuery.of(context).size;
         return Scaffold(
           appBar: const PreferredSize(
             preferredSize: Size.fromHeight(250),
@@ -28,7 +27,7 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/about',
-          builder: (context, state) => const HomeScreen(),
+          builder: (context, state) => const HomeScreen(section: 'about'),
         ),
         GoRoute(
           path: '/gallery',
@@ -43,8 +42,8 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) => const TeamScreen(),
         ),
         GoRoute(
-          path: '/contact',
-          builder: (context, state) => const ContactScreen(),
+          path: '/blogs',
+          builder: (context, state) => const BlogsScreen(),
         ),
       ],
     ),

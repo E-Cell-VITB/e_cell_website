@@ -111,6 +111,7 @@ const List<Color> eventBoxLinearGradient=[
   Color(0xFF000000)
 ];
 
+const containerBgColor = Color(0xff1A1A1A);
 const List<Color> linerGradient = [
   Color(0xffC79200),
   Color(0xffFFE8A9),

@@ -19,7 +19,7 @@ class ParticleBackground extends StatefulWidget {
     this.primaryColor = const Color(0xFF404040),
     this.secondaryColor = const Color(0xFFC79200),
     this.highlightColor = const Color(0xFFC79200),
-    this.particleCount = 50,
+    this.particleCount = 72,
     this.gridOpacity = 0.2,
     this.child,
   });
