@@ -54,13 +54,24 @@ class GalleryScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                
-                Eventgallery(eventname: "Techsprouts",noofphotos: 10,),
-                SizedBox(height: 60,),
-                Eventgallery(eventname: "InnoVit 2k25",noofphotos: 7,),
-                SizedBox(height: 60,),
-                Eventgallery(eventname: "Techsprouts",noofphotos: 5,),
-
+                const Eventgallery(
+                  eventname: "Techsprouts",
+                  noofphotos: 10,
+                ),
+                const SizedBox(
+                  height: 60,
+                ),
+                const Eventgallery(
+                  eventname: "InnoVit 2k25",
+                  noofphotos: 7,
+                ),
+                const SizedBox(
+                  height: 60,
+                ),
+                const Eventgallery(
+                  eventname: "Techsprouts",
+                  noofphotos: 5,
+                ),
               ],
             ),
           ),

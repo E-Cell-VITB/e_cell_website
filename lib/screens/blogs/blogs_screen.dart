@@ -36,7 +36,7 @@ class BlogsScreen extends StatelessWidget {
                     text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "Moments from Our Iconic Events! ",
+                      text: "Lessons, Strategies, and Success Stories! ",
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     TextSpan(

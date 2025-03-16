@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/gallery/widget/imagebox.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +7,7 @@ import 'package:flutter/material.dart';
 class Eventgallery extends StatelessWidget {
   final String eventname;
   final int noofphotos;
- 
+
   const Eventgallery({
     required this.noofphotos,
     required this.eventname,
@@ -15,31 +17,31 @@ class Eventgallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final ind=(noofphotos>6)?6:noofphotos;
+    final ind = (noofphotos > 6) ? 6 : noofphotos;
     return Column(
       children: [
         LinearGradientText(
           child: Text(
             eventname,
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
         ),
-        SizedBox(height: 20),
-
-      
+        const SizedBox(height: 20),
         Wrap(
           spacing: 25,
           runSpacing: 25,
           children: List.generate(
-            ind, 
+            ind,
             (index) {
               return InkWell(
-                 onTap: () => showDialog(
-                 context: context,
-                 barrierDismissible: true,
-                 builder: (BuildContext context) {
-                   return Imagebox(initialIndex: index, noOfPhotos: noofphotos);
-               },),
+                onTap: () => showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return Imagebox(
+                        initialIndex: index, noOfPhotos: noofphotos);
+                  },
+                ),
                 borderRadius: BorderRadius.circular(18),
                 child: Container(
                   height: size.height * 0.28,
@@ -47,14 +49,29 @@ class Eventgallery extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(19),
                     color: Colors.white,
-                    
                   ),
-                  
-                    child:ClipRRect(
-                      borderRadius: BorderRadius.circular(18),
-                      child: Image.network('https://picsum.photos/seed/$ind/500/300',fit: BoxFit.cover,)),
-
-
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: CachedNetworkImage(
+                      imageUrl: "https://picsum.photos/seed/$ind/500/300",
+                      placeholder: (context, url) => const SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: secondaryColor,
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.cover,
+                    ),
+                    //  Image.network(
+                    //     'https://picsum.photos/seed/$ind/500/300',
+                    //     fit: BoxFit.cover,
+                    //   )
+                  ),
                 ),
               );
             },
