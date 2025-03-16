@@ -9,10 +9,8 @@ class AppNavigator {
         return MaterialPageRoute(builder: (context) => const HomeScreen());
       case GalleryScreen.galleryScreenRoute:
         return MaterialPageRoute(builder: (context) => const GalleryScreen());
-      // case '/about':
-      //   return MaterialPageRoute(builder: (context) => AboutPage());
+
       default:
-        // return MaterialPageRoute(builder: (context) => HomePage());
         return _errorRoute();
     }
   }
