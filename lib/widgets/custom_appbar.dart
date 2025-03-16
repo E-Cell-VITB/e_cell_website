@@ -39,6 +39,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 backgroundColor: secondaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -47,7 +49,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: () {
                 // Navigator.pushNamed(context, JoinPage.joinPageRoute);
               },
-              child: const Text("Join Us"),
+              child: Text(
+                "Join Us",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
             ),
           ],
         ),
@@ -68,7 +73,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           child: Text(
             title,
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
       ),

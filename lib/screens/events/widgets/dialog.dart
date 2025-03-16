@@ -1,4 +1,5 @@
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
 
 class ShowEventBox {
@@ -51,11 +52,10 @@ class ShowEventBox {
                               end: Alignment.bottomRight,
                             ).createShader(bounds);
                           },
-                          child: Text(
+                          child: SelectableText(
                             'TechSprouts 2K25',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                              fontFamily: 'Montserrat',
                               fontSize:
                                   MediaQuery.of(context).size.width * 0.02,
                               fontWeight: FontWeight.w500,
@@ -65,7 +65,7 @@ class ShowEventBox {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Text(
+                        SelectableText(
                           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.....",
                           textAlign: TextAlign.left,
                           style: TextStyle(

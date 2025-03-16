@@ -14,13 +14,9 @@ class GalleryScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return ParticleBackground(
       child: SingleChildScrollView(
-        physics:
-            const ClampingScrollPhysics(), // Provides more web-like scrolling
+        physics: const ClampingScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 18.0,
-            horizontal: 16,
-          ),
+          padding: const EdgeInsets.all(8),
           child: SizedBox(
             width: size.width,
             child: Column(

@@ -12,13 +12,9 @@ class TeamScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return ParticleBackground(
       child: SingleChildScrollView(
-        physics:
-            const ClampingScrollPhysics(), // Provides more web-like scrolling
+        physics: const ClampingScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 24.0,
-            horizontal: 16,
-          ),
+          padding: const EdgeInsets.all(8),
           child: SizedBox(
             width: size.width,
             child: Column(
@@ -33,10 +29,22 @@ class TeamScreen extends StatelessWidget {
                 const SizedBox(
                   height: 16,
                 ),
-                Text(
-                  "Meet the changemakers of E-Cell VITB.",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
+                RichText(
+                    text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Meet the changemakers of E-Cell VITB. ",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    TextSpan(
+                      text: "✨",
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: secondaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ],
+                )),
                 const SizedBox(
                   height: 40,
                 ),

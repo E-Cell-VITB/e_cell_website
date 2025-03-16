@@ -83,7 +83,7 @@ class EventsScreen extends StatelessWidget {
                             child: Center(
                               child: Text(
                                 'Tech Spourt 2k25',
-                                style: Theme.of(context).textTheme.bodyLarge,
+                                style: Theme.of(context).textTheme.titleLarge,
                               ),
                             ),
                           ),

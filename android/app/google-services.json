@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "213720031718",
+    "project_id": "e-cell-vishnu-website",
+    "storage_bucket": "e-cell-vishnu-website.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213720031718:android:f4cb66c6bc865e083c3627",
+        "android_client_info": {
+          "package_name": "com.example.e_cell_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213720031718-6aua9c2ubi61upj6m7i3p2h321s3crb4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.e_cell_admin",
+            "certificate_hash": "556c801c98e3bb4a65ab207acc1d1dc3b4d48103"
+          }
+        },
+        {
+          "client_id": "213720031718-fr9d79narq9aafkkgm0hv2l469ubppvf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwCfcZPK3t1mQsn8Wp69GcLQazEHbXwr0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213720031718-fr9d79narq9aafkkgm0hv2l469ubppvf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "213720031718-9ohcc0gbbl0ek3e2aohnt7pusrpii3u9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.eCellAdmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213720031718:android:182d341f868a334a3c3627",
+        "android_client_info": {
+          "package_name": "com.example.e_cell_website"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213720031718-fr9d79narq9aafkkgm0hv2l469ubppvf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwCfcZPK3t1mQsn8Wp69GcLQazEHbXwr0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213720031718-fr9d79narq9aafkkgm0hv2l469ubppvf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "213720031718-9ohcc0gbbl0ek3e2aohnt7pusrpii3u9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.eCellAdmin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
