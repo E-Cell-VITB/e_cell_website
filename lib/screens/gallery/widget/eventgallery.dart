@@ -52,7 +52,7 @@ class Eventgallery extends StatelessWidget {
                   
                     child:ClipRRect(
                       borderRadius: BorderRadius.circular(18),
-                      child: Image.network('https://picsum.photos/seed/$ind/500/300',fit: BoxFit.cover,)),
+                      child: Image.network('https://picsum.photos/seed/$index/500/300',fit: BoxFit.cover,)),
 
 
                 ),

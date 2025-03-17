@@ -1,5 +1,4 @@
 import 'package:e_cell_website/const/theme.dart';
-import 'package:e_cell_website/main.dart';
 import 'package:e_cell_website/screens/events/widgets/dialog.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,5 @@
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/screens/team/widgets/card.dart';
 import 'package:e_cell_website/services/enums/department.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
@@ -40,6 +41,7 @@ class TeamScreen extends StatelessWidget {
                 const SizedBox(
                   height: 40,
                 ),
+                Membercard(),
                 ...Department.values.map((dept) {
                   return TeamContainer(
                     size: size,
