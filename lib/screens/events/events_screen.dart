@@ -26,22 +26,28 @@ class EventsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              RichText(
-                  text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Fueling Ideas, Igniting Change: E-Cell VITB Events ",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  TextSpan(
-                    text: "✨",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: secondaryColor,
-                          fontWeight: FontWeight.bold,
+              SizedBox(
+                width: size.width * 0.8,
+                child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text:
+                              "Fueling Ideas, Igniting Change: E-Cell VITB Events ",
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
-                  ),
-                ],
-              )),
+                        TextSpan(
+                          text: "✨",
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: secondaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                      ],
+                    )),
+              ),
               // Text(
               //   "Fueling Ideas, Igniting Change: E-Cell VITB Events",
               //   textAlign: TextAlign.center,

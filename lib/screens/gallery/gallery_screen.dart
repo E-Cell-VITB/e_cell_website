@@ -68,6 +68,9 @@ class GalleryScreen extends StatelessWidget {
                   eventname: "Techsprouts",
                   noofphotos: 5,
                 ),
+                SizedBox(
+                  height: size.height * 0.1,
+                ),
               ],
             ),
           ),

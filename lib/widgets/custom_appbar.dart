@@ -1,4 +1,5 @@
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,10 +8,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if the screen width is less than 768px (mobile view)
+    bool isMobile = MediaQuery.of(context).size.width < 720;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
       decoration: BoxDecoration(
-        color: backgroundColor, // Dark Background
+        color: backgroundColor,
         boxShadow: [
           BoxShadow(
             color: backgroundColor.withOpacity(0.2),
@@ -27,33 +31,48 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               'assets/icons/logo.png',
               height: 46,
             ),
-            Row(
-              children: [
-                _navItem("Home", context, "/"),
-                _navItem("About", context, "/about"),
-                _navItem("Events", context, "/events"),
-                _navItem("Gallery", context, "/gallery"),
-                _navItem("Team", context, "/team"),
-                _navItem("Blogs", context, "/blogs"),
-              ],
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                backgroundColor: secondaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            if (isMobile)
+              LinearGradientText(
+                  child: Text(
+                "E-Cell",
+                style: Theme.of(context).textTheme.titleLarge,
+              )),
+            if (!isMobile)
+              Row(
+                children: [
+                  _navItem("Home", context, "/"),
+                  _navItem("About", context, "/about"),
+                  _navItem("Events", context, "/events"),
+                  _navItem("Gallery", context, "/gallery"),
+                  _navItem("Team", context, "/team"),
+                  _navItem("Blogs", context, "/blogs"),
+                ],
+              ),
+            if (!isMobile)
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  backgroundColor: secondaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: () {
+                  // Navigator.pushNamed(context, JoinPage.joinPageRoute);
+                },
+                child: Text(
+                  "Join Us",
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
-              onPressed: () {
-                // Navigator.pushNamed(context, JoinPage.joinPageRoute);
-              },
-              child: Text(
-                "Join Us",
-                style: Theme.of(context).textTheme.titleMedium,
+            if (isMobile)
+              IconButton(
+                icon: const Icon(Icons.menu, size: 32, color: Colors.white),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
               ),
-            ),
           ],
         ),
       ),
