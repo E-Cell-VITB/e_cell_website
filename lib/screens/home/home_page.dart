@@ -4,6 +4,7 @@ import 'package:e_cell_website/screens/home/widgets/slogan_text.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class HomeScreen extends StatefulWidget {
   final String? section;
@@ -96,58 +97,61 @@ class _HomeScreenState extends State<HomeScreen>
         children: [
           SizedBox(
             height: size.height * 0.85,
-            child: ParticleBackground(
-              primaryColor: const Color(0xFF404040),
-              secondaryColor: const Color(0xFFC79200),
-              highlightColor: const Color(0xFFC79200),
-              baseColor: backgroundColor,
-              particleCount: 72,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SlideTransition(
-                      position: _offsetAnimation,
-                      child: LinearGradientText(
-                        child: Text(
-                          'E-CELL',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: size.width * 0.14,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 2,
-                            color: primaryColor,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 32.0),
+              child: ParticleBackground(
+                primaryColor: const Color(0xFF404040),
+                secondaryColor: const Color(0xFFC79200),
+                highlightColor: const Color(0xFFC79200),
+                baseColor: backgroundColor,
+                particleCount: 72,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SlideTransition(
+                        position: _offsetAnimation,
+                        child: LinearGradientText(
+                          child: Text(
+                            'E-CELL',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: size.width * 0.14,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 2,
+                              color: primaryColor,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Text(
-                      clgName.toUpperCase(),
-                      key: _clgNameKey,
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: size.width * 0.04,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 2,
-                        color: primaryColor,
-                        shadows: const [
-                          Shadow(
-                            color: Color.fromRGBO(32, 32, 32, 0.6),
-                            offset: Offset(2, 4),
-                            blurRadius: 2,
-                          ),
-                        ],
+                      Text(
+                        clgName.toUpperCase(),
+                        key: _clgNameKey,
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: size.width * 0.04,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 2,
+                          color: primaryColor,
+                          shadows: const [
+                            Shadow(
+                              color: Color.fromRGBO(32, 32, 32, 0.6),
+                              offset: Offset(2, 4),
+                              blurRadius: 2,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SloganText(size: size),
-                  ],
+                      SloganText(size: size),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
           SizedBox(
             key: _aboutSectionKey,
-            height: size.height,
+            // height: size.height,
             width: size.width,
             // color: secondaryColor,
             child: Column(
@@ -157,15 +161,58 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Text(
                     "About Us".toUpperCase(),
                     style: TextStyle(
-                      fontSize: size.width * 0.02,
+                      fontSize: size.width * 0.025,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
                       color: primaryColor,
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: size.height * 0.015,
+                ),
+                SizedBox(
+                    width: size.width * 0.7,
+                    child: SelectableText(
+                      textAlign: TextAlign.center,
+                      aboutUs,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            height: 2,
+                          ),
+                    )),
               ],
             ),
+          ),
+          SizedBox(
+            height: size.height * .15,
+          ),
+          SizedBox(
+            // key: _aboutSectionKey,
+            // height: size.height,
+            width: size.width,
+            // color: secondaryColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                LinearGradientText(
+                  child: Text(
+                    "Our Motto".toUpperCase(),
+                    style: TextStyle(
+                      fontSize: size.width * 0.025,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                      color: primaryColor,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.015,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: size.height * .15,
           )
         ],
       ),

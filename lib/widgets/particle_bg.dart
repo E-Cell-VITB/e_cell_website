@@ -198,13 +198,14 @@ class ParticlePainter extends CustomPainter {
         ? Offset(
             mousePosition!.dx * size.width, mousePosition!.dy * size.height)
         : null;
-
+    final hLines = size.width > 600 ? 12 : 8;
+    final vLines = size.width > 600 ? 16 : 16;
     // Draw horizontal grid lines
-    for (int i = 0; i <= 12; i++) {
+    for (int i = 0; i <= hLines; i++) {
       final y = i * cellHeight;
 
       // Draw vertical grid lines
-      for (int j = 0; j <= 16; j++) {
+      for (int j = 0; j <= vLines; j++) {
         final x = j * cellWidth;
 
         // Get the four points of this grid cell
