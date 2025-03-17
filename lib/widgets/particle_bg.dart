@@ -87,63 +87,68 @@ class _ParticleBackgroundState extends State<ParticleBackground>
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onHover: (event) {
-        setState(() {
-          final size = MediaQuery.of(context).size;
-          mousePosition = Offset(
-            event.position.dx / size.width,
-            event.position.dy / size.height,
-          );
+    final size = MediaQuery.of(context).size;
+    return size.width < 600
+        ? SizedBox(
+            child: widget.child,
+          )
+        : MouseRegion(
+            onHover: (event) {
+              setState(() {
+                mousePosition = Offset(
+                  event.position.dx / size.width,
+                  event.position.dy / size.height,
+                );
 
-          // Update particle colors based on distance to mouse
-          for (var particle in particles) {
-            if (mousePosition != null) {
-              final distance = (particle.position - mousePosition!).distance;
-              if (distance < 0.2) {
-                final t = 1.0 - (distance / 0.2);
-                particle.color = Color.lerp(
-                    particle.originalColor, particle.highlightColor, t)!;
-              } else {
-                particle.color = particle.originalColor;
-              }
-            }
-          }
-        });
-      },
-      onExit: (event) {
-        setState(() {
-          mousePosition = null;
-          for (var particle in particles) {
-            particle.color = particle.originalColor;
-          }
-        });
-      },
-      child: Stack(
-        children: [
-          Container(
-            color: widget.baseColor,
-          ),
+                // Update particle colors based on distance to mouse
+                for (var particle in particles) {
+                  if (mousePosition != null) {
+                    final distance =
+                        (particle.position - mousePosition!).distance;
+                    if (distance < 0.2) {
+                      final t = 1.0 - (distance / 0.2);
+                      particle.color = Color.lerp(
+                          particle.originalColor, particle.highlightColor, t)!;
+                    } else {
+                      particle.color = particle.originalColor;
+                    }
+                  }
+                }
+              });
+            },
+            onExit: (event) {
+              setState(() {
+                mousePosition = null;
+                for (var particle in particles) {
+                  particle.color = particle.originalColor;
+                }
+              });
+            },
+            child: Stack(
+              children: [
+                Container(
+                  color: widget.baseColor,
+                ),
 
-          SizedBox.expand(
-            child: CustomPaint(
-              painter: ParticlePainter(
-                particles: particles,
-                primaryColor: widget.primaryColor,
-                secondaryColor: widget.secondaryColor,
-                highlightColor: widget.highlightColor,
-                gridOpacity: widget.gridOpacity,
-                mousePosition: mousePosition,
-                baseColor: widget.baseColor,
-              ),
+                SizedBox.expand(
+                  child: CustomPaint(
+                    painter: ParticlePainter(
+                      particles: particles,
+                      primaryColor: widget.primaryColor,
+                      secondaryColor: widget.secondaryColor,
+                      highlightColor: widget.highlightColor,
+                      gridOpacity: widget.gridOpacity,
+                      mousePosition: mousePosition,
+                      baseColor: widget.baseColor,
+                    ),
+                  ),
+                ),
+
+                // Child content
+                if (widget.child != null) widget.child!,
+              ],
             ),
-          ),
-
-          // Child content
-          if (widget.child != null) widget.child!,
-        ],
-      ),
-    );
+          );
   }
 }
 
