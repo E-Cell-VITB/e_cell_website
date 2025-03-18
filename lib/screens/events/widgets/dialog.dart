@@ -1,5 +1,4 @@
 import 'package:e_cell_website/const/theme.dart';
-import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
 
 class ShowEventBox {

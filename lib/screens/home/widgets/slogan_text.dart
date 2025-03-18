@@ -3,7 +3,13 @@ import 'package:e_cell_website/const/theme.dart';
 import 'package:flutter/material.dart';
 
 class SloganText extends StatelessWidget {
+  final TextAlign textAlign;
+  final String str;
+  final double textsize;
   const SloganText({
+    this.textAlign=TextAlign.start,
+    required this.textsize,
+    required this.str,
     super.key,
     required this.size,
   });
@@ -13,6 +19,7 @@ class SloganText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RichText(
+      textAlign: textAlign,
         text: TextSpan(children: [
       TextSpan(
         text: "✨ ",
@@ -31,10 +38,10 @@ class SloganText extends StatelessWidget {
         ),
       ),
       TextSpan(
-        text: slogan.toUpperCase(),
+        text: str,      
         style: TextStyle(
           fontFamily: 'Montserrat',
-          fontSize: size.width * 0.02,
+          fontSize: textsize,
           fontWeight: FontWeight.w600,
           letterSpacing: 2,
           color: primaryColor,
