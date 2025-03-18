@@ -1,5 +1,7 @@
 import 'package:e_cell_website/const/const_labels.dart';
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/screens/home/widgets/motobox.dart';
+import 'package:e_cell_website/screens/home/widgets/partnerbox.dart';
 import 'package:e_cell_website/screens/home/widgets/slogan_text.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
@@ -96,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen>
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: size.height * 0.85,
+            height: (size.width > 450) ? size.height * 0.85 : size.height * 0.3,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 32.0),
               child: ParticleBackground(
@@ -142,7 +144,11 @@ class _HomeScreenState extends State<HomeScreen>
                           ],
                         ),
                       ),
-                      SloganText(size: size),
+                      SloganText(
+                        size: size,
+                        str: slogan,
+                        textsize: size.width * 0.02,
+                      ),
                     ],
                   ),
                 ),
@@ -150,8 +156,11 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           SizedBox(
+            height: 20,
+          ),
+          SizedBox(
             key: _aboutSectionKey,
-            // height: size.height,
+            height: (size.width > 450) ? size.height * 0.5 : size.height * 0.2,
             width: size.width,
             // color: secondaryColor,
             child: Column(
@@ -174,21 +183,15 @@ class _HomeScreenState extends State<HomeScreen>
                 SizedBox(
                     width: size.width * 0.7,
                     child: SelectableText(
-                      textAlign: TextAlign.center,
-                      aboutUs,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            height: 2,
-                          ),
-                    )),
+                        textAlign: TextAlign.center,
+                        aboutUs,
+                        style: TextStyle(fontSize: size.width * 0.018))),
               ],
             ),
           ),
           SizedBox(
-            height: size.height * .15,
-          ),
-          SizedBox(
             // key: _aboutSectionKey,
-            // height: size.height,
+            height: (size.width > 450) ? size.height * 0.6 : size.height * 0.5,
             width: size.width,
             // color: secondaryColor,
             child: Column(
@@ -208,11 +211,136 @@ class _HomeScreenState extends State<HomeScreen>
                 SizedBox(
                   height: size.height * 0.015,
                 ),
+                Padding(
+                  padding: EdgeInsets.all(40),
+                  child: SizedBox(
+                    width: size.width*0.75,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 106,
+                      runSpacing: 40,
+                      children: [
+                        Motobox(
+                            image: "assets/icons/innovate.png",
+                            heading: "Innovate",
+                            info:
+                                "Think beyond boundaries and develop groundbreaking ideas."),
+                        Motobox(
+                            image: "assets/icons/create.png",
+                            heading: "Create",
+                            info:
+                                "Transform ideas into real-world solutions with creativity and technology."),
+                        Motobox(
+                        image: "assets/icons/lead.png",
+                        heading: "Lead",
+                        info:
+                            "Inspire change, take initiative, and drive the future of entrepreneurship."),
+                      ],
+                    ),
+                  ),
+                ),
+                // SizedBox(
+                //   height: 10,
+                // ),
+                // Center(
+                //   child: Motobox(
+                //       icon: Icon(Icons.home),
+                //       heading: "Lead",
+                //       info:
+                //           "Inspire change, take initiative, and drive the future of entrepreneurship."),
+                // )
               ],
             ),
           ),
           SizedBox(
-            height: size.height * .15,
+            // key: _aboutSectionKey,
+            height: (size.width > 450) ? size.height * 0.5 : size.height * 0.2,
+            width: size.width,
+            // color: secondaryColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                LinearGradientText(
+                  child: Text(
+                    "Our vision".toUpperCase(),
+                    style: TextStyle(
+                      fontSize: size.width * 0.025,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                      color: primaryColor,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.015,
+                ),
+                SizedBox(
+                    width: size.width * 0.7,
+                    child: SelectableText(
+                        textAlign: TextAlign.center,
+                        OurVision,
+                        style: TextStyle(fontSize: size.width * 0.018))),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: (size.height < 950) ? size.height * 0.8 : size.height * 0.6,
+            child: Column(
+              children: [
+                LinearGradientText(
+                  child: Text(
+                    "Why Partner with E-Cell?".toUpperCase(),
+                    style: TextStyle(
+                      fontSize: size.width * 0.025,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                      color: primaryColor,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 60,
+                ),
+                Wrap(
+                  spacing: 30,
+                  runSpacing: 40,
+                  children: [
+                    Partnerbox(
+                        heading: "Access to Young Innovators",
+                        info:
+                            "Connect with talented students and fresh ideas."),
+                    Partnerbox(
+                        heading: "Industry-Academia Collaboration",
+                        info:
+                            "Bridge the gap between education and real-world entrepreneurship."),
+                    Partnerbox(
+                        heading: "Networking & Branding",
+                        info:
+                            "Gain visibility among future leaders, startups, and investors."),
+                    Partnerbox(
+                        heading: "Mutual Growth",
+                        info:
+                            "Create opportunities for innovation, mentorship, and business expansion."),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: (size.width>450)?size.width*0.8:size.width*0.6,
+              child: SloganText(
+            size: size,
+            str:
+                "Partner with us and be a part of the next wave of innovation!",
+            textsize:
+                (size.width > 450) ? size.width * 0.01 : size.width * 0.02,
+            textAlign: TextAlign.center,
+          )),
+          SizedBox(
+            height: size.height * 0.8,
+            child: Center(
+              child: Text("Footer section"),
+            ),
           )
         ],
       ),
