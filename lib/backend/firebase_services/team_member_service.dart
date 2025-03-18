@@ -19,7 +19,7 @@ class TeamMemberService {
       switch (designation) {
         case "lead":
           return 1;
-        case "coLead":
+        case "colead":
           return 2;
         case "associate":
           return 3;
@@ -32,7 +32,7 @@ class TeamMemberService {
       switch (designation) {
         case "president":
           return 1;
-        case "vicePresident":
+        case "vicepresident":
           return 2;
         case "secretary":
           return 3;
