@@ -160,11 +160,12 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           SizedBox(
             key: _aboutSectionKey,
-            height: (size.width > 450) ? size.height * 0.5 : size.height * 0.2,
+            height: (size.width > 450) ? size.height * 0.45 : size.width * 0.3,
             width: size.width,
             // color: secondaryColor,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 LinearGradientText(
                   child: Text(
@@ -178,47 +179,48 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
                 SizedBox(
-                  height: size.height * 0.015,
+                  height: size.height * 0.025,
                 ),
                 SizedBox(
-                    width: size.width * 0.7,
+                    width: size.width * 0.65,
                     child: SelectableText(
                         textAlign: TextAlign.center,
                         aboutUs,
-                        style: TextStyle(fontSize: size.width * 0.018))),
+                        style: TextStyle(fontSize:(size.width>450)? size.width * 0.012:6))),
               ],
             ),
           ),
           SizedBox(
             // key: _aboutSectionKey,
-            height: (size.width > 450) ? size.height * 0.6 : size.height * 0.5,
+            height: (size.width > 450) ? size.height * 0.6 : size.height*0.4 ,
             width: size.width,
             // color: secondaryColor,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                LinearGradientText(
-                  child: Text(
-                    "Our Motto".toUpperCase(),
-                    style: TextStyle(
-                      fontSize: size.width * 0.025,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                      color: primaryColor,
+            child: Padding(
+              padding: const EdgeInsets.all(22.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  LinearGradientText(
+                    child: Text(
+                      "Our Motto".toUpperCase(),
+                      style: TextStyle(
+                        fontSize: size.width * 0.025,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2,
+                        color: primaryColor,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: size.height * 0.015,
-                ),
-                Padding(
-                  padding: EdgeInsets.all(40),
-                  child: SizedBox(
+                  SizedBox(
+                    height:(size.width>450)? size.width * 0.025:20,
+                  ),
+                  SizedBox(
                     width: size.width*0.75,
                     child: Wrap(
                       alignment: WrapAlignment.center,
                       spacing: 106,
-                      runSpacing: 40,
+                      runSpacing: size.width*0.035,
                       children: [
                         Motobox(
                             image: "assets/icons/innovate.png",
@@ -238,18 +240,18 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
                     ),
                   ),
-                ),
-                // SizedBox(
-                //   height: 10,
-                // ),
-                // Center(
-                //   child: Motobox(
-                //       icon: Icon(Icons.home),
-                //       heading: "Lead",
-                //       info:
-                //           "Inspire change, take initiative, and drive the future of entrepreneurship."),
-                // )
-              ],
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+                  // Center(
+                  //   child: Motobox(
+                  //       icon: Icon(Icons.home),
+                  //       heading: "Lead",
+                  //       info:
+                  //           "Inspire change, take initiative, and drive the future of entrepreneurship."),
+                  // )
+                ],
+              ),
             ),
           ),
           SizedBox(
@@ -258,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen>
             width: size.width,
             // color: secondaryColor,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 LinearGradientText(
                   child: Text(
@@ -272,20 +274,22 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
                 SizedBox(
-                  height: size.height * 0.015,
+                  height: size.height * 0.025,
                 ),
                 SizedBox(
-                    width: size.width * 0.7,
+                    width: size.width * 0.65,
                     child: SelectableText(
                         textAlign: TextAlign.center,
                         OurVision,
-                        style: TextStyle(fontSize: size.width * 0.018))),
+                        style: TextStyle(fontSize:(size.width>450)? size.width * 0.012:6))),
               ],
             ),
           ),
           SizedBox(
-            height: (size.height < 950) ? size.height * 0.8 : size.height * 0.6,
+            height: (size.height < 950) ? size.height * 0.8 : size.height * 0.4,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+
               children: [
                 LinearGradientText(
                   child: Text(
@@ -299,7 +303,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
                 SizedBox(
-                  height: 60,
+                  height:(size.width>450)? size.width*0.025:size.width*0.1,
                 ),
                 Wrap(
                   spacing: 30,
@@ -333,11 +337,11 @@ class _HomeScreenState extends State<HomeScreen>
             str:
                 "Partner with us and be a part of the next wave of innovation!",
             textsize:
-                (size.width > 450) ? size.width * 0.01 : size.width * 0.02,
+                (size.width > 450) ? size.width * 0.012 : size.width * 0.025,
             textAlign: TextAlign.center,
           )),
           SizedBox(
-            height: size.height * 0.8,
+            height: size.height * 0.5,
             child: Center(
               child: Text("Footer section"),
             ),

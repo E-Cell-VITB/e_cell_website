@@ -3,22 +3,14 @@ import 'package:e_cell_website/screens/events/events_screen.dart';
 import 'package:e_cell_website/screens/gallery/gallery_screen.dart';
 import 'package:e_cell_website/screens/home/home_page.dart';
 import 'package:e_cell_website/screens/team/team_screen.dart';
-import 'package:e_cell_website/widgets/custom_appbar.dart';
-import 'package:flutter/material.dart';
-
+import 'package:e_cell_website/widgets/app_scaffold.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter appRouter = GoRouter(
   routes: [
     ShellRoute(
       builder: (context, state, child) {
-        return Scaffold(
-          appBar: const PreferredSize(
-            preferredSize: Size.fromHeight(250),
-            child: CustomAppBar(),
-          ),
-          body: child,
-        );
+        return AppScaffold(child: child);
       },
       routes: [
         GoRoute(

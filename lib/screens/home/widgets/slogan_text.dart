@@ -42,8 +42,8 @@ class SloganText extends StatelessWidget {
         style: TextStyle(
           fontFamily: 'Montserrat',
           fontSize: textsize,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 2,
+          fontWeight: FontWeight.w200,
+          letterSpacing: 1,
           color: primaryColor,
           shadows: const [
             Shadow(
