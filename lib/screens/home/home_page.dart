@@ -155,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           SizedBox(
@@ -191,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           SizedBox(
             // key: _aboutSectionKey,
-            height: (size.width > 450) ? size.height * 0.6 : size.height * 0.5,
+            height: (size.width > 450) ? size.height * 0.6 : size.height * 0.7,
             width: size.width,
             // color: secondaryColor,
             child: Column(
@@ -212,10 +212,10 @@ class _HomeScreenState extends State<HomeScreen>
                   height: size.height * 0.015,
                 ),
                 Padding(
-                  padding: EdgeInsets.all(40),
+                  padding: const EdgeInsets.all(40),
                   child: SizedBox(
-                    width: size.width*0.75,
-                    child: Wrap(
+                    width: size.width * 0.75,
+                    child: const Wrap(
                       alignment: WrapAlignment.center,
                       spacing: 106,
                       runSpacing: 40,
@@ -231,10 +231,10 @@ class _HomeScreenState extends State<HomeScreen>
                             info:
                                 "Transform ideas into real-world solutions with creativity and technology."),
                         Motobox(
-                        image: "assets/icons/lead.png",
-                        heading: "Lead",
-                        info:
-                            "Inspire change, take initiative, and drive the future of entrepreneurship."),
+                            image: "assets/icons/lead.png",
+                            heading: "Lead",
+                            info:
+                                "Inspire change, take initiative, and drive the future of entrepreneurship."),
                       ],
                     ),
                   ),
@@ -298,10 +298,10 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 60,
                 ),
-                Wrap(
+                const Wrap(
                   spacing: 30,
                   runSpacing: 40,
                   children: [
@@ -327,18 +327,18 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           SizedBox(
-            width: (size.width>450)?size.width*0.8:size.width*0.6,
+              width: (size.width > 450) ? size.width * 0.8 : size.width * 0.6,
               child: SloganText(
-            size: size,
-            str:
-                "Partner with us and be a part of the next wave of innovation!",
-            textsize:
-                (size.width > 450) ? size.width * 0.01 : size.width * 0.02,
-            textAlign: TextAlign.center,
-          )),
+                size: size,
+                str:
+                    "Partner with us and be a part of the next wave of innovation!",
+                textsize:
+                    (size.width > 450) ? size.width * 0.02 : size.width * 0.03,
+                textAlign: TextAlign.center,
+              )),
           SizedBox(
             height: size.height * 0.8,
-            child: Center(
+            child: const Center(
               child: Text("Footer section"),
             ),
           )

@@ -1,1 +1,34 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"e-cell-vishnu-website","appId":"1:213720031718:android:182d341f868a334a3c3627","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"e-cell-vishnu-website","configurations":{"android":"1:213720031718:android:182d341f868a334a3c3627","ios":"1:213720031718:ios:abcc83aa66118b893c3627","macos":"1:213720031718:ios:abcc83aa66118b893c3627","web":"1:213720031718:web:5d8e6808d29815c73c3627","windows":"1:213720031718:web:2a51d0f51d2ac6b83c3627"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "e-cell-vishnu-website",
+          "appId": "1:213720031718:android:182d341f868a334a3c3627",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "e-cell-vishnu-website",
+          "configurations": {
+            "android": "1:213720031718:android:182d341f868a334a3c3627",
+            "ios": "1:213720031718:ios:abcc83aa66118b893c3627",
+            "macos": "1:213720031718:ios:abcc83aa66118b893c3627",
+            "web": "1:213720031718:web:5d8e6808d29815c73c3627",
+            "windows": "1:213720031718:web:2a51d0f51d2ac6b83c3627"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+	"site": "ecell-vitb",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

@@ -120,28 +120,10 @@ class ProfileCard extends StatelessWidget {
                                       },
                                       splashColor: primaryColor,
                                       child: SizedBox(
-                                        height: 32,
-                                        width: 32,
-                                        child: ShaderMask(
-                                          shaderCallback: (Rect bounds) {
-                                            return LinearGradient(
-                                              colors: [
-                                                Colors.amber,
-                                                Colors.amberAccent,
-                                                Colors.amber,
-                                                Colors.grey.shade50,
-                                                Colors.amberAccent,
-                                                Colors.amber,
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ).createShader(bounds);
-                                          },
-                                          child: const Icon(
-                                            Icons.mail,
-                                            size: 36,
-                                            color: Colors.white,
-                                          ),
+                                        width: 24,
+                                        height: 24,
+                                        child: Image.asset(
+                                          "assets/icons/Email_Icon.png",
                                         ),
                                       ),
                                     ),
@@ -159,8 +141,8 @@ class ProfileCard extends StatelessWidget {
                                       },
                                       splashColor: primaryColor,
                                       child: SizedBox(
-                                        width: 34,
-                                        height: 28,
+                                        width: 24,
+                                        height: 24,
                                         child: Image.asset(
                                           "assets/icons/linkdein_icon.png",
                                         ),
