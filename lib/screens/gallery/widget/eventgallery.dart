@@ -63,7 +63,7 @@ class Eventgallery extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(18),
                       child: CachedNetworkImage(
-                        imageUrl: "https://picsum.photos/seed/$ind/500/300",
+                        imageUrl: "https://picsum.photos/seed/$index/500/300",
                         placeholder: (context, url) => const SizedBox(
                           height: 40,
                           width: 40,
@@ -77,10 +77,7 @@ class Eventgallery extends StatelessWidget {
                             const Icon(Icons.error),
                         fit: BoxFit.cover,
                       ),
-                      //  Image.network(
-                      //     'https://picsum.photos/seed/$ind/500/300',
-                      //     fit: BoxFit.cover,
-                      //   )
+            
                     ),
                   ),
                 );

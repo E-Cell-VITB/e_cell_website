@@ -41,9 +41,9 @@ class Motobox extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("$heading",style: TextStyle(fontWeight: FontWeight.w500,fontSize:(size.width>450)? size.width*0.012:size.width*0.025),),
+                  SelectableText("$heading",style: TextStyle(fontWeight: FontWeight.w500,fontSize:(size.width>450)? size.width*0.012:size.width*0.025),),
                   SizedBox(height: 1,),
-                  Text("$info",style: TextStyle(fontSize:(size.width>450)? size.width*0.008:size.width*0.02,color: Colors.grey),),
+                  SelectableText("$info",style: TextStyle(fontSize:(size.width>450)? size.width*0.008:size.width*0.02,color: Colors.grey),),
                 ],
               ),
             )

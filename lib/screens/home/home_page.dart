@@ -156,11 +156,11 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           SizedBox(
-            height: 20,
+            height: size.width*0.04,
           ),
           SizedBox(
             key: _aboutSectionKey,
-            height: (size.width > 450) ? size.height * 0.45 : size.width * 0.3,
+            // height: (size.width > 450) ? size.height * 0.45 : size.width * 0.3,
             width: size.width,
             // color: secondaryColor,
             child: Column(
@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Text(
                     "About Us".toUpperCase(),
                     style: TextStyle(
-                      fontSize: size.width * 0.025,
+                      fontSize:(size.width>450)? size.width * 0.025:20,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
                       color: primaryColor,
@@ -182,17 +182,20 @@ class _HomeScreenState extends State<HomeScreen>
                   height: size.height * 0.025,
                 ),
                 SizedBox(
-                    width: size.width * 0.65,
+                    width:(size.width>450)? size.width * 0.65:size.width*0.85,
                     child: SelectableText(
                         textAlign: TextAlign.center,
                         aboutUs,
-                        style: TextStyle(fontSize:(size.width>450)? size.width * 0.012:6))),
+                        style: TextStyle(fontSize:(size.width>450)? size.width * 0.012:14))),
               ],
             ),
           ),
           SizedBox(
+            height: size.width*0.04,
+          ),
+          SizedBox(
             // key: _aboutSectionKey,
-            height: (size.width > 450) ? size.height * 0.6 : size.height*0.4 ,
+            // height: (size.width > 450) ? size.height * 0.6 : size.height*0.4 ,
             width: size.width,
             // color: secondaryColor,
             child: Padding(
@@ -205,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen>
                     child: Text(
                       "Our Motto".toUpperCase(),
                       style: TextStyle(
-                        fontSize: size.width * 0.025,
+                        fontSize:(size.width>450)? size.width * 0.025:20,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 2,
                         color: primaryColor,
@@ -240,23 +243,16 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
                     ),
                   ),
-                  // SizedBox(
-                  //   height: 10,
-                  // ),
-                  // Center(
-                  //   child: Motobox(
-                  //       icon: Icon(Icons.home),
-                  //       heading: "Lead",
-                  //       info:
-                  //           "Inspire change, take initiative, and drive the future of entrepreneurship."),
-                  // )
                 ],
               ),
             ),
           ),
           SizedBox(
+            height: size.width*0.04,
+          ),
+          SizedBox(
             // key: _aboutSectionKey,
-            height: (size.width > 450) ? size.height * 0.5 : size.height * 0.2,
+            // height: (size.width > 450) ? size.height * 0.5 : size.height * 0.1,
             width: size.width,
             // color: secondaryColor,
             child: Column(
@@ -266,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Text(
                     "Our vision".toUpperCase(),
                     style: TextStyle(
-                      fontSize: size.width * 0.025,
+                      fontSize:(size.width>450)? size.width * 0.025:20,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
                       color: primaryColor,
@@ -277,16 +273,19 @@ class _HomeScreenState extends State<HomeScreen>
                   height: size.height * 0.025,
                 ),
                 SizedBox(
-                    width: size.width * 0.65,
+                    width:(size.width>450)? size.width * 0.65:size.width*0.85,
                     child: SelectableText(
                         textAlign: TextAlign.center,
                         OurVision,
-                        style: TextStyle(fontSize:(size.width>450)? size.width * 0.012:6))),
+                        style: TextStyle(fontSize:(size.width>450)? size.width * 0.012:14))),
               ],
             ),
           ),
           SizedBox(
-            height: (size.height < 950) ? size.height * 0.8 : size.height * 0.4,
+            height: size.width*0.06,
+          ),
+          SizedBox(
+            // height: (size.height < 950) ? size.height * 0.8 : size.height * 0.4,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
 
@@ -295,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Text(
                     "Why Partner with E-Cell?".toUpperCase(),
                     style: TextStyle(
-                      fontSize: size.width * 0.025,
+                     fontSize:(size.width>450)? size.width * 0.025:20,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
                       color: primaryColor,
@@ -329,6 +328,9 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ],
             ),
+          ),
+          SizedBox(
+            height: size.width*0.04,
           ),
           SizedBox(
             width: (size.width>450)?size.width*0.8:size.width*0.6,
