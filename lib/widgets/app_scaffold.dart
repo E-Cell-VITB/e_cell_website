@@ -76,6 +76,7 @@ class AppScaffold extends StatelessWidget {
                   ),
                   onPressed: () {
                     // Navigator.pushNamed(context, JoinPage.joinPageRoute);
+                    context.go("/joinus");
                   },
                   child: Text(
                     "Join Us",

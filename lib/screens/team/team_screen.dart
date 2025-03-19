@@ -3,6 +3,7 @@ import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/team/widgets/profile_card.dart';
 import 'package:e_cell_website/services/enums/department.dart';
 import 'package:e_cell_website/services/providers/team_members_provider.dart';
+import 'package:e_cell_website/widgets/footer.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
@@ -59,10 +60,13 @@ class TeamScreen extends StatelessWidget {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator(
-                            color: secondaryColor,
-                          ));
+                          return SizedBox(
+                            height: size.height * 0.6,
+                            child: const Center(
+                                child: CircularProgressIndicator(
+                              color: secondaryColor,
+                            )),
+                          );
                         }
                         if (snapshot.hasError) {
                           return Center(
@@ -110,7 +114,8 @@ class TeamScreen extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 24),
+                const Footer(),
               ],
             ),
           ),

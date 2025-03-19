@@ -1,6 +1,7 @@
 import 'package:e_cell_website/backend/models/blog.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/services/providers/blogs_provider.dart';
+import 'package:e_cell_website/widgets/footer.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,10 @@ class BlogsScreen extends StatelessWidget {
                     stream: blogProvider.blogsStream,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
+                        return SizedBox(
+                            height: size.height * 0.6,
+                            child: const Center(
+                                child: CircularProgressIndicator()));
                       }
 
                       if (snapshot.hasError) {
@@ -86,6 +90,7 @@ class BlogsScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 24),
+                  const Footer(),
                 ],
               ),
             ),
