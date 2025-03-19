@@ -15,8 +15,8 @@ class Motobox extends StatelessWidget {
   Widget build(BuildContext context) {
     final size=MediaQuery.of(context).size;
     return Container(
-      height: 80,
-      width: (size.width>450)?380:300,
+      height: (size.width>450)?90:60,
+      width: (size.width>450)?400:300,
       decoration: BoxDecoration(
         gradient: LinearGradient(colors: eventBoxLinearGradient),
         borderRadius: BorderRadius.circular(70),
@@ -26,8 +26,8 @@ class Motobox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
-              height: (size.width>450)?60:50,
-              width: (size.width>450)?60:50,
+              height: (size.width>450)?67:50,
+              width: (size.width>450)?67:50,
               child: CircleAvatar(
                 backgroundColor: secondaryColor,
                 backgroundImage: AssetImage(image)
@@ -35,15 +35,15 @@ class Motobox extends StatelessWidget {
             ),
             
             Container(
-              width: (size.width>500)?260: 220,
+              width: (size.width>500)?300: 190,
               
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("$heading",style: TextStyle(fontWeight: FontWeight.w500,fontSize:(size.width>450)? size.width*0.01:size.width*0.02),),
+                  SelectableText("$heading",style: TextStyle(fontWeight: FontWeight.w500,fontSize:(size.width>450)? size.width*0.012:size.width*0.025),),
                   SizedBox(height: 1,),
-                  Text("$info",style: TextStyle(fontSize:(size.width>450)? size.width*0.008:size.width*0.02,color: Colors.grey),),
+                  SelectableText("$info",style: TextStyle(fontSize:(size.width>450)? size.width*0.008:size.width*0.02,color: Colors.grey),),
                 ],
               ),
             )

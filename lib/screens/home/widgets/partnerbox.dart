@@ -20,14 +20,14 @@ class Partnerbox extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(
-        padding:  EdgeInsets.all(size.width*0.02),
+        padding:  EdgeInsets.all((size.width>450)?size.width*0.01:12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-              Text("$heading",style: TextStyle(fontSize:(size.width>450)?size.width*0.015:size.width*0.035,fontWeight: FontWeight.bold),),
+              SelectableText("$heading",style: TextStyle(fontSize:(size.width>450)?size.width*0.015:size.width*0.035,fontWeight: FontWeight.bold),),
               SizedBox(height: 10,),
-              Text("$info",style: TextStyle(fontSize:(size.width>450)? size.width*0.01:size.width*0.03,color: Colors.grey),)
+              SelectableText("$info",style: TextStyle(fontSize:(size.width>450)? size.width*0.01:size.width*0.03,color: Colors.grey),)
           ],
         ),
       ),
