@@ -31,8 +31,103 @@
 
   <title>E-Cell_VITB</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Loading indicator styles -->
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000000;
+      z-index: 9999;
+    }
+
+    .loading-spinner {
+      position: relative;
+      width: 220px;
+      height: 220px;
+    }
+
+    .logo-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 100px;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo-container img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .spinner-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 4px solid transparent;
+      border-top: 4px solid #ffffff;
+      border-radius: 50%;
+      animation: spin 1.5s linear infinite;
+    }
+
+    .spinner-ring:nth-child(2) {
+      width: 80%;
+      height: 80%;
+      top: 10%;
+      left: 10%;
+      border-top-color: #007bff;
+      animation-duration: 2s;
+      animation-direction: reverse;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
+  <!-- Loading indicator -->
+  <div id="loading" class="loading-container">
+    <div class="loading-spinner">
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="logo-container">
+        <img src="icons/Icon-192.png" alt="E-Cell Logo">
+      </div>
+    </div>
+  </div>
+
+  <!-- Script to remove loading indicator when Flutter is ready -->
+  <script>
+    window.addEventListener('flutter-first-frame', function() {
+      var loadingIndicator = document.getElementById('loading');
+      if (loadingIndicator) {
+        loadingIndicator.style.opacity = '0';
+        loadingIndicator.style.transition = 'opacity 0.5s ease';
+        setTimeout(function() {
+          loadingIndicator.remove();
+        }, 500);
+      }
+    });
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

@@ -88,6 +88,9 @@ class ProfileCard extends StatelessWidget {
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600),
                           ),
+                          const SizedBox(
+                            height: 8,
+                          ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -98,7 +101,7 @@ class ProfileCard extends StatelessWidget {
                                   teamMember.designation,
                                 ),
                                 style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
+                                    fontSize: 16, fontWeight: FontWeight.w700),
                               )),
                               const SizedBox(
                                 width: 20,
