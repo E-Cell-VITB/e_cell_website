@@ -32,7 +32,7 @@ class TeamMemberService {
       switch (designation) {
         case "president":
           return 1;
-        case "vicepresident":
+        case "vicePresident":
           return 2;
         case "secretary":
           return 3;

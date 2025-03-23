@@ -39,15 +39,20 @@ class ProfileCard extends StatelessWidget {
               child: ClipRRect(
                 child: CachedNetworkImage(
                   imageUrl: teamMember.profileURL,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
+                  placeholder: (context, url) => const Center(
+                      child: SizedBox(
+                          height: 32,
+                          width: 32,
+                          child: CircularProgressIndicator(
+                            color: secondaryColor,
+                          ))),
                   errorWidget: (context, url, error) => Image.asset(
                     "assets/icons/logo.png",
                     height: 260,
                     width: 222,
                   ),
                   height: 260,
-                  width: 222,
+                  width: 224,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -80,13 +85,17 @@ class ProfileCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            textAlign: TextAlign.start,
-                            teamMember.name,
-                            style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600),
+                          SizedBox(
+                            // width: 200,
+                            height: 24,
+                            child: Text(
+                              textAlign: TextAlign.start,
+                              teamMember.name,
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600),
+                            ),
                           ),
                           const SizedBox(
                             height: 8,
