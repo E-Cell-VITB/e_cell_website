@@ -79,12 +79,17 @@ class BlogsScreen extends StatelessWidget {
                       }
 
                       final blogs = snapshot.data!;
-                      return Wrap(
-                        spacing: 16,
-                        runSpacing: 16,
-                        alignment: WrapAlignment.center,
-                        children:
-                            blogs.map((blog) => BlogCard(blog: blog)).toList(),
+                      return SizedBox(
+                        width:
+                            size.width > 600 ? size.width * 0.82 : size.width,
+                        child: Wrap(
+                          spacing: 24,
+                          runSpacing: 24,
+                          alignment: WrapAlignment.center,
+                          children: blogs
+                              .map((blog) => BlogCard(blog: blog))
+                              .toList(),
+                        ),
                       );
                     },
                   ),

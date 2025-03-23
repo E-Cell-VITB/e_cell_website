@@ -309,26 +309,25 @@ mentorship, networking, and industry collaborations.""",
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
-          children: [
-            Icon(
-              Icons.phone,
-              color: Color(0xFFC79200),
-              size: 18,
-            ),
-            SizedBox(width: 10),
-            SelectableText(
-              '+91 9490 538 442',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
+        // const Row(
+        //   children: [
+        //     Icon(
+        //       Icons.phone,
+        //       color: Color(0xFFC79200),
+        //       size: 18,
+        //     ),
+        //     SizedBox(width: 10),
+        //     SelectableText(
+        //       '+91 9490 538 442',
+        //       style: TextStyle(
+        //         color: Colors.white,
+        //         fontSize: 14,
+        //       ),
+        //     ),
+        //   ],
+        // ),
         InkWell(
-          onTap: () => _launchUrl('mailto:ecell@vishnu.edu.in'),
+          onTap: () => _launchUrl('mailto:e-cell@vishnu.edu.in'),
           child: const Row(
             children: [
               Icon(
@@ -338,7 +337,28 @@ mentorship, networking, and industry collaborations.""",
               ),
               SizedBox(width: 10),
               Text(
-                'ecell@vishnu.edu.in',
+                'e-cell@vishnu.edu.in',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        InkWell(
+          onTap: () => _launchUrl('mailto:president.ecell@vishnu.edu.in'),
+          child: const Row(
+            children: [
+              Icon(
+                Icons.email,
+                color: Color(0xFFC79200),
+                size: 18,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'president.ecell@vishnu.edu.in',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14,

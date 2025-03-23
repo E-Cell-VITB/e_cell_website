@@ -56,7 +56,7 @@ class _BlogCardState extends State<BlogCard> {
                   imageUrl: widget.blog.thumbnailUrl,
                   height: 200,
                   width: double.infinity,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                   placeholder: (context, url) => Container(
                     height: 200,
                     color: Colors.grey.shade300,
@@ -69,7 +69,7 @@ class _BlogCardState extends State<BlogCard> {
                     height: 200,
                     color: Colors.grey.shade300,
                     child: Center(
-                      child: Icon(Icons.broken_image,
+                      child: Icon(Icons.image,
                           color: Colors.grey.shade500, size: 40),
                     ),
                   ),
