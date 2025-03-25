@@ -1,6 +1,7 @@
 import 'package:e_cell_website/const/theme.dart';
 
 import 'package:e_cell_website/screens/events/widgets/dialog.dart';
+import 'package:e_cell_website/widgets/footer.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +96,8 @@ class EventsScreen extends StatelessWidget {
                           ),
                         ));
                   }),
+              const SizedBox(height: 24),
+              const Footer()
             ],
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/gallery/widget/eventgallery.dart';
+import 'package:e_cell_website/widgets/footer.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
@@ -68,9 +69,8 @@ class GalleryScreen extends StatelessWidget {
                   eventname: "Techsprouts",
                   noofphotos: 5,
                 ),
-                SizedBox(
-                  height: size.height * 0.1,
-                ),
+                const SizedBox(height: 24),
+                const Footer()
               ],
             ),
           ),

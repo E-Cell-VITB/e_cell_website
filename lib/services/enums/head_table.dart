@@ -7,7 +7,7 @@ enum HeadTable {
   String toString() {
     return switch (this) {
       HeadTable.president => "President",
-      HeadTable.vicePresident => "Vice-President",
+      HeadTable.vicePresident => "Vice President",
       HeadTable.secretary => "Secretary",
     };
   }

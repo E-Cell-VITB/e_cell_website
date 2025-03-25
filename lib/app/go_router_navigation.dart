@@ -37,6 +37,10 @@ final GoRouter appRouter = GoRouter(
           path: '/blogs',
           builder: (context, state) => const BlogsScreen(),
         ),
+        GoRoute(
+          path: '/joinus',
+          builder: (context, state) => const HomeScreen(section: 'footer'),
+        ),
       ],
     ),
   ],

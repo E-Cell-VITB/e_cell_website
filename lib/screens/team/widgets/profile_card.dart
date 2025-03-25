@@ -39,15 +39,20 @@ class ProfileCard extends StatelessWidget {
               child: ClipRRect(
                 child: CachedNetworkImage(
                   imageUrl: teamMember.profileURL,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
+                  placeholder: (context, url) => const Center(
+                      child: SizedBox(
+                          height: 32,
+                          width: 32,
+                          child: CircularProgressIndicator(
+                            color: secondaryColor,
+                          ))),
                   errorWidget: (context, url, error) => Image.asset(
                     "assets/icons/logo.png",
                     height: 260,
                     width: 222,
                   ),
                   height: 260,
-                  width: 222,
+                  width: 224,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -80,13 +85,20 @@ class ProfileCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            textAlign: TextAlign.start,
-                            teamMember.name,
-                            style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600),
+                          SizedBox(
+                            // width: 200,
+                            height: 24,
+                            child: Text(
+                              textAlign: TextAlign.start,
+                              teamMember.name,
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 8,
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -98,7 +110,7 @@ class ProfileCard extends StatelessWidget {
                                   teamMember.designation,
                                 ),
                                 style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
+                                    fontSize: 16, fontWeight: FontWeight.w700),
                               )),
                               const SizedBox(
                                 width: 20,
@@ -120,28 +132,10 @@ class ProfileCard extends StatelessWidget {
                                       },
                                       splashColor: primaryColor,
                                       child: SizedBox(
-                                        height: 32,
-                                        width: 32,
-                                        child: ShaderMask(
-                                          shaderCallback: (Rect bounds) {
-                                            return LinearGradient(
-                                              colors: [
-                                                Colors.amber,
-                                                Colors.amberAccent,
-                                                Colors.amber,
-                                                Colors.grey.shade50,
-                                                Colors.amberAccent,
-                                                Colors.amber,
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ).createShader(bounds);
-                                          },
-                                          child: const Icon(
-                                            Icons.mail,
-                                            size: 36,
-                                            color: Colors.white,
-                                          ),
+                                        width: 24,
+                                        height: 24,
+                                        child: Image.asset(
+                                          "assets/icons/Email_Icon.png",
                                         ),
                                       ),
                                     ),
@@ -159,8 +153,8 @@ class ProfileCard extends StatelessWidget {
                                       },
                                       splashColor: primaryColor,
                                       child: SizedBox(
-                                        width: 34,
-                                        height: 28,
+                                        width: 24,
+                                        height: 24,
                                         child: Image.asset(
                                           "assets/icons/linkdein_icon.png",
                                         ),

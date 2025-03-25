@@ -3,10 +3,12 @@ import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/home/widgets/motobox.dart';
 import 'package:e_cell_website/screens/home/widgets/partnerbox.dart';
 import 'package:e_cell_website/screens/home/widgets/slogan_text.dart';
+import 'package:e_cell_website/widgets/footer.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
-// import 'package:auto_size_text/auto_size_text.dart';
+
+import 'package:visibility_detector/visibility_detector.dart';
 
 class HomeScreen extends StatefulWidget {
   final String? section;
@@ -23,6 +25,15 @@ class _HomeScreenState extends State<HomeScreen>
   late Animation<Offset> _offsetAnimation;
   final GlobalKey _clgNameKey = GlobalKey();
   final GlobalKey _aboutSectionKey = GlobalKey();
+  final GlobalKey _footerSectionKey = GlobalKey();
+
+  // Animation controllers for each section
+  Map<String, bool> _sectionVisible = {
+    'about': false,
+    'motto': false,
+    'vision': false,
+    'partner': false,
+  };
 
   @override
   void initState() {
@@ -47,6 +58,9 @@ class _HomeScreenState extends State<HomeScreen>
       // Check if we need to scroll to the about section
       if (widget.section == 'about') {
         _scrollToAboutSection();
+      }
+      if (widget.section == 'footer') {
+        _scrollToFooterSection();
       }
     });
   }
@@ -83,10 +97,66 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
+  void _scrollToFooterSection() {
+    if (_footerSectionKey.currentContext != null) {
+      Scrollable.ensureVisible(
+        _footerSectionKey.currentContext!,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+      );
+    }
+    _sectionVisible = {
+      'about': true,
+      'motto': true,
+      'vision': true,
+      'partner': true,
+    };
+    setState(() {});
+  }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  // Animated builder for sections
+  Widget _buildAnimatedSection({
+    required String sectionKey,
+    required Widget child,
+    bool fadeIn = true,
+    bool slideUp = true,
+  }) {
+    return VisibilityDetector(
+      key: Key(sectionKey),
+      onVisibilityChanged: (VisibilityInfo info) {
+        // Set visibility when 40% of the widget is visible
+        if (info.visibleFraction > 0.4 && !_sectionVisible[sectionKey]!) {
+          setState(() {
+            _sectionVisible[sectionKey] = true;
+          });
+        }
+      },
+      child: AnimatedOpacity(
+        opacity: _sectionVisible[sectionKey]!
+            ? 1.0
+            : fadeIn
+                ? 0.0
+                : 1.0,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+        child: AnimatedSlide(
+          offset: _sectionVisible[sectionKey]!
+              ? Offset.zero
+              : slideUp
+                  ? const Offset(0, 0.2)
+                  : Offset.zero,
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeOutQuint,
+          child: child,
+        ),
+      ),
+    );
   }
 
   @override
@@ -94,6 +164,7 @@ class _HomeScreenState extends State<HomeScreen>
     final size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -156,59 +227,24 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           SizedBox(
-            height: size.width*0.04,
+            height: size.width * 0.02,
           ),
-          SizedBox(
-            key: _aboutSectionKey,
-            // height: (size.width > 450) ? size.height * 0.45 : size.width * 0.3,
-            width: size.width,
-            // color: secondaryColor,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LinearGradientText(
-                  child: Text(
-                    "About Us".toUpperCase(),
-                    style: TextStyle(
-                      fontSize:(size.width>450)? size.width * 0.025:20,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                      color: primaryColor,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: size.height * 0.025,
-                ),
-                SizedBox(
-                    width:(size.width>450)? size.width * 0.65:size.width*0.85,
-                    child: SelectableText(
-                        textAlign: TextAlign.center,
-                        aboutUs,
-                        style: TextStyle(fontSize:(size.width>450)? size.width * 0.012:14))),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: size.width*0.04,
-          ),
-          SizedBox(
-            // key: _aboutSectionKey,
-            // height: (size.width > 450) ? size.height * 0.6 : size.height*0.4 ,
-            width: size.width,
-            // color: secondaryColor,
-            child: Padding(
-              padding: const EdgeInsets.all(22.0),
+
+          // About Us Section with Animation
+          _buildAnimatedSection(
+            sectionKey: 'about',
+            child: SizedBox(
+              key: _aboutSectionKey,
+              width: size.width,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   LinearGradientText(
                     child: Text(
-                      "Our Motto".toUpperCase(),
+                      "About Us".toUpperCase(),
                       style: TextStyle(
-                        fontSize:(size.width>450)? size.width * 0.025:20,
+                        fontSize: (size.width > 450) ? size.width * 0.025 : 20,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 2,
                         color: primaryColor,
@@ -216,140 +252,239 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                   SizedBox(
-                    height:(size.width>450)? size.width * 0.025:20,
+                    height: size.height * 0.025,
                   ),
                   SizedBox(
-                    width: size.width*0.75,
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 106,
-                      runSpacing: size.width*0.035,
-                      children: [
-                        Motobox(
-                            image: "assets/icons/innovate.png",
-                            heading: "Innovate",
-                            info:
-                                "Think beyond boundaries and develop groundbreaking ideas."),
-                        Motobox(
-                            image: "assets/icons/create.png",
-                            heading: "Create",
-                            info:
-                                "Transform ideas into real-world solutions with creativity and technology."),
-                        Motobox(
-                        image: "assets/icons/lead.png",
-                        heading: "Lead",
-                        info:
-                            "Inspire change, take initiative, and drive the future of entrepreneurship."),
-                      ],
+                    width: (size.width > 450)
+                        ? size.width * 0.65
+                        : size.width * 0.85,
+                    child: SelectableText(
+                      textAlign: TextAlign.center,
+                      aboutUs,
+                      style: TextStyle(
+                        fontSize: (size.width > 450) ? size.width * 0.012 : 14,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          SizedBox(
-            height: size.width*0.04,
-          ),
-          SizedBox(
-            // key: _aboutSectionKey,
-            // height: (size.width > 450) ? size.height * 0.5 : size.height * 0.1,
-            width: size.width,
-            // color: secondaryColor,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LinearGradientText(
-                  child: Text(
-                    "Our vision".toUpperCase(),
-                    style: TextStyle(
-                      fontSize:(size.width>450)? size.width * 0.025:20,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                      color: primaryColor,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: size.height * 0.025,
-                ),
-                SizedBox(
-                    width:(size.width>450)? size.width * 0.65:size.width*0.85,
-                    child: SelectableText(
-                        textAlign: TextAlign.center,
-                        OurVision,
-                        style: TextStyle(fontSize:(size.width>450)? size.width * 0.012:14))),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: size.width*0.06,
-          ),
-          SizedBox(
-            // height: (size.height < 950) ? size.height * 0.8 : size.height * 0.4,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
 
-              children: [
-                LinearGradientText(
-                  child: Text(
-                    "Why Partner with E-Cell?".toUpperCase(),
-                    style: TextStyle(
-                     fontSize:(size.width>450)? size.width * 0.025:20,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                      color: primaryColor,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height:(size.width>450)? size.width*0.025:size.width*0.1,
-                ),
-                Wrap(
-                  spacing: 30,
-                  runSpacing: 40,
+          SizedBox(
+            height: size.width * 0.04,
+          ),
+
+          // Our Motto Section with Animation
+          _buildAnimatedSection(
+            sectionKey: 'motto',
+            child: SizedBox(
+              width: size.width,
+              child: Padding(
+                padding: const EdgeInsets.all(22.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Partnerbox(
-                        heading: "Access to Young Innovators",
-                        info:
-                            "Connect with talented students and fresh ideas."),
-                    Partnerbox(
-                        heading: "Industry-Academia Collaboration",
-                        info:
-                            "Bridge the gap between education and real-world entrepreneurship."),
-                    Partnerbox(
-                        heading: "Networking & Branding",
-                        info:
-                            "Gain visibility among future leaders, startups, and investors."),
-                    Partnerbox(
-                        heading: "Mutual Growth",
-                        info:
-                            "Create opportunities for innovation, mentorship, and business expansion."),
+                    LinearGradientText(
+                      child: Text(
+                        "Our Motto".toUpperCase(),
+                        style: TextStyle(
+                          fontSize:
+                              (size.width > 450) ? size.width * 0.025 : 20,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2,
+                          color: primaryColor,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: (size.width > 450) ? size.width * 0.025 : 20,
+                    ),
+                    SizedBox(
+                      width: size.width * 0.75,
+                      child: _buildStaggeredItems(
+                        size: size,
+                        items: const [
+                          Motobox(
+                            image: "assets/icons/innovate.png",
+                            heading: "Innovate",
+                            info:
+                                "Think beyond boundaries and develop groundbreaking ideas.",
+                          ),
+                          Motobox(
+                            image: "assets/icons/create.png",
+                            heading: "Create",
+                            info:
+                                "Transform ideas into real-world solutions with creativity and technology.",
+                          ),
+                          Motobox(
+                            image: "assets/icons/lead.png",
+                            heading: "Lead",
+                            info:
+                                "Inspire change, take initiative, and drive the future of entrepreneurship.",
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
+
           SizedBox(
-            height: size.width*0.04,
+            height: size.width * 0.04,
           ),
-          SizedBox(
-            width: (size.width>450)?size.width*0.8:size.width*0.6,
-              child: SloganText(
-            size: size,
-            str:
-                "Partner with us and be a part of the next wave of innovation!",
-            textsize:
-                (size.width > 450) ? size.width * 0.012 : size.width * 0.025,
-            textAlign: TextAlign.center,
-          )),
-          SizedBox(
-            height: size.height * 0.5,
-            child: Center(
-              child: Text("Footer section"),
+
+          // Our Vision Section with Animation
+          _buildAnimatedSection(
+            sectionKey: 'vision',
+            child: SizedBox(
+              width: size.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LinearGradientText(
+                    child: Text(
+                      "Our vision".toUpperCase(),
+                      style: TextStyle(
+                        fontSize: (size.width > 450) ? size.width * 0.025 : 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2,
+                        color: primaryColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height * 0.025,
+                  ),
+                  SizedBox(
+                    width: (size.width > 450)
+                        ? size.width * 0.65
+                        : size.width * 0.85,
+                    child: SelectableText(
+                      textAlign: TextAlign.center,
+                      OurVision,
+                      style: TextStyle(
+                        fontSize: (size.width > 450) ? size.width * 0.012 : 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
+          ),
+
+          SizedBox(
+            height: size.width * 0.06,
+          ),
+
+          // Partner Section with Animation
+          _buildAnimatedSection(
+            sectionKey: 'partner',
+            child: SizedBox(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LinearGradientText(
+                    child: Text(
+                      "Why Partner with E-Cell?".toUpperCase(),
+                      style: TextStyle(
+                        fontSize: (size.width > 450) ? size.width * 0.025 : 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2,
+                        color: primaryColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: (size.width > 450)
+                        ? size.width * 0.025
+                        : size.width * 0.1,
+                  ),
+                  _buildStaggeredItems(
+                    size: size,
+                    items: const [
+                      Partnerbox(
+                        heading: "Access to Young Innovators",
+                        info: "Connect with talented students and fresh ideas.",
+                      ),
+                      Partnerbox(
+                        heading: "Industry-Academia Collaboration",
+                        info:
+                            "Bridge the gap between education and real-world entrepreneurship.",
+                      ),
+                      Partnerbox(
+                        heading: "Networking & Branding",
+                        info:
+                            "Gain visibility among future leaders, startups, and investors.",
+                      ),
+                      Partnerbox(
+                        heading: "Mutual Growth",
+                        info:
+                            "Create opportunities for innovation, mentorship, and business expansion.",
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          SizedBox(
+            height: size.width * 0.04,
+          ),
+
+          SizedBox(
+            width: (size.width > 450) ? size.width * 0.8 : size.width * 0.6,
+            child: SloganText(
+              size: size,
+              str:
+                  "Partner with us and be a part of the next wave of innovation!",
+              textsize:
+                  (size.width > 450) ? size.width * 0.012 : size.width * 0.025,
+              textAlign: TextAlign.center,
+            ),
+          ),
+
+          SizedBox(
+            height: size.width * 0.04,
+          ),
+          Footer(
+            key: _footerSectionKey,
           )
         ],
       ),
+    );
+  }
+
+  // Widget to build staggered items with animations
+  Widget _buildStaggeredItems({
+    required Size size,
+    required List<Widget> items,
+  }) {
+    return Wrap(
+      spacing: 30,
+      runSpacing: 40,
+      alignment: WrapAlignment.center,
+      children: items.asMap().entries.map((entry) {
+        int index = entry.key;
+        Widget item = entry.value;
+        bool isVisible = _sectionVisible[index < 3 ? 'motto' : 'partner']!;
+
+        return AnimatedOpacity(
+          opacity: isVisible ? 1.0 : 0.0,
+          duration: Duration(milliseconds: 800 + (index * 200)),
+          curve: Curves.easeInOut,
+          child: AnimatedSlide(
+            offset: isVisible ? Offset.zero : const Offset(0, 0.2),
+            duration: Duration(milliseconds: 800 + (index * 200)),
+            curve: Curves.easeOutQuint,
+            child: item,
+          ),
+        );
+      }).toList(),
     );
   }
 }

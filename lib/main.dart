@@ -34,3 +34,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+/// firebase hosting command
+
+// firebase deploy --only hosting:ecell-vitb (use this only for main-website)

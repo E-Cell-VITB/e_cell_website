@@ -2,11 +2,11 @@ enum Department {
   headTable,
   technical,
   prHr,
+  design,
   rAndD,
   contentAndMedia,
   marketing,
   logisticsAndOperations,
-  design,
   communication,
   videography,
   offstage;
