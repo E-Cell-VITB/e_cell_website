@@ -36,18 +36,19 @@ class _ImageboxState extends State<Imagebox> {
     final isMobile = size.width < 768;
 
     return Dialog(
-      backgroundColor: Colors.transparent,
+       
+      backgroundColor: const Color.fromARGB(70, 0, 0, 0),
       insetPadding: isMobile
           ? const EdgeInsets.symmetric(horizontal: 16, vertical: 24)
-          : const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+          : const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => Navigator.pop(context),
         child: Container(
-          height: isMobile ? size.height * 0.6 : size.height * 0.65,
-          width: isMobile ? size.width * 0.9 : size.width * 0.8,
+          height: isMobile ? size.height * 0.6 : size.height ,
+          width: isMobile ? size.width * 0.9 : size.width ,
           decoration: BoxDecoration(
-            color: Colors.transparent,
+            color: const Color.fromARGB(84, 0, 0, 0),
             borderRadius: BorderRadius.circular(18),
           ),
           child:
@@ -216,7 +217,7 @@ class _ImageboxState extends State<Imagebox> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (currentIndex > 0)
+        (currentIndex > 0)?
           IconButton(
             onPressed: () {
               setState(() {
@@ -226,7 +227,7 @@ class _ImageboxState extends State<Imagebox> {
             icon: const Icon(Icons.arrow_circle_left_outlined, size: 60),
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
-          ),
+          ):SizedBox(width: 77,),
         const SizedBox(width: 60),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 400),
@@ -238,13 +239,13 @@ class _ImageboxState extends State<Imagebox> {
             height: size.height * 0.6,
             width: size.width * 0.5,
             decoration: BoxDecoration(
-              color: Colors.white,
               borderRadius: BorderRadius.circular(18),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(18),
               child: CachedNetworkImage(
-                imageUrl: "https://picsum.photos/seed/$currentIndex/500/300",
+                imageUrl:
+                    "https://picsum.photos/seed/$currentIndex/500/300",
                 placeholder: (context, url) => const SizedBox(
                   height: 40,
                   width: 40,
@@ -254,15 +255,35 @@ class _ImageboxState extends State<Imagebox> {
                     ),
                   ),
                 ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+                errorWidget: (context, url, error) =>
+                    const Icon(Icons.error),
                 fit: BoxFit.cover,
               ),
             ),
           ),
         ),
+        //image count
+        Positioned(
+          bottom: 5,
+          right: size.width*0.5,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text(
+              "${currentIndex + 1}/${widget.noOfPhotos}",
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
         const SizedBox(width: 60),
-        if (currentIndex < widget.noOfPhotos - 1)
-          IconButton(
+       currentIndex < widget.noOfPhotos - 1?
+       IconButton(
             onPressed: () {
               setState(() {
                 currentIndex += 1;
@@ -271,7 +292,8 @@ class _ImageboxState extends State<Imagebox> {
             icon: const Icon(Icons.arrow_circle_right_outlined, size: 60),
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
-          ),
+          )
+          :SizedBox(width:77 ,)         
       ],
     );
   }
