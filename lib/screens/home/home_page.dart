@@ -33,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen>
     'motto': false,
     'vision': false,
     'partner': false,
+    'speakers': false,
   };
 
   @override
@@ -55,7 +56,6 @@ class _HomeScreenState extends State<HomeScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _adjustAnimationStart();
 
-      // Check if we need to scroll to the about section
       if (widget.section == 'about') {
         _scrollToAboutSection();
       }
@@ -110,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen>
       'motto': true,
       'vision': true,
       'partner': true,
+      'speakers': true,
     };
     setState(() {});
   }
@@ -169,9 +170,9 @@ class _HomeScreenState extends State<HomeScreen>
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: (size.width > 450) ? size.height * 0.85 : size.height * 0.3,
+            height: (size.width > 450) ? size.height * 0.9 : size.height * 0.3,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 32.0),
+              padding: const EdgeInsets.only(bottom: 16.0),
               child: ParticleBackground(
                 primaryColor: const Color(0xFF404040),
                 secondaryColor: const Color(0xFFC79200),
@@ -262,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen>
                       textAlign: TextAlign.center,
                       aboutUs,
                       style: TextStyle(
-                        fontSize: (size.width > 450) ? size.width * 0.012 : 14,
+                        fontSize: (size.width > 450) ? size.width * 0.012 : 13,
                       ),
                     ),
                   ),
@@ -307,19 +308,19 @@ class _HomeScreenState extends State<HomeScreen>
                         size: size,
                         items: const [
                           Motobox(
-                            image: "assets/icons/innovate.png",
+                            image: "assets/images/innovate.png",
                             heading: "Innovate",
                             info:
                                 "Think beyond boundaries and develop groundbreaking ideas.",
                           ),
                           Motobox(
-                            image: "assets/icons/create.png",
+                            image: "assets/images/create.png",
                             heading: "Create",
                             info:
                                 "Transform ideas into real-world solutions with creativity and technology.",
                           ),
                           Motobox(
-                            image: "assets/icons/lead.png",
+                            image: "assets/images/lead.png",
                             heading: "Lead",
                             info:
                                 "Inspire change, take initiative, and drive the future of entrepreneurship.",
@@ -367,7 +368,7 @@ class _HomeScreenState extends State<HomeScreen>
                       textAlign: TextAlign.center,
                       OurVision,
                       style: TextStyle(
-                        fontSize: (size.width > 450) ? size.width * 0.012 : 14,
+                        fontSize: (size.width > 450) ? size.width * 0.012 : 13,
                       ),
                     ),
                   ),
@@ -401,7 +402,7 @@ class _HomeScreenState extends State<HomeScreen>
                   SizedBox(
                     height: (size.width > 450)
                         ? size.width * 0.025
-                        : size.width * 0.1,
+                        : size.width * 0.08,
                   ),
                   _buildStaggeredItems(
                     size: size,
@@ -409,21 +410,25 @@ class _HomeScreenState extends State<HomeScreen>
                       Partnerbox(
                         heading: "Access to Young Innovators",
                         info: "Connect with talented students and fresh ideas.",
+                        imageUrl: "assets/images/partner/innovate.png",
                       ),
                       Partnerbox(
-                        heading: "Industry-Academia Collaboration",
+                        heading: "Industry Partnership",
                         info:
                             "Bridge the gap between education and real-world entrepreneurship.",
+                        imageUrl: "assets/images/partner/collaborate.png",
                       ),
                       Partnerbox(
                         heading: "Networking & Branding",
                         info:
                             "Gain visibility among future leaders, startups, and investors.",
+                        imageUrl: "assets/images/partner/network.png",
                       ),
                       Partnerbox(
                         heading: "Mutual Growth",
                         info:
                             "Create opportunities for innovation, mentorship, and business expansion.",
+                        imageUrl: "assets/images/partner/growth.png",
                       ),
                     ],
                   ),
@@ -433,7 +438,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
 
           SizedBox(
-            height: size.width * 0.04,
+            height: size.width * 0.03,
           ),
 
           SizedBox(
@@ -442,16 +447,38 @@ class _HomeScreenState extends State<HomeScreen>
               size: size,
               str:
                   "Partner with us and be a part of the next wave of innovation!",
-              textsize:
-                  (size.width > 450) ? size.width * 0.012 : size.width * 0.025,
+              textsize: (size.width > 450) ? size.width * 0.012 : 14,
               textAlign: TextAlign.center,
             ),
           ),
-          
-          Center(
+
+          SizedBox(
+            height: size.width * 0.04,
+          ),
+          _buildAnimatedSection(
+            sectionKey: "speakers",
             child: SizedBox(
-              height: size.width * 0.4,
-              child: const LinearGradientText(child: Text("Speakers",style:TextStyle(fontSize: 30,fontWeight: FontWeight.bold))),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LinearGradientText(
+                    child: Text(
+                      "Speakers".toUpperCase(),
+                      style: TextStyle(
+                        fontSize: (size.width > 450) ? size.width * 0.025 : 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2,
+                        color: primaryColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: (size.width > 450)
+                        ? size.width * 0.025
+                        : size.width * 0.08,
+                  ),
+                ],
+              ),
             ),
           ),
           Footer(
@@ -468,8 +495,8 @@ class _HomeScreenState extends State<HomeScreen>
     required List<Widget> items,
   }) {
     return Wrap(
-      spacing: 30,
-      runSpacing: 40,
+      spacing: size.width > 450 ? 30 : 20,
+      runSpacing: size.width > 450 ? 40 : 20,
       alignment: WrapAlignment.center,
       children: items.asMap().entries.map((entry) {
         int index = entry.key;
