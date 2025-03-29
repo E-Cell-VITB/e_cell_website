@@ -132,7 +132,7 @@ class ShowEventBox {
       color: Colors.transparent,
       child: InkWell(
         onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> Eventdetails()));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> const Eventdetails()));
         },
         child: Container(
           height: isDesktop ? size.height * 0.05 : 40,

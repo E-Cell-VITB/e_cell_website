@@ -36,7 +36,6 @@ class _ImageboxState extends State<Imagebox> {
     final isMobile = size.width < 768;
 
     return Dialog(
-       
       backgroundColor: const Color.fromARGB(70, 0, 0, 0),
       insetPadding: isMobile
           ? const EdgeInsets.symmetric(horizontal: 16, vertical: 24)
@@ -45,8 +44,8 @@ class _ImageboxState extends State<Imagebox> {
         behavior: HitTestBehavior.opaque,
         onTap: () => Navigator.pop(context),
         child: Container(
-          height: isMobile ? size.height * 0.6 : size.height ,
-          width: isMobile ? size.width * 0.9 : size.width ,
+          height: isMobile ? size.height * 0.6 : size.height,
+          width: isMobile ? size.width * 0.9 : size.width,
           decoration: BoxDecoration(
             color: const Color.fromARGB(84, 0, 0, 0),
             borderRadius: BorderRadius.circular(18),
@@ -217,83 +216,98 @@ class _ImageboxState extends State<Imagebox> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        (currentIndex > 0)?
-          IconButton(
-            onPressed: () {
-              setState(() {
-                currentIndex -= 1;
-              });
-            },
-            icon: const Icon(Icons.arrow_circle_left_outlined, size: 60),
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-          ):SizedBox(width: 77,),
+        (currentIndex > 0)
+            ? IconButton(
+                onPressed: () {
+                  setState(() {
+                    currentIndex -= 1;
+                  });
+                },
+                icon: const Icon(Icons.arrow_circle_left_outlined, size: 60),
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+              )
+            : const SizedBox(
+                width: 77,
+              ),
         const SizedBox(width: 60),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          child: Container(
-            key: ValueKey<int>(currentIndex),
-            height: size.height * 0.6,
-            width: size.width * 0.5,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(18),
-              child: CachedNetworkImage(
-                imageUrl:
-                    "https://picsum.photos/seed/$currentIndex/500/300",
-                placeholder: (context, url) => const SizedBox(
-                  height: 40,
-                  width: 40,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: secondaryColor,
+        Padding(
+            padding:  const EdgeInsets.only(top: 60),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  transitionBuilder: (Widget child, Animation<double> animation) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
+                  child: Container(
+                    key: ValueKey<int>(currentIndex),
+                    height: size.height * 0.6,
+                    width: size.width * 0.5,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(18),
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            "https://picsum.photos/seed/$currentIndex/500/300",
+                        placeholder: (context, url) => const SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: secondaryColor,
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.error),
-                fit: BoxFit.cover,
-              ),
+                const SizedBox(
+                  height: 26,
+                ),
+                //image count
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(
+                    "${currentIndex + 1}/${widget.noOfPhotos}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-        //image count
-        Positioned(
-          bottom: 5,
-          right: size.width*0.5,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.4),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Text(
-              "${currentIndex + 1}/${widget.noOfPhotos}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
+        
         const SizedBox(width: 60),
-       currentIndex < widget.noOfPhotos - 1?
-       IconButton(
-            onPressed: () {
-              setState(() {
-                currentIndex += 1;
-              });
-            },
-            icon: const Icon(Icons.arrow_circle_right_outlined, size: 60),
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-          )
-          :SizedBox(width:77 ,)         
+        currentIndex < widget.noOfPhotos - 1
+            ? IconButton(
+                onPressed: () {
+                  setState(() {
+                    currentIndex += 1;
+                  });
+                },
+                icon: const Icon(Icons.arrow_circle_right_outlined, size: 60),
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+              )
+            : const SizedBox(
+                width: 77,
+              )
       ],
     );
   }
