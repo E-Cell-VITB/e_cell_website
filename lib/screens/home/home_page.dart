@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 
 import 'package:visibility_detector/visibility_detector.dart';
 
+import 'widgets/speakers.dart';
+
 class HomeScreen extends StatefulWidget {
   final String? section;
   const HomeScreen({this.section, super.key});
@@ -438,7 +440,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
 
           SizedBox(
-            height: size.width * 0.03,
+            height: size.width * 0.04,
           ),
 
           SizedBox(
@@ -477,6 +479,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ? size.width * 0.025
                         : size.width * 0.08,
                   ),
+                  const SpeakerCards()
                 ],
               ),
             ),

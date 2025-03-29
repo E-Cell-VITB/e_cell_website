@@ -191,8 +191,7 @@ mentorship, networking, and industry collaborations.""",
         _socialIcon(
             'assets/icons/youtube.png', 'https://www.youtube.com/@ECellVITB'),
         const SizedBox(width: 15),
-        _socialIcon(
-            'assets/icons/twitter.png', 'https://www.youtube.com/@ECellVITB'),
+        _socialIcon('assets/icons/twitter.png', 'https://x.com/Ecellvitb'),
         const SizedBox(width: 15),
         _socialIcon('assets/icons/whatsapp.png',
             'https://whatsapp.com/channel/0029VatSc1XGufJ2ObNHI33M'),
