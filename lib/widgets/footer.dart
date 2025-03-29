@@ -190,6 +190,12 @@ mentorship, networking, and industry collaborations.""",
         const SizedBox(width: 15),
         _socialIcon(
             'assets/icons/youtube.png', 'https://www.youtube.com/@ECellVITB'),
+        const SizedBox(width: 15),
+        _socialIcon(
+            'assets/icons/twitter.png', 'https://www.youtube.com/@ECellVITB'),
+        const SizedBox(width: 15),
+        _socialIcon('assets/icons/whatsapp.png',
+            'https://whatsapp.com/channel/0029VatSc1XGufJ2ObNHI33M'),
       ],
     );
   }
@@ -282,13 +288,13 @@ mentorship, networking, and industry collaborations.""",
             ),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 12),
         Container(
           height: 40,
           padding: const EdgeInsets.symmetric(horizontal: 15),
           decoration: BoxDecoration(
-            color: const Color(0xFFC79200),
-            borderRadius: BorderRadius.circular(5),
+            gradient: const LinearGradient(colors: linerGradient),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: const Center(
             child: Text(
