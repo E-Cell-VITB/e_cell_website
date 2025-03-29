@@ -1,4 +1,5 @@
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/screens/events/widgets/evntdetails.dart';
 import 'package:flutter/material.dart';
 
 class ShowEventBox {
@@ -62,7 +63,7 @@ class ShowEventBox {
               const SizedBox(height: 10),
               _buildDescription(size, isDesktop: true),
               const SizedBox(height: 15),
-              _buildReadMoreButton(size, isDesktop: true),
+              _buildReadMoreButton(context,size, isDesktop: true),
             ],
           ),
         ),
@@ -84,7 +85,7 @@ class ShowEventBox {
           const SizedBox(height: 15),
           _buildDescription(size, isDesktop: false),
           const SizedBox(height: 15),
-          Center(child: _buildReadMoreButton(size, isDesktop: false)),
+          Center(child: _buildReadMoreButton(context, size, isDesktop: false)),
         ],
       ),
     );
@@ -126,11 +127,13 @@ class ShowEventBox {
     );
   }
 
-  Widget _buildReadMoreButton(Size size, {required bool isDesktop}) {
+  Widget _buildReadMoreButton(BuildContext context,Size size, {required bool isDesktop}) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {},
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> const Eventdetails()));
+        },
         child: Container(
           height: isDesktop ? size.height * 0.05 : 40,
           width: isDesktop ? size.width * 0.09 : 120,

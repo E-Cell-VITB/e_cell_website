@@ -447,9 +447,12 @@ class _HomeScreenState extends State<HomeScreen>
               textAlign: TextAlign.center,
             ),
           ),
-
-          SizedBox(
-            height: size.width * 0.04,
+          
+          Center(
+            child: SizedBox(
+              height: size.width * 0.4,
+              child: const LinearGradientText(child: Text("Speakers",style:TextStyle(fontSize: 30,fontWeight: FontWeight.bold))),
+            ),
           ),
           Footer(
             key: _footerSectionKey,

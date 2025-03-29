@@ -33,7 +33,7 @@ class Eventgallery extends StatelessWidget {
           LinearGradientText(
             child: Text(
               eventname,
-              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(height: 20),
@@ -58,7 +58,7 @@ class Eventgallery extends StatelessWidget {
                     width: 320,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(19),
-                      color: Colors.white,
+                      
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(18),
