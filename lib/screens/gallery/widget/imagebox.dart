@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 class Imagebox extends StatefulWidget {
   final int initialIndex;
   final int noOfPhotos;
+  final List<String> images;
 
   const Imagebox(
-      {required this.initialIndex, required this.noOfPhotos, super.key});
+      {required this.initialIndex,
+      required this.images,
+      required this.noOfPhotos,
+      super.key});
 
   @override
   State<Imagebox> createState() => _ImageboxState();
@@ -86,7 +90,8 @@ class _ImageboxState extends State<Imagebox> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(18),
                   child: CachedNetworkImage(
-                    imageUrl: "https://picsum.photos/seed/$index/500/300",
+                    // imageUrl: "https://picsum.photos/seed/$index/500/300",
+                    imageUrl: widget.images[index],
                     placeholder: (context, url) => const SizedBox(
                       height: 120,
                       width: 240,
@@ -232,67 +237,66 @@ class _ImageboxState extends State<Imagebox> {
               ),
         const SizedBox(width: 60),
         Padding(
-            padding:  const EdgeInsets.only(top: 60),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              
-              children: [
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 400),
-                  transitionBuilder: (Widget child, Animation<double> animation) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  child: Container(
-                    key: ValueKey<int>(currentIndex),
-                    height: size.height * 0.6,
-                    width: size.width * 0.5,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(18),
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            "https://picsum.photos/seed/$currentIndex/500/300",
-                        placeholder: (context, url) => const SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: secondaryColor,
-                            ),
+          padding: const EdgeInsets.only(top: 60),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 400),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: Container(
+                  key: ValueKey<int>(currentIndex),
+                  height: size.height * 0.6,
+                  width: size.width * 0.5,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: CachedNetworkImage(
+                      // imageUrl:
+                      //     "https://picsum.photos/seed/$currentIndex/500/300",
+                      imageUrl: widget.images[currentIndex],
+                      placeholder: (context, url) => const SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: secondaryColor,
                           ),
                         ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        fit: BoxFit.cover,
                       ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 26,
+              ),
+              const SizedBox(
+                height: 26,
+              ),
+              //image count
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                //image count
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    "${currentIndex + 1}/${widget.noOfPhotos}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                child: Text(
+                  "${currentIndex + 1}/${widget.noOfPhotos}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        
+        ),
         const SizedBox(width: 60),
         currentIndex < widget.noOfPhotos - 1
             ? IconButton(

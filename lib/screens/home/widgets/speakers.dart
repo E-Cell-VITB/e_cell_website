@@ -171,7 +171,6 @@ class _SpeakerCardsState extends State<SpeakerCards> {
                         ),
                 ),
               ),
-              // Dot indicators - always show 5 dots or fewer based on available data
               if (speakers.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20.0),
@@ -180,14 +179,12 @@ class _SpeakerCardsState extends State<SpeakerCards> {
                     children: List.generate(
                       speakers.length <= 5 ? speakers.length : 5,
                       (dotIndex) {
-                        // Determine if this dot should be active
                         bool isActive =
                             _getActiveDotIndex(_currentPage, speakers.length) ==
                                 dotIndex;
 
                         return GestureDetector(
                           onTap: () {
-                            // When dot is tapped, navigate to the corresponding card
                             final targetCardIndex =
                                 _getCardIndexFromDot(dotIndex, speakers.length);
                             _pageController.animateToPage(
@@ -345,7 +342,7 @@ class SpeakerCard extends StatelessWidget {
                       const SizedBox(height: 16),
                       SelectableText(
                         maxLines: 6,
-                        speaker.about,
+                        speaker.about.trim(),
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white70,

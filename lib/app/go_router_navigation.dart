@@ -1,5 +1,7 @@
+import 'package:e_cell_website/backend/models/event.dart';
 import 'package:e_cell_website/screens/blogs/blogs_screen.dart';
 import 'package:e_cell_website/screens/events/events_screen.dart';
+import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
 import 'package:e_cell_website/screens/gallery/gallery_screen.dart';
 import 'package:e_cell_website/screens/home/home_page.dart';
 import 'package:e_cell_website/screens/team/team_screen.dart';
@@ -26,9 +28,38 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) => const GalleryScreen(),
         ),
         GoRoute(
-          path: '/events',
-          builder: (context, state) => const EventsScreen(),
-        ),
+            path: '/events',
+            builder: (context, state) => const EventsScreen(),
+            routes: [
+              GoRoute(
+                path: ':eventName',
+                builder: (context, state) {
+                  // final eventName = state.pathParameters['eventName'];
+
+                  final eventData =
+                      state.extra is Event ? state.extra as Event : null;
+
+                  if (eventData == null) {
+                    return const EventsScreen();
+                  }
+
+                  return EventDetails(
+                    event: eventData,
+                  );
+                },
+                redirect: (context, state) {
+                  // final eventName = state.pathParameters['eventName'];
+                  final eventData =
+                      state.extra is Event ? state.extra as Event : null;
+
+                  if (eventData == null) {
+                    return '/events';
+                  }
+
+                  return null;
+                },
+              ),
+            ]),
         GoRoute(
           path: '/team',
           builder: (context, state) => const TeamScreen(),

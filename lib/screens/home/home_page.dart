@@ -476,7 +476,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   SizedBox(
                     height: (size.width > 450)
-                        ? size.width * 0.025
+                        ? size.width * 0.02
                         : size.width * 0.08,
                   ),
                   const SpeakerCards()

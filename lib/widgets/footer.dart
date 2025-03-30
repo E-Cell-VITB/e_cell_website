@@ -301,6 +301,7 @@ mentorship, networking, and industry collaborations.""",
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
             ),
           ),
