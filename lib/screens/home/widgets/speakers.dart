@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_cell_website/backend/models/speaker.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/services/providers/speakers_provider.dart';
@@ -246,23 +245,35 @@ class SpeakerCard extends StatelessWidget {
               children: [
                 // Speaker Image
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: CachedNetworkImage(
-                    imageUrl: speaker.imageUrl,
-                    width: double.infinity,
-                    height: 172,
-                    fit: BoxFit.fill,
-                    errorWidget: (context, error, stackTrace) {
-                      return Container(
-                        width: double.infinity,
-                        height: 172,
-                        color: Colors.grey[800],
-                        child: const Icon(Icons.person,
-                            size: 50, color: Colors.white60),
-                      );
-                    },
-                  ),
-                ),
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.network(
+                      speaker.imageUrl,
+                      width: double.infinity,
+                      height: 172,
+                      fit: BoxFit.fill,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Container(
+                          width: double.infinity,
+                          height: 172,
+                          color: Colors.grey[800],
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white60,
+                            ),
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          width: double.infinity,
+                          height: 172,
+                          color: Colors.grey[800],
+                          child: const Icon(Icons.person,
+                              size: 50, color: Colors.white60),
+                        );
+                      },
+                    )),
                 const SizedBox(height: 20),
                 // Speaker Info
                 Column(
@@ -299,12 +310,25 @@ class SpeakerCard extends StatelessWidget {
                 // Speaker Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(15),
-                  child: CachedNetworkImage(
-                    imageUrl: speaker.imageUrl,
+                  child: Image.network(
+                    speaker.imageUrl,
                     width: 180,
                     height: 240,
                     fit: BoxFit.cover,
-                    errorWidget: (context, error, stackTrace) {
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        width: 180,
+                        height: 240,
+                        color: Colors.grey[800],
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white60,
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
                       return Container(
                         width: 180,
                         height: 240,

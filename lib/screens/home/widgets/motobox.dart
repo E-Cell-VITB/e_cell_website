@@ -59,6 +59,9 @@ class _MotoboxState extends State<Motobox> {
                   backgroundImage: AssetImage(widget.image),
                 ),
               ),
+              const SizedBox(
+                width: 10,
+              ),
               SizedBox(
                 width: (size.width > 500) ? 320 : 200,
                 child: Column(

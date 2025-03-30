@@ -138,7 +138,12 @@ class ShowEventBox {
       child: InkWell(
         onTap: () {
           Navigator.pop(context);
-          context.go('/events/${event.name.replaceAll(' ', '-')}',
+          String nameToUrlFormat(String name) {
+            return name.toLowerCase().replaceAll(RegExp(r'\s+'), '-');
+          }
+
+          // Navigate with both ID and name
+          context.go('/events/${event.id}-${nameToUrlFormat(event.name)}',
               extra: event);
         },
         child: Container(

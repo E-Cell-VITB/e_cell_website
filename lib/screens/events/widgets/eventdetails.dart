@@ -2,7 +2,6 @@
 
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_cell_website/backend/models/event.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/events/widgets/speakerbox.dart';
@@ -61,22 +60,28 @@ class _EventDetailsState extends State<EventDetails> {
                             (generatorIndex) {
                               return Expanded(
                                 child: SizedBox(
-                                  height: double.infinity,
-                                  child: CachedNetworkImage(
-                                    imageUrl:
-                                        widget.event.allPhotos[generatorIndex],
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
                                     height: double.infinity,
-                                    placeholder: (context, url) => const Center(
-                                      child: CircularProgressIndicator(
-                                        color: secondaryColor,
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.image),
-                                  ),
-                                ),
+                                    child: Image.network(
+                                      widget.event.allPhotos[generatorIndex],
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+
+                                        return const Center(
+                                          child: CircularProgressIndicator(
+                                            color: secondaryColor,
+                                          ),
+                                        );
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              const Icon(Icons.image),
+                                    )),
                               );
                             },
                           ),
@@ -262,20 +267,39 @@ class _EventDetailsState extends State<EventDetails> {
                               child: Stack(
                                 fit: StackFit.expand,
                                 children: [
-                                  CachedNetworkImage(
-                                    imageUrl: widget.event.allPhotos[index],
+                                  Image.network(
+                                    widget.event.allPhotos[index],
                                     fit: BoxFit.cover,
-                                    placeholder: (context, url) => Center(
-                                      child: CircularProgressIndicator(
-                                        color: secondaryColor,
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        Center(
-                                            child: Icon(
-                                      Icons.image,
-                                      color: secondaryColor,
-                                    )),
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Container(
+                                        height: 120,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.2),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: const Center(
+                                          child: CircularProgressIndicator(
+                                              color: secondaryColor),
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        height: 120,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade300,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: const Icon(Icons.broken_image,
+                                            color: Colors.grey),
+                                      );
+                                    },
                                   ),
                                   Positioned.fill(
                                     child: Material(
@@ -339,35 +363,46 @@ class _EventDetailsState extends State<EventDetails> {
                               child: Padding(
                                 padding: const EdgeInsets.all(12),
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: CachedNetworkImage(
-                                    imageUrl: widget.event.winnerPhotos[index],
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Container(
-                                      height: 120,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: const Center(
-                                        child: CircularProgressIndicator(
-                                            color: secondaryColor),
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        Container(
-                                      height: 120,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade300,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: const Icon(Icons.broken_image,
-                                          color: Colors.grey),
-                                    ),
-                                  ),
-                                ),
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      widget.event.winnerPhotos[index],
+                                      fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+
+                                        return Container(
+                                          height: 120,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.white.withOpacity(0.2),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: const Center(
+                                            child: CircularProgressIndicator(
+                                                color: secondaryColor),
+                                          ),
+                                        );
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Container(
+                                          height: 120,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade300,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: const Icon(Icons.broken_image,
+                                              color: Colors.grey),
+                                        );
+                                      },
+                                    )),
                               ),
                             );
                           },
@@ -414,7 +449,7 @@ class _EventDetailsState extends State<EventDetails> {
                                       fontWeight: FontWeight.w600)),
                             ),
                             SizedBox(
-                              height: (isMobile) ? 0 : 12,
+                              height: (isMobile) ? 0 : 8,
                             ),
                             SelectableText(
                               widget.event.description.trim(),
@@ -472,18 +507,36 @@ class _EventDetailsState extends State<EventDetails> {
                   child: InteractiveViewer(
                     minScale: 0.5,
                     maxScale: 4.0,
-                    child: CachedNetworkImage(
-                      imageUrl: widget.event.allPhotos[index],
-                      fit: BoxFit.contain,
-                      placeholder: (context, url) => Center(
-                        child: CircularProgressIndicator(
-                          color: secondaryColor,
-                        ),
-                      ),
-                      errorWidget: (context, url, error) => const Icon(
-                        Icons.error,
-                        color: Colors.white,
-                      ),
+                    child: Image.network(
+                      widget.event.allPhotos[index],
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Container(
+                          height: 120,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                                color: secondaryColor),
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          height: 120,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(Icons.broken_image,
+                              color: Colors.grey),
+                        );
+                      },
                     ),
                   ),
                 ),

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_cell_website/backend/models/gallery.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/gallery/widget/imagebox.dart';
@@ -68,28 +67,31 @@ class Eventgallery extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(18),
-                      child: CachedNetworkImage(
-                        imageUrl: images[index],
-                        //  "https://picsum.photos/seed/$index/500/300",
-                        placeholder: (context, url) => const SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: secondaryColor,
-                            ),
-                          ),
+                        borderRadius: BorderRadius.circular(18),
+                        child: Image.network(
+                          images[index],
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: secondaryColor,
+                                ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(Icons.image),
+                        )
+
+                        //  Image.network(
+                        //     'https://picsum.photos/seed/$ind/500/300',
+                        //     fit: BoxFit.cover,
+                        //   )
                         ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        fit: BoxFit.cover,
-                      ),
-                      //  Image.network(
-                      //     'https://picsum.photos/seed/$ind/500/300',
-                      //     fit: BoxFit.cover,
-                      //   )
-                    ),
                   ),
                 );
               },

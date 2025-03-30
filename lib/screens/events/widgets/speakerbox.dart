@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_cell_website/backend/models/event.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class _SpeakerboxState extends State<Speakerbox> {
         duration: const Duration(milliseconds: 300),
         transform:
             _isHovered ? (Matrix4.identity()..scale(1.05)) : Matrix4.identity(),
-        height: 280,
+        height: 300,
         width: 210,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -47,21 +46,23 @@ class _SpeakerboxState extends State<Speakerbox> {
           child: Column(
             children: [
               ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(20)),
-                child: CachedNetworkImage(
-                  imageUrl: widget.guestOrJudge.photoUrl,
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: double.infinity,
-                  placeholder: (context, url) => const Padding(
-                    padding: EdgeInsets.all(20),
-                    child: CircularProgressIndicator(color: secondaryColor),
-                  ),
-                  errorWidget: (context, url, error) =>
-                      const Icon(Icons.person, size: 50, color: Colors.grey),
-                ),
-              ),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(20)),
+                  child: Image.network(
+                    widget.guestOrJudge.photoUrl,
+                    fit: BoxFit.cover,
+                    height: 200,
+                    width: double.infinity,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: CircularProgressIndicator(color: secondaryColor),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.person, size: 50, color: Colors.grey),
+                  )),
               const SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),

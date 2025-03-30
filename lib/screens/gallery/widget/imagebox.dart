@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -88,24 +87,25 @@ class _ImageboxState extends State<Imagebox> {
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18),
-                  child: CachedNetworkImage(
-                    // imageUrl: "https://picsum.photos/seed/$index/500/300",
-                    imageUrl: widget.images[index],
-                    placeholder: (context, url) => const SizedBox(
-                      height: 120,
-                      width: 240,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: secondaryColor,
-                        ),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                    borderRadius: BorderRadius.circular(18),
+                    child: Image.network(
+                      widget.images[index],
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const SizedBox(
+                          height: 120,
+                          width: 240,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: secondaryColor,
+                            ),
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.error),
+                    )),
               ),
             );
           },
@@ -254,25 +254,25 @@ class _ImageboxState extends State<Imagebox> {
                     borderRadius: BorderRadius.circular(18),
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
-                    child: CachedNetworkImage(
-                      // imageUrl:
-                      //     "https://picsum.photos/seed/$currentIndex/500/300",
-                      imageUrl: widget.images[currentIndex],
-                      placeholder: (context, url) => const SizedBox(
-                        height: 40,
-                        width: 40,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: secondaryColor,
-                          ),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                      borderRadius: BorderRadius.circular(18),
+                      child: Image.network(
+                        widget.images[currentIndex],
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: secondaryColor,
+                              ),
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.error),
+                      )),
                 ),
               ),
               const SizedBox(

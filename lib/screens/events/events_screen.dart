@@ -39,8 +39,9 @@ class EventsScreen extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text:
-                              "Fueling Ideas, Igniting Change: E-Cell VITB Events ",
+                          text: size.width > 600
+                              ? "Fueling Ideas, Igniting Change: E-Cell VITB Events "
+                              : "Fueling Ideas, Igniting Change\nE-Cell VITB Events ",
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         TextSpan(

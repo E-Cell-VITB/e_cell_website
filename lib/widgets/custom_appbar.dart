@@ -27,9 +27,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset(
-              'assets/icons/logo.png',
-              height: 46,
+            GestureDetector(
+              onTap: isMobile
+                  ? () {
+                      Scaffold.of(context).openDrawer();
+                    }
+                  : () {},
+              child: Image.asset(
+                'assets/icons/logo.png',
+                height: 46,
+              ),
             ),
             if (isMobile)
               LinearGradientText(
