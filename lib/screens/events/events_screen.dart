@@ -70,8 +70,11 @@ class EventsScreen extends StatelessWidget {
                       return const Center(child: Text('No events found'));
                     }
 
-                    final events = snapshot.data!;
+                    List<Event> events = snapshot.data!;
 
+                    final filteredEvents = events
+                        .where((event) => event.allPhotos.isNotEmpty)
+                        .toList();
                     return GridView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -83,9 +86,10 @@ class EventsScreen extends StatelessWidget {
                         mainAxisSpacing: size.height * 0.08,
                         childAspectRatio: 3,
                       ),
-                      itemCount: events.length,
+                      itemCount: filteredEvents.length,
                       itemBuilder: (context, index) {
-                        final event = events[index];
+                        final Event event = filteredEvents[index];
+
                         return InkWell(
                             onTap: () => ShowEventBox(context, index, event),
                             child: Container(

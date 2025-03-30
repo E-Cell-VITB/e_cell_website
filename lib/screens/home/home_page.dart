@@ -7,6 +7,7 @@ import 'package:e_cell_website/widgets/footer.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -190,8 +191,16 @@ class _HomeScreenState extends State<HomeScreen>
                         child: LinearGradientText(
                           child: Text(
                             'E-CELL',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
+                            style:
+                                //  GoogleFonts.lora(
+                                //   fontSize: size.width * 0.15,
+                                //   fontWeight: FontWeight.w500,
+                                //   letterSpacing: 2,
+                                //   color: primaryColor,
+                                // ),
+
+                                TextStyle(
+                              fontFamily: 'Lora',
                               fontSize: size.width * 0.14,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 2,
@@ -207,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen>
                           fontFamily: 'Montserrat',
                           fontSize: size.width * 0.04,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: 2,
+                          letterSpacing: 3,
                           color: primaryColor,
                           shadows: const [
                             Shadow(

@@ -4,6 +4,7 @@ import 'package:e_cell_website/screens/gallery/widget/eventgallery.dart';
 import 'package:e_cell_website/services/providers/gallery_provider.dart';
 import 'package:e_cell_website/widgets/footer.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
+import 'package:e_cell_website/widgets/loading_indicator.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +60,7 @@ class GalleryScreen extends StatelessWidget {
                   stream: galleryProvider.getGalleriesStream(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: LoadingIndicator());
                     }
 
                     if (snapshot.hasError) {
@@ -95,6 +96,9 @@ class GalleryScreen extends StatelessWidget {
                       itemCount: galleries.length,
                       itemBuilder: (context, index) {
                         // return GalleryItem(gallery: galleries[index]);
+                        if (galleries[index].allPhotos.isEmpty) {
+                          return const SizedBox();
+                        }
                         return Eventgallery(
                           gallery: galleries[index],
                         );

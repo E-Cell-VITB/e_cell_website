@@ -27,7 +27,7 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
     _innerController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
-    )..repeat(reverse: true);
+    )..repeat();
   }
 
   @override
