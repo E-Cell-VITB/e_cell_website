@@ -1,4 +1,6 @@
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/services/const/image_compressor.dart';
+import 'package:e_cell_website/services/enums/device.dart';
 import 'package:flutter/material.dart';
 
 class Imagebox extends StatefulWidget {
@@ -89,7 +91,12 @@ class _ImageboxState extends State<Imagebox> {
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(18),
                     child: Image.network(
-                      widget.images[index],
+                      // widget.images[index],
+                      getOptimizedImageUrl(
+                          originalUrl: widget.images[index],
+                          device: size.width < 500
+                              ? Device.mobile
+                              : Device.desktop),
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
@@ -256,7 +263,13 @@ class _ImageboxState extends State<Imagebox> {
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(18),
                       child: Image.network(
-                        widget.images[currentIndex],
+                        // widget.images[currentIndex],
+                        getOptimizedImageUrl(
+                            originalUrl: widget.images[currentIndex],
+                            device: size.width < 500
+                                ? Device.mobile
+                                : Device.desktop),
+
                         fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;

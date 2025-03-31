@@ -41,6 +41,7 @@ class AppScaffold extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
+                            fontFamily: "Lora",
                           ),
                         ),
                         Text(
@@ -48,6 +49,7 @@ class AppScaffold extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 32,
                             color: secondaryColor,
+                            fontFamily: "Lora",
                           ),
                         ),
                       ],

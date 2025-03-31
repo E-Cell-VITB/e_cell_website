@@ -5,6 +5,8 @@ import 'dart:math';
 import 'package:e_cell_website/backend/models/event.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/events/widgets/speakerbox.dart';
+import 'package:e_cell_website/services/const/image_compressor.dart';
+import 'package:e_cell_website/services/enums/device.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +64,12 @@ class _EventDetailsState extends State<EventDetails> {
                                 child: SizedBox(
                                     height: double.infinity,
                                     child: Image.network(
-                                      widget.event.allPhotos[generatorIndex],
+                                      getOptimizedImageUrl(
+                                          originalUrl: widget
+                                              .event.allPhotos[generatorIndex],
+                                          device: isMobile
+                                              ? Device.mobile
+                                              : Device.desktop),
                                       fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: double.infinity,
@@ -268,7 +275,13 @@ class _EventDetailsState extends State<EventDetails> {
                                 fit: StackFit.expand,
                                 children: [
                                   Image.network(
-                                    widget.event.allPhotos[index],
+                                    // widget.event.allPhotos[index],
+                                    getOptimizedImageUrl(
+                                        originalUrl:
+                                            widget.event.allPhotos[index],
+                                        device: isMobile
+                                            ? Device.mobile
+                                            : Device.desktop),
                                     fit: BoxFit.cover,
                                     loadingBuilder:
                                         (context, child, loadingProgress) {
@@ -365,7 +378,13 @@ class _EventDetailsState extends State<EventDetails> {
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
                                     child: Image.network(
-                                      widget.event.winnerPhotos[index],
+                                      // widget.event.winnerPhotos[index],
+                                      getOptimizedImageUrl(
+                                          originalUrl:
+                                              widget.event.winnerPhotos[index],
+                                          device: isMobile
+                                              ? Device.mobile
+                                              : Device.desktop),
                                       fit: BoxFit.cover,
                                       loadingBuilder:
                                           (context, child, loadingProgress) {
@@ -508,7 +527,10 @@ class _EventDetailsState extends State<EventDetails> {
                     minScale: 0.5,
                     maxScale: 4.0,
                     child: Image.network(
-                      widget.event.allPhotos[index],
+                      // widget.event.allPhotos[index],
+                      getOptimizedImageUrl(
+                          originalUrl: widget.event.allPhotos[index],
+                          device: isMobile ? Device.mobile : Device.desktop),
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;

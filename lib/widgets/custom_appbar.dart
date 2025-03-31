@@ -30,7 +30,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             GestureDetector(
               onTap: isMobile
                   ? () {
-                      Scaffold.of(context).openDrawer();
+                      // Scaffold.of(context).openDrawer();
+                      context.go('/');
                     }
                   : () {},
               child: Image.asset(
@@ -42,7 +43,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               LinearGradientText(
                   child: Text(
                 "E-Cell",
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontFamily: 'Lora',
+                    ),
               )),
             if (!isMobile)
               Row(

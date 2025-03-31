@@ -1,6 +1,8 @@
 import 'package:e_cell_website/backend/models/gallery.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/gallery/widget/imagebox.dart';
+import 'package:e_cell_website/services/const/image_compressor.dart';
+import 'package:e_cell_website/services/enums/device.dart';
 
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +21,10 @@ class Eventgallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final List<String> images = gallery.winnerPhotos + gallery.allPhotos;
+    final List<String> images = gallery.allPhotos + gallery.winnerPhotos;
     int ind;
     int noofphotos = images.length;
-
+    bool isMobile = size.width < 600;
     if (size.width < 700) {
       ind = (noofphotos > 3) ? 3 : noofphotos;
     } else {
@@ -69,7 +71,11 @@ class Eventgallery extends StatelessWidget {
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(18),
                         child: Image.network(
-                          images[index],
+                          // images[index],
+                          getOptimizedImageUrl(
+                              originalUrl: images[index],
+                              device:
+                                  isMobile ? Device.mobile : Device.desktop),
                           fit: BoxFit.cover,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
