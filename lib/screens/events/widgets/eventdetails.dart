@@ -396,8 +396,8 @@ class _EventDetailsState extends State<EventDetails> {
                             textStyle: TextStyle(color: Colors.white),
                             verticalOffset: 12,
                             child: Container(
-                              height: 48,
-                              width: 48,
+                              height: 46,
+                              width: 46,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                                 gradient: LinearGradient(
@@ -416,8 +416,8 @@ class _EventDetailsState extends State<EventDetails> {
                                 child: Image.asset(
                                   socialLink.urlType.icon,
                                   fit: BoxFit.contain,
-                                  height: 28,
-                                  width: 28,
+                                  height: 26,
+                                  width: 26,
                                 ),
                               ),
                             ),
@@ -470,25 +470,23 @@ class _EventDetailsState extends State<EventDetails> {
               _isMenuOpen = !_isMenuOpen;
             });
           },
-          child: Container(
-            height: 46,
-            width: 46,
+          child: Tooltip(
+            message: "Social Links",
             decoration: BoxDecoration(
-              color: secondaryColor,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  spreadRadius: 1,
-                  blurRadius: 3,
-                  offset: Offset(0, 2),
-                ),
-              ],
+              color: Colors.black87,
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              _isMenuOpen ? Icons.close : Icons.link,
-              size: 30,
-              color: Colors.white,
+            textStyle: TextStyle(color: Colors.white),
+            verticalOffset: 12,
+            child: Center(
+              child: Image.asset(
+                _isMenuOpen
+                    ? "assets/icons/close.png"
+                    : "assets/icons/link.png",
+                height: 48,
+                width: 48,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ),
