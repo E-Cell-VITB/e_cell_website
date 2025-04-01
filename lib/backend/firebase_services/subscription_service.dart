@@ -22,7 +22,8 @@ class SubscriptionService {
   // Initialize the service
   Future<void> init() async {
     try {
-      final credentials = await rootBundle.loadString('credentials.json');
+      final credentials =
+          await rootBundle.loadString('assets/credentials.json');
       _gsheets = GSheets(jsonDecode(credentials));
       // Get spreadsheet by ID
       _spreadsheet = await _gsheets.spreadsheet(_spreadsheetId);
