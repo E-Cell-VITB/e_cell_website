@@ -8,14 +8,14 @@ class Gallery {
   final String status;
   final List<String> winnerPhotos;
   final List<String> allPhotos;
-  final String socialLink;
+  // final String socialLink;
 
   Gallery({
     required this.name,
     required this.description,
     required this.winnerPhotos,
     required this.allPhotos,
-    required this.socialLink,
+    // required this.socialLink,
     required this.status,
     this.id,
   });
@@ -27,7 +27,7 @@ class Gallery {
       'status': status,
       'winnerPhotos': winnerPhotos,
       'allPhotos': allPhotos,
-      'socialLink': socialLink,
+      // 'socialLink': socialLink,
     };
   }
 
@@ -39,7 +39,7 @@ class Gallery {
       status: map['status'] as String,
       winnerPhotos: List<String>.from((map['winnerPhotos'])),
       allPhotos: List<String>.from((map['allPhotos'])),
-      socialLink: map['socialLink'] as String,
+      // socialLink: map['socialLink'] as String,
     );
   }
 

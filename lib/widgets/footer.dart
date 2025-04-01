@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'subscription_form.dart';
+
 class Footer extends StatelessWidget {
   const Footer({super.key});
 
@@ -267,47 +269,52 @@ mentorship, networking, and industry collaborations.""",
 
   // Subscribe form
   Widget _buildSubscribeForm() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              color: const Color(0xFF333333),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: const TextField(
-              style: TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                hintText: 'Enter your email',
-                hintStyle: TextStyle(color: Colors.grey),
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Container(
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: linerGradient),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Center(
-            child: Text(
-              'Subscribe',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    return const SubscriptionForm();
+
+    //  Row(
+    //   children: [
+    //     Expanded(
+    //       child: Container(
+    //         height: 40,
+    //         decoration: BoxDecoration(
+    //           color: const Color(0xFF333333),
+    //           borderRadius: BorderRadius.circular(5),
+    //         ),
+    //         child: const TextField(
+    //           style: TextStyle(color: Colors.white),
+    //           decoration: InputDecoration(
+    //             contentPadding: EdgeInsets.symmetric(horizontal: 15),
+    //             hintText: 'Enter your email',
+    //             hintStyle: TextStyle(color: Colors.grey),
+    //             border: InputBorder.none,
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //     const SizedBox(width: 12),
+    //     InkWell(
+    //       onTap: () {},
+    //       child: Container(
+    //         height: 40,
+    //         padding: const EdgeInsets.symmetric(horizontal: 15),
+    //         decoration: BoxDecoration(
+    //           gradient: const LinearGradient(colors: linerGradient),
+    //           borderRadius: BorderRadius.circular(12),
+    //         ),
+    //         child: const Center(
+    //           child: Text(
+    //             'Subscribe',
+    //             style: TextStyle(
+    //               color: Colors.black,
+    //               fontWeight: FontWeight.bold,
+    //               fontSize: 14,
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 
   // Contact info

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_cell_website/services/enums/url_type.dart';
 
 class Event {
   final String? id;
@@ -10,13 +11,13 @@ class Event {
   final String status;
   final List<String> winnerPhotos;
   final List<String> allPhotos;
-  final String socialLink;
+  final List<SocialLink> socialLink;
   final int numParticipants;
   final int numTeams;
   final List<GuestOrJudge> guestsAndJudges;
   final double prizePool;
   final String place;
-  final String bannerPhotoUrl; // New parameter
+  final String bannerPhotoUrl;
 
   Event({
     required this.name,
@@ -32,15 +33,15 @@ class Event {
     required this.guestsAndJudges,
     required this.prizePool,
     required this.place,
-    required this.bannerPhotoUrl, // Add to constructor
+    required this.bannerPhotoUrl,
     this.id,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': name,
-      'description': description,
+      'name': name.trim(),
+      'description': description.trim(),
       'eventDate': Timestamp.fromDate(eventDate),
       'createdAt': createdAt,
       'status': status,
@@ -66,7 +67,10 @@ class Event {
       status: map['status'] as String,
       winnerPhotos: List<String>.from(map['winnerPhotos']),
       allPhotos: List<String>.from(map['allPhotos']),
-      socialLink: map['socialLink'] as String,
+      socialLink: (map['socialLink'] as List<dynamic>?)
+              ?.map((e) => SocialLink.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       numParticipants: (map['numParticipants'] as int?) ?? 0,
       numTeams: (map['numTeams'] as int?) ?? 0,
       guestsAndJudges: (map['guestsAndJudges'] as List<dynamic>?)
@@ -75,7 +79,8 @@ class Event {
           [],
       prizePool: (map['prizePool'] as num?)?.toDouble() ?? 0.0,
       place: map['place'] as String? ?? "VITB, Bhimavarm",
-      bannerPhotoUrl: map['bannerPhotoUrl'] as String? ?? "",
+      bannerPhotoUrl: map['bannerPhotoUrl'] as String? ??
+          "", // Add to fromMap with default value
     );
   }
 }
@@ -84,7 +89,7 @@ class GuestOrJudge {
   final String name;
   final String about;
   final String photoUrl;
-  final String role; // "Guest" or "Judge"
+  final String role;
 
   GuestOrJudge({
     required this.name,
@@ -117,6 +122,35 @@ class GuestOrJudge {
       GuestOrJudge.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
+class SocialLink {
+  final UrlType urlType;
+  final String url;
+
+  SocialLink({
+    required this.urlType,
+    required this.url,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'urlType': urlType,
+      'url': url,
+    };
+  }
+
+  factory SocialLink.fromMap(Map<String, dynamic> map) {
+    return SocialLink(
+      urlType: UrlType.fromString(map['type'] as String),
+      url: map['url'] as String,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SocialLink.fromJson(String source) =>
+      SocialLink.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
 Event dummyEvent = Event(
   name: "Hackathon 2025",
   description:
@@ -144,7 +178,7 @@ Event dummyEvent = Event(
     "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
   ],
-  socialLink: "https://example.com/hackathon2025",
+  socialLink: [],
   numParticipants: 200,
   numTeams: 50,
   guestsAndJudges: [

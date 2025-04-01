@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:toastification/toastification.dart';
 
 // import 'dart:async';
 
@@ -74,13 +75,15 @@ class _MyAppState extends State<MyApp> {
     screensize = MediaQuery.of(context).size.width;
     return MultiProvider(
       providers: AppProviders.providers,
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        title: 'E-Cell_VITB',
-        // onGenerateRoute: AppNavigator.generateRoute,
-        routerConfig: appRouter,
-        theme: getAppTheme(),
-        // home: const HomeScreen(),
+      child: ToastificationWrapper(
+        child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          title: 'E-Cell_VITB',
+          // onGenerateRoute: AppNavigator.generateRoute,
+          routerConfig: appRouter,
+          theme: getAppTheme(),
+          // home: const HomeScreen(),
+        ),
       ),
     );
   }
