@@ -18,6 +18,7 @@ class Event {
   final double prizePool;
   final String place;
   final String bannerPhotoUrl;
+  final String certificatesScript;
 
   Event({
     required this.name,
@@ -34,6 +35,7 @@ class Event {
     required this.prizePool,
     required this.place,
     required this.bannerPhotoUrl,
+    required this.certificatesScript,
     this.id,
   });
 
@@ -53,7 +55,8 @@ class Event {
       'guestsAndJudges': guestsAndJudges.map((gj) => gj.toMap()).toList(),
       'prizePool': prizePool,
       'place': place,
-      'bannerPhotoUrl': bannerPhotoUrl, // Add to map
+      'bannerPhotoUrl': bannerPhotoUrl,
+      'certificatesScript': certificatesScript
     };
   }
 
@@ -79,8 +82,9 @@ class Event {
           [],
       prizePool: (map['prizePool'] as num?)?.toDouble() ?? 0.0,
       place: map['place'] as String? ?? "VITB, Bhimavarm",
-      bannerPhotoUrl: map['bannerPhotoUrl'] as String? ??
-          "", // Add to fromMap with default value
+      bannerPhotoUrl: map['bannerPhotoUrl'] as String? ?? "",
+      certificatesScript: map['certificatesScript'] as String? ??
+          "https://script.google.com/macros/s/AKfycbzqlOnxhhlZiJYeetOiukTviFxobw4_3kyujrcvSDGDXe5uaAXGBJpBPNJL9jEfLpKZBw/exec",
     );
   }
 }
@@ -158,6 +162,7 @@ Event dummyEvent = Event(
   eventDate: DateTime(2025, 5, 20),
   createdAt: Timestamp.now(),
   status: "Upcoming",
+  certificatesScript: "",
   // Winner photos - 3 images
   winnerPhotos: [
     "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",

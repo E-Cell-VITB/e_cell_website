@@ -50,7 +50,7 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
               return Transform.rotate(
                 angle: _outerController.value * 2 * pi,
                 child: CustomPaint(
-                  size: const Size(196, 196),
+                  size: const Size(164, 164),
                   painter: ArcPainter(
                     startAngle: 0,
                     sweepAngle: pi * 1.2, // 67% of a full circle
@@ -69,7 +69,7 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
               return Transform.rotate(
                 angle: -_innerController.value * 2 * pi,
                 child: CustomPaint(
-                  size: const Size(164, 164),
+                  size: const Size(132, 132),
                   painter: ArcPainter(
                     startAngle: pi / 2,
                     sweepAngle: pi, // 50% of a full circle
@@ -85,8 +85,8 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
           Center(
             child: Image.asset(
               'assets/icons/Icon-192.png',
-              width: 96,
-              height: 96,
+              width: 72,
+              height: 72,
             ),
           ),
         ],

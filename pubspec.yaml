@@ -50,6 +50,7 @@ dependencies:
   toastification: ^3.0.2
   gsheets: ^0.5.0
   font_awesome_flutter: ^10.8.0
+  dio: ^5.8.0+1
 
 
 

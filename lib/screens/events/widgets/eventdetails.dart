@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:e_cell_website/backend/models/event.dart';
+import 'package:e_cell_website/certificate_gen/gertificate_generator.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/events/widgets/speakerbox.dart';
 import 'package:e_cell_website/services/const/image_compressor.dart';
@@ -174,34 +175,67 @@ class _EventDetailsState extends State<EventDetails> {
                                 ),
                               ),
                             ),
-                            GradientBox(
-                              height: isMobile ? 36 : 50,
-                              radius: 25,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: isMobile ? 12 : 20),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.location_on_outlined,
-                                      size: isMobile ? 14 : 20,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(width: isMobile ? 6 : 10),
-                                    Text(
-                                      widget.event.place,
-                                      style: TextStyle(
-                                        fontSize: isMobile ? 12 : 16,
-                                        fontWeight: FontWeight.w500,
+                            if (widget.event.place != "")
+                              GradientBox(
+                                height: isMobile ? 36 : 50,
+                                radius: 25,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: isMobile ? 12 : 20),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.location_on_outlined,
+                                        size: isMobile ? 14 : 20,
                                         color: Colors.white,
                                       ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
+                                      SizedBox(width: isMobile ? 6 : 10),
+                                      Text(
+                                        widget.event.place,
+                                        style: TextStyle(
+                                          fontSize: isMobile ? 12 : 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            )
+                            if (widget.event.certificatesScript != "")
+                              GradientBox(
+                                onTap: () => CertificateDialogs
+                                    .showCertificateInputDialog(context,
+                                        apiUrl:
+                                            widget.event.certificatesScript),
+                                height: isMobile ? 36 : 50,
+                                radius: 25,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: isMobile ? 12 : 20),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.verified_outlined,
+                                        size: isMobile ? 14 : 20,
+                                        color: secondaryColor,
+                                      ),
+                                      SizedBox(width: isMobile ? 6 : 10),
+                                      Text(
+                                        "Certificate",
+                                        style: TextStyle(
+                                          fontSize: isMobile ? 12 : 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -784,12 +818,15 @@ class GradientBox extends StatelessWidget {
   final double height;
   final double? width;
   final double radius;
+  final VoidCallback? onTap;
+
   const GradientBox({
     super.key,
     required this.radius,
     required this.child,
     required this.height,
     this.width,
+    this.onTap,
   });
 
   @override
@@ -802,7 +839,7 @@ class GradientBox extends StatelessWidget {
         gradient: LinearGradient(colors: linerGradient),
       ),
       child: Padding(
-        padding: EdgeInsets.all(1),
+        padding: const EdgeInsets.all(1),
         child: Container(
           height: height,
           width: width,
@@ -810,7 +847,11 @@ class GradientBox extends StatelessWidget {
             borderRadius: BorderRadius.circular(radius),
             gradient: LinearGradient(colors: eventBoxLinearGradient),
           ),
-          child: child,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(radius),
+            child: child,
+          ),
         ),
       ),
     );
