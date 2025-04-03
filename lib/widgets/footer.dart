@@ -67,7 +67,7 @@ class Footer extends StatelessWidget {
             children: [
               _buildLogo(),
               const SizedBox(height: 15),
-              _buildDescription(),
+              _buildDescription(false),
               const SizedBox(height: 20),
               _buildSocialIcons(),
             ],
@@ -117,7 +117,7 @@ class Footer extends StatelessWidget {
         // Logo and description section
         Center(child: _buildLogo()),
         const SizedBox(height: 15),
-        _buildDescription(),
+        _buildDescription(true),
         const SizedBox(height: 20),
         Center(child: _buildSocialIcons()),
         const SizedBox(height: 30),
@@ -166,12 +166,14 @@ class Footer extends StatelessWidget {
   }
 
   // Description
-  Widget _buildDescription() {
-    return const SelectableText(
-      """E-Cell, Vishnu Institute of Technology, empowers
+  Widget _buildDescription(bool isMobile) {
+    return SelectableText(
+      isMobile
+          ? "E-Cell, Vishnu Institute of Technology, empowers students to turn ideas into startups through mentorship, networking, and industry collaborations."
+          : """E-Cell, Vishnu Institute of Technology, empowers
 students to turn ideas into startups through
 mentorship, networking, and industry collaborations.""",
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.grey,
         fontSize: 14,
         height: 1.5,

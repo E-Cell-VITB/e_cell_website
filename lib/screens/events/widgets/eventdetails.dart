@@ -384,11 +384,12 @@ class _EventDetailsState extends State<EventDetails> {
               ),
             ),
           ),
-          Positioned(
-            bottom: 20,
-            right: 20,
-            child: _floatingActionLinks(),
-          ),
+          if (widget.event.socialLink.isNotEmpty)
+            Positioned(
+              bottom: 20,
+              right: 20,
+              child: _floatingActionLinks(),
+            ),
         ],
       ),
     );

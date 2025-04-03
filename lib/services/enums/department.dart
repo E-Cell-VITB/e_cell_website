@@ -9,6 +9,9 @@ enum Department {
   logisticsAndOperations,
   communication,
   videography,
+  innovation,
+  sponsorship,
+  creativity,
   offstage;
 
   @override
@@ -19,12 +22,15 @@ enum Department {
       Department.prHr => "PR & HR",
       Department.rAndD => "R&D",
       Department.contentAndMedia => "Content & Media",
-      Department.marketing => "Marketing",
+      Department.marketing => "Marketing & Outreach",
       Department.logisticsAndOperations => "Logistics & Operations",
       Department.design => "Design",
       Department.communication => "Communication",
       Department.videography => "Videography",
       Department.offstage => "Offstage",
+      Department.innovation => "Innovation & Incubations",
+      Department.sponsorship => "Sponsorship",
+      Department.creativity => "Creativity",
     };
   }
 }
