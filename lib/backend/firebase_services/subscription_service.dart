@@ -4,11 +4,11 @@ import 'package:gsheets/gsheets.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class SubscriptionService {
-  static const _credentials = r'''
+  // static const _credentials = r'''
 
-  ''';
+  // ''';
 
-  // Your Google Sheet ID - found in the URL of your sheet
+  // Google Sheet ID
   static const _spreadsheetId = '1uWjjJPV4pajOObqNj2MStHFWOMJkOaNitU3MKbzUmjo';
 
   // final _gsheets = GSheets(_credentials);

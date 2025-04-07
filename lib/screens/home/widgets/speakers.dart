@@ -250,7 +250,7 @@ class SpeakerCard extends StatelessWidget {
                       speaker.imageUrl,
                       width: double.infinity,
                       height: 172,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
                         return Container(

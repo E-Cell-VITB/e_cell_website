@@ -83,8 +83,7 @@ class Event {
       prizePool: (map['prizePool'] as num?)?.toDouble() ?? 0.0,
       place: map['place'] as String? ?? "VITB, Bhimavarm",
       bannerPhotoUrl: map['bannerPhotoUrl'] as String? ?? "",
-      certificatesScript: map['certificatesScript'] as String? ??
-          "https://script.google.com/macros/s/AKfycbzqlOnxhhlZiJYeetOiukTviFxobw4_3kyujrcvSDGDXe5uaAXGBJpBPNJL9jEfLpKZBw/exec",
+      certificatesScript: map['certificatesScript'] as String? ?? "",
     );
   }
 }
