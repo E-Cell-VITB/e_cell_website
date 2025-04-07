@@ -4,8 +4,8 @@ class CertificateService {
   final Dio _dio = Dio();
 
   // URL of your deployed Google Apps Script web app
-  final String _apiUrl =
-      'https://script.google.com/macros/s/AKfycbzqlOnxhhlZiJYeetOiukTviFxobw4_3kyujrcvSDGDXe5uaAXGBJpBPNJL9jEfLpKZBw/exec';
+  // final String _apiUrl =
+  //     'https://script.google.com/macros/s/AKfycbzqlOnxhhlZiJYeetOiukTviFxobw4_3kyujrcvSDGDXe5uaAXGBJpBPNJL9jEfLpKZBw/exec';
 
   Future<Map<String, dynamic>> fetchCertificate({
     required String identifier,
@@ -13,7 +13,6 @@ class CertificateService {
     required String apiUrl,
   }) async {
     try {
-      // Prepare query parameters based on identifier type
       Map<String, String> params = {};
       if (identifierType == 'Registration Number') {
         params['regdno'] = identifier.trim();
@@ -22,7 +21,7 @@ class CertificateService {
       }
 
       // Make API call
-      final response = await _dio.get(_apiUrl, queryParameters: params);
+      final response = await _dio.get(apiUrl, queryParameters: params);
 
       return response.data;
     } catch (e) {

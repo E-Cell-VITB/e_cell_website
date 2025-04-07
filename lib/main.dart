@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:toastification/toastification.dart';
 
-import 'certificate_gen/gertificate_generator.dart';
+// import 'certificate_gen/gertificate_generator.dart';
 
 // import 'dart:async';
 
