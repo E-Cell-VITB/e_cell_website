@@ -1,9 +1,10 @@
+import 'package:e_cell_website/backend/models/event.dart';
 import 'package:e_cell_website/const/theme.dart';
-import 'package:e_cell_website/screens/events/widgets/evntdetails.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ShowEventBox {
-  ShowEventBox(BuildContext context, int index) {
+  ShowEventBox(BuildContext context, int index, Event event) {
     final size = MediaQuery.of(context).size;
     final bool isMobile = size.width < 600;
 
@@ -40,8 +41,8 @@ class ShowEventBox {
               ),
               padding: EdgeInsets.all(isMobile ? 20.0 : 35.0),
               child: isMobile
-                  ? _buildMobileLayout(context, size)
-                  : _buildDesktopLayout(context, size),
+                  ? _buildMobileLayout(context, size, event)
+                  : _buildDesktopLayout(context, size, event),
             ),
           ),
         );
@@ -49,7 +50,7 @@ class ShowEventBox {
     );
   }
 
-  Widget _buildDesktopLayout(BuildContext context, Size size) {
+  Widget _buildDesktopLayout(BuildContext context, Size size, Event event) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,39 +60,40 @@ class ShowEventBox {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildGradientTitle(context, size, isDesktop: true),
+              _buildGradientTitle(event.name, size, isDesktop: true),
               const SizedBox(height: 10),
-              _buildDescription(size, isDesktop: true),
+              _buildDescription(event.description, size, isDesktop: true),
               const SizedBox(height: 15),
-              _buildReadMoreButton(context,size, isDesktop: true),
+              _buildReadMoreButton(context, size, event, isDesktop: true),
             ],
           ),
         ),
         const SizedBox(width: 12),
-        _buildImageContainer(size, isDesktop: true),
+        _buildImageContainer(event.bannerPhotoUrl, size, isDesktop: true),
       ],
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context, Size size) {
+  Widget _buildMobileLayout(BuildContext context, Size size, Event event) {
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildGradientTitle(context, size, isDesktop: false),
+          _buildGradientTitle(event.name, size, isDesktop: false),
           const SizedBox(height: 10),
-          // if(!isMobile)  _buildImageContainer(size, isDesktop: false),
           const SizedBox(height: 15),
-          _buildDescription(size, isDesktop: false),
+          _buildDescription(event.description, size, isDesktop: false),
           const SizedBox(height: 15),
-          Center(child: _buildReadMoreButton(context, size, isDesktop: false)),
+          Center(
+            child: _buildReadMoreButton(context, size, event, isDesktop: false),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildGradientTitle(BuildContext context, Size size,
+  Widget _buildGradientTitle(String title, Size size,
       {required bool isDesktop}) {
     return ShaderMask(
       blendMode: BlendMode.srcIn,
@@ -103,7 +105,7 @@ class ShowEventBox {
         ).createShader(bounds);
       },
       child: SelectableText(
-        'TechSprouts 2K25',
+        title,
         textAlign: TextAlign.left,
         style: TextStyle(
           fontSize: isDesktop ? size.width * 0.02 : 20,
@@ -115,24 +117,34 @@ class ShowEventBox {
     );
   }
 
-  Widget _buildDescription(Size size, {required bool isDesktop}) {
+  Widget _buildDescription(String description, Size size,
+      {required bool isDesktop}) {
     return SelectableText(
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.....",
+      description.trim(),
       textAlign: TextAlign.left,
       style: TextStyle(
         fontSize: isDesktop ? size.width * 0.012 : 14,
         height: 1.5,
         color: Colors.white,
       ),
+      maxLines: 8,
     );
   }
 
-  Widget _buildReadMoreButton(BuildContext context,Size size, {required bool isDesktop}) {
+  Widget _buildReadMoreButton(BuildContext context, Size size, Event event,
+      {required bool isDesktop}) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> const Eventdetails()));
+        onTap: () {
+          Navigator.pop(context);
+          String nameToUrlFormat(String name) {
+            return name.toLowerCase().replaceAll(RegExp(r'\s+'), '-');
+          }
+
+          // Navigate with both ID and name
+          context.go('/events/${event.id}-${nameToUrlFormat(event.name)}',
+              extra: event);
         },
         child: Container(
           height: isDesktop ? size.height * 0.05 : 40,
@@ -155,19 +167,19 @@ class ShowEventBox {
     );
   }
 
-  Widget _buildImageContainer(Size size, {required bool isDesktop}) {
+  Widget _buildImageContainer(String imageUrl, Size size,
+      {required bool isDesktop}) {
     return Container(
       height: isDesktop ? size.height * 0.50 : size.height * 0.2,
       width: isDesktop ? size.width * 0.2 : double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-      ),
-      child: const Center(
-        child: Text(
-          "hello",
-          style: TextStyle(color: Colors.black),
-          textAlign: TextAlign.center,
+        image: DecorationImage(
+          image: imageUrl != ""
+              ? NetworkImage(imageUrl)
+              : const AssetImage("assets/icons/logo.png"),
+          fit: BoxFit.cover,
         ),
       ),
     );

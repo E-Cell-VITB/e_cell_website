@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'subscription_form.dart';
+
 class Footer extends StatelessWidget {
   const Footer({super.key});
 
@@ -65,7 +67,7 @@ class Footer extends StatelessWidget {
             children: [
               _buildLogo(),
               const SizedBox(height: 15),
-              _buildDescription(),
+              _buildDescription(false),
               const SizedBox(height: 20),
               _buildSocialIcons(),
             ],
@@ -115,7 +117,7 @@ class Footer extends StatelessWidget {
         // Logo and description section
         Center(child: _buildLogo()),
         const SizedBox(height: 15),
-        _buildDescription(),
+        _buildDescription(true),
         const SizedBox(height: 20),
         Center(child: _buildSocialIcons()),
         const SizedBox(height: 30),
@@ -164,12 +166,14 @@ class Footer extends StatelessWidget {
   }
 
   // Description
-  Widget _buildDescription() {
-    return const SelectableText(
-      """E-Cell, Vishnu Institute of Technology, empowers
+  Widget _buildDescription(bool isMobile) {
+    return SelectableText(
+      isMobile
+          ? "E-Cell, Vishnu Institute of Technology, empowers students to turn ideas into startups through mentorship, networking, and industry collaborations."
+          : """E-Cell, Vishnu Institute of Technology, empowers
 students to turn ideas into startups through
 mentorship, networking, and industry collaborations.""",
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.grey,
         fontSize: 14,
         height: 1.5,
@@ -190,6 +194,11 @@ mentorship, networking, and industry collaborations.""",
         const SizedBox(width: 15),
         _socialIcon(
             'assets/icons/youtube.png', 'https://www.youtube.com/@ECellVITB'),
+        const SizedBox(width: 15),
+        _socialIcon('assets/icons/twitter.png', 'https://x.com/Ecellvitb'),
+        const SizedBox(width: 15),
+        _socialIcon('assets/icons/whatsapp.png',
+            'https://whatsapp.com/channel/0029VatSc1XGufJ2ObNHI33M'),
       ],
     );
   }
@@ -262,46 +271,52 @@ mentorship, networking, and industry collaborations.""",
 
   // Subscribe form
   Widget _buildSubscribeForm() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              color: const Color(0xFF333333),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: const TextField(
-              style: TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                hintText: 'Enter your email',
-                hintStyle: TextStyle(color: Colors.grey),
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Container(
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          decoration: BoxDecoration(
-            color: const Color(0xFFC79200),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: const Center(
-            child: Text(
-              'Subscribe',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    return const SubscriptionForm();
+
+    //  Row(
+    //   children: [
+    //     Expanded(
+    //       child: Container(
+    //         height: 40,
+    //         decoration: BoxDecoration(
+    //           color: const Color(0xFF333333),
+    //           borderRadius: BorderRadius.circular(5),
+    //         ),
+    //         child: const TextField(
+    //           style: TextStyle(color: Colors.white),
+    //           decoration: InputDecoration(
+    //             contentPadding: EdgeInsets.symmetric(horizontal: 15),
+    //             hintText: 'Enter your email',
+    //             hintStyle: TextStyle(color: Colors.grey),
+    //             border: InputBorder.none,
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //     const SizedBox(width: 12),
+    //     InkWell(
+    //       onTap: () {},
+    //       child: Container(
+    //         height: 40,
+    //         padding: const EdgeInsets.symmetric(horizontal: 15),
+    //         decoration: BoxDecoration(
+    //           gradient: const LinearGradient(colors: linerGradient),
+    //           borderRadius: BorderRadius.circular(12),
+    //         ),
+    //         child: const Center(
+    //           child: Text(
+    //             'Subscribe',
+    //             style: TextStyle(
+    //               color: Colors.black,
+    //               fontWeight: FontWeight.bold,
+    //               fontSize: 14,
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 
   // Contact info

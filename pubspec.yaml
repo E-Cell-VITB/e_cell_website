@@ -46,6 +46,13 @@ dependencies:
   auto_size_text: ^3.0.0
   visibility_detector: ^0.4.0+2
   flutter_staggered_grid_view: ^0.7.0
+  intl: ^0.20.2
+  toastification: ^3.0.2
+  gsheets: ^0.5.0
+  font_awesome_flutter: ^10.8.0
+  dio: ^5.8.0+1
+
+
 
 
 dev_dependencies:
@@ -82,8 +89,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    # - assets/images/
+    - assets/images/
     - assets/icons/
+    - assets/images/partner/
+    - assets/credentials.json
     # - assets/lotties/
     # - assets/svgs/
   #   - images/a_dot_ham.jpeg
@@ -111,5 +120,14 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+  fonts:
+    - family: Lora
+      fonts:
+        - asset: assets/fonts/Lora-Regular.ttf
+        - asset: assets/fonts/Lora-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Lora-SemiBold.ttf
+          weight: 500
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

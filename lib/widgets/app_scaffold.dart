@@ -41,6 +41,7 @@ class AppScaffold extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
+                            fontFamily: "Lora",
                           ),
                         ),
                         Text(
@@ -48,6 +49,7 @@ class AppScaffold extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 32,
                             color: secondaryColor,
+                            fontFamily: "Lora",
                           ),
                         ),
                       ],
@@ -76,6 +78,7 @@ class AppScaffold extends StatelessWidget {
                   ),
                   onPressed: () {
                     // Navigator.pushNamed(context, JoinPage.joinPageRoute);
+                    Navigator.pop(context);
                     context.go("/joinus");
                   },
                   child: Text(

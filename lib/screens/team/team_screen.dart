@@ -5,6 +5,7 @@ import 'package:e_cell_website/services/enums/department.dart';
 import 'package:e_cell_website/services/providers/team_members_provider.dart';
 import 'package:e_cell_website/widgets/footer.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
+import 'package:e_cell_website/widgets/loading_indicator.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,22 +35,29 @@ class TeamScreen extends StatelessWidget {
                 const SizedBox(
                   height: 16,
                 ),
-                RichText(
-                    text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Meet the changemakers of E-Cell VITB. ",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    TextSpan(
-                      text: "✨",
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: secondaryColor,
-                            fontWeight: FontWeight.bold,
+                SizedBox(
+                  width: size.width * 0.8,
+                  child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: size.width > 600
+                                ? "Meet the changemakers of E-Cell VITB. "
+                                : "Meet the changemakers ",
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
-                    ),
-                  ],
-                )),
+                          TextSpan(
+                            text: "✨",
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: secondaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                          ),
+                        ],
+                      )),
+                ),
                 const SizedBox(
                   height: 40,
                 ),
@@ -63,9 +71,8 @@ class TeamScreen extends StatelessWidget {
                           return SizedBox(
                             height: size.height * 0.6,
                             child: const Center(
-                                child: CircularProgressIndicator(
-                              color: secondaryColor,
-                            )),
+                              child: LoadingIndicator(),
+                            ),
                           );
                         }
                         if (snapshot.hasError) {

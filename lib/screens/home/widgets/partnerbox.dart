@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 class Partnerbox extends StatefulWidget {
   final String heading;
   final String info;
-  const Partnerbox({required this.heading, required this.info, super.key});
+  final String imageUrl;
+  const Partnerbox(
+      {required this.heading,
+      required this.info,
+      required this.imageUrl,
+      super.key});
 
   @override
   State<Partnerbox> createState() => _PartnerboxState();
@@ -24,7 +29,7 @@ class _PartnerboxState extends State<Partnerbox> {
         transform: Matrix4.identity()..scale(_isHovered ? 1.05 : 1.0),
         transformAlignment: Alignment.center,
         height: (size.width > 450) ? size.width * 0.25 : size.width * 0.55,
-        width: (size.width > 450) ? size.width * 0.19 : size.width * 0.4,
+        width: (size.width > 450) ? size.width * 0.19 : size.width * 0.43,
         decoration: BoxDecoration(
           gradient: const LinearGradient(colors: eventBoxLinearGradient),
           borderRadius: BorderRadius.circular(12),
@@ -45,6 +50,25 @@ class _PartnerboxState extends State<Partnerbox> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              SizedBox(
+                height: (size.width > 450) ? 38 : 24,
+              ),
+              Align(
+                // top: 10,
+                alignment: Alignment.center,
+                child: Image.asset(
+                  widget.imageUrl,
+                  height:
+                      (size.width > 450) ? size.width * 0.07 : size.width * 0.1,
+                  width:
+                      (size.width > 450) ? size.width * 0.07 : size.width * 0.1,
+                  // fit: BoxFit.cover,
+                ),
+              ),
+              // SizedBox(
+              //   height: (size.width > 450) ? 32 : 24,
+              // ),
+              const Spacer(),
               SelectableText(
                 widget.heading,
                 style: TextStyle(
@@ -64,6 +88,7 @@ class _PartnerboxState extends State<Partnerbox> {
                   color: Colors.grey,
                 ),
               ),
+              if ((size.width > 450)) const SizedBox(height: 16),
             ],
           ),
         ),

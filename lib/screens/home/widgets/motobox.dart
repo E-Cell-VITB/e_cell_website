@@ -27,12 +27,13 @@ class _MotoboxState extends State<Motobox> {
       onExit: (_) => setState(() => _isHovered = false), // Mouse exits
       cursor: SystemMouseCursors.click, // Optional: Hand cursor on hover
       child: AnimatedContainer(
+        padding: const EdgeInsets.all(8),
         duration: const Duration(milliseconds: 200), // Animation duration
         transform: Matrix4.identity()
           ..scale(_isHovered ? 1.05 : 1.0), // Scale up on hover
         transformAlignment: Alignment.center, // Scale from center
-        height: (size.width > 450) ? 90 : 60,
-        width: (size.width > 450) ? 400 : 300,
+        height: (size.width > 450) ? 110 : 86,
+        width: (size.width > 450) ? 432 : 332,
         decoration: BoxDecoration(
           gradient: const LinearGradient(colors: eventBoxLinearGradient),
           borderRadius: BorderRadius.circular(70),
@@ -58,8 +59,11 @@ class _MotoboxState extends State<Motobox> {
                   backgroundImage: AssetImage(widget.image),
                 ),
               ),
+              const SizedBox(
+                width: 10,
+              ),
               SizedBox(
-                width: (size.width > 500) ? 300 : 190,
+                width: (size.width > 500) ? 320 : 200,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,8 +73,8 @@ class _MotoboxState extends State<Motobox> {
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: (size.width > 450)
-                            ? size.width * 0.012
-                            : size.width * 0.025,
+                            ? size.width * 0.014
+                            : size.width * 0.03,
                       ),
                     ),
                     const SizedBox(height: 1),
@@ -78,8 +82,8 @@ class _MotoboxState extends State<Motobox> {
                       widget.info,
                       style: TextStyle(
                         fontSize: (size.width > 450)
-                            ? size.width * 0.008
-                            : size.width * 0.02,
+                            ? size.width * 0.009
+                            : size.width * 0.025,
                         color: Colors.grey,
                       ),
                     ),

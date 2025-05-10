@@ -1,13 +1,18 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/services/const/image_compressor.dart';
+import 'package:e_cell_website/services/enums/device.dart';
 import 'package:flutter/material.dart';
 
 class Imagebox extends StatefulWidget {
   final int initialIndex;
   final int noOfPhotos;
+  final List<String> images;
 
   const Imagebox(
-      {required this.initialIndex, required this.noOfPhotos, super.key});
+      {required this.initialIndex,
+      required this.images,
+      required this.noOfPhotos,
+      super.key});
 
   @override
   State<Imagebox> createState() => _ImageboxState();
@@ -84,23 +89,30 @@ class _ImageboxState extends State<Imagebox> {
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18),
-                  child: CachedNetworkImage(
-                    imageUrl: "https://picsum.photos/seed/$index/500/300",
-                    placeholder: (context, url) => const SizedBox(
-                      height: 120,
-                      width: 240,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: secondaryColor,
-                        ),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                    borderRadius: BorderRadius.circular(18),
+                    child: Image.network(
+                      // widget.images[index],
+                      getOptimizedImageUrl(
+                          originalUrl: widget.images[index],
+                          device: size.width < 500
+                              ? Device.mobile
+                              : Device.desktop),
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const SizedBox(
+                          height: 120,
+                          width: 240,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: secondaryColor,
+                            ),
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.error),
+                    )),
               ),
             );
           },
@@ -232,67 +244,72 @@ class _ImageboxState extends State<Imagebox> {
               ),
         const SizedBox(width: 60),
         Padding(
-            padding:  const EdgeInsets.only(top: 60),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              
-              children: [
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 400),
-                  transitionBuilder: (Widget child, Animation<double> animation) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                  child: Container(
-                    key: ValueKey<int>(currentIndex),
-                    height: size.height * 0.6,
-                    width: size.width * 0.5,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(18),
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            "https://picsum.photos/seed/$currentIndex/500/300",
-                        placeholder: (context, url) => const SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: secondaryColor,
-                            ),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 26,
-                ),
-                //image count
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.only(top: 60),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 400),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: Container(
+                  key: ValueKey<int>(currentIndex),
+                  height: size.height * 0.6,
+                  width: size.width * 0.5,
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(18),
                   ),
-                  child: Text(
-                    "${currentIndex + 1}/${widget.noOfPhotos}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(18),
+                      child: Image.network(
+                        // widget.images[currentIndex],
+                        getOptimizedImageUrl(
+                            originalUrl: widget.images[currentIndex],
+                            device: size.width < 500
+                                ? Device.mobile
+                                : Device.desktop),
+
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: secondaryColor,
+                              ),
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.error),
+                      )),
+                ),
+              ),
+              const SizedBox(
+                height: 26,
+              ),
+              //image count
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  "${currentIndex + 1}/${widget.noOfPhotos}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        
+        ),
         const SizedBox(width: 60),
         currentIndex < widget.noOfPhotos - 1
             ? IconButton(

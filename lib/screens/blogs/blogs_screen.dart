@@ -3,6 +3,7 @@ import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/services/providers/blogs_provider.dart';
 import 'package:e_cell_website/widgets/footer.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
+import 'package:e_cell_website/widgets/loading_indicator.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,26 +36,34 @@ class BlogsScreen extends StatelessWidget {
                   const SizedBox(
                     height: 16,
                   ),
-                  RichText(
-                      text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Lessons, Strategies, and Success Stories! ",
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      TextSpan(
-                        text: "✨",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: secondaryColor,
-                              fontWeight: FontWeight.bold,
+                  SizedBox(
+                    width: size.width * 0.8,
+                    child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: size.width > 600
+                                  ? "Lessons, Strategies, and Success Stories! "
+                                  : "Lessons, Strategies, and\nSuccess Stories! ",
+                              style: Theme.of(context).textTheme.bodyLarge,
                             ),
-                      ),
-                    ],
-                  )),
+                            TextSpan(
+                              text: "✨",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: secondaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        )),
+                  ),
                   const SizedBox(
                     height: 40,
                   ),
-                  // Stream builder with Wrap instead of ListView
                   StreamBuilder<List<Blog>>(
                     stream: blogProvider.blogsStream,
                     builder: (context, snapshot) {
@@ -62,7 +71,8 @@ class BlogsScreen extends StatelessWidget {
                         return SizedBox(
                             height: size.height * 0.6,
                             child: const Center(
-                                child: CircularProgressIndicator()));
+                              child: LoadingIndicator(),
+                            ));
                       }
 
                       if (snapshot.hasError) {
@@ -93,7 +103,6 @@ class BlogsScreen extends StatelessWidget {
                       );
                     },
                   ),
-
                   const SizedBox(height: 24),
                   const Footer(),
                 ],

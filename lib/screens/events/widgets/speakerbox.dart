@@ -1,53 +1,98 @@
+import 'package:e_cell_website/backend/models/event.dart';
 import 'package:e_cell_website/const/theme.dart';
-import 'package:e_cell_website/screens/events/widgets/evntdetails.dart';
 import 'package:flutter/material.dart';
 
-class Speakerbox extends StatelessWidget {
-  final String spearkername;
-  final String speakerrole;
-  const Speakerbox({
-    required this.spearkername,
-    required this.speakerrole,
-    super.key});
+class Speakerbox extends StatefulWidget {
+  final GuestOrJudge guestOrJudge;
+
+  const Speakerbox({required this.guestOrJudge, super.key});
+
+  @override
+  _SpeakerboxState createState() => _SpeakerboxState();
+}
+
+class _SpeakerboxState extends State<Speakerbox> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 250,
-      width: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(colors: linerGradient),
-      ),
-      padding: EdgeInsets.all(1),
-      child: Container(
-
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        transform:
+            _isHovered ? (Matrix4.identity()..scale(1.05)) : Matrix4.identity(),
+        height: 300,
+        width: 210,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: backgroundColor,
-        ),
-        child: Column(
-          children: [
-            GradientBox(
-              radius: 20,
-              height: 200,
-              width: 200,
-              child: Center(child: Text("photo")),
+          gradient: const LinearGradient(colors: linerGradient),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(_isHovered ? 0.3 : 0.2),
+              blurRadius: _isHovered ? 12 : 8,
+              offset: const Offset(0, 4),
             ),
-            Container(
-              width: 200,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(spearkername,style: TextStyle(fontSize: 16),),
-                  Text(speakerrole,style: TextStyle(fontSize: 8),)
-                ],
-              ),
-            )
           ],
         ),
-      )
+        padding: const EdgeInsets.all(1),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: backgroundColor,
+          ),
+          child: Column(
+            children: [
+              ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(20)),
+                  child: Image.network(
+                    widget.guestOrJudge.photoUrl,
+                    fit: BoxFit.cover,
+                    height: 200,
+                    width: double.infinity,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: CircularProgressIndicator(color: secondaryColor),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.person, size: 50, color: Colors.grey),
+                  )),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      widget.guestOrJudge.name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.guestOrJudge.role,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

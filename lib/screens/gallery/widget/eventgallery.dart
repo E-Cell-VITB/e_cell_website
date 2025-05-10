@@ -1,39 +1,43 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_cell_website/backend/models/gallery.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/gallery/widget/imagebox.dart';
+import 'package:e_cell_website/services/const/image_compressor.dart';
+import 'package:e_cell_website/services/enums/device.dart';
+
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
 
 class Eventgallery extends StatelessWidget {
-  final String eventname;
-  final int noofphotos;
-
+  // final String eventname;
+  // final int noofphotos;
+  final Gallery gallery;
   const Eventgallery({
-    required this.noofphotos,
-    required this.eventname,
+    // required this.noofphotos,
+    // required this.eventname,
+    required this.gallery,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
+    final List<String> images = gallery.allPhotos + gallery.winnerPhotos;
     int ind;
-
+    int noofphotos = images.length;
+    bool isMobile = size.width < 600;
     if (size.width < 700) {
       ind = (noofphotos > 3) ? 3 : noofphotos;
     } else {
       ind = (noofphotos > 6) ? 6 : noofphotos;
     }
-
     return SizedBox(
       width: size.width * 0.72,
       child: Column(
         children: [
           LinearGradientText(
             child: Text(
-              eventname,
-              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              gallery.name,
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(height: 20),
@@ -49,36 +53,51 @@ class Eventgallery extends StatelessWidget {
                     barrierDismissible: true,
                     builder: (BuildContext context) {
                       return Imagebox(
-                          initialIndex: index, noOfPhotos: noofphotos);
+                        noOfPhotos: images.length,
+                        images: images,
+                        initialIndex: index,
+                        // noOfPhotos: noofphotos,
+                      );
                     },
                   ),
                   borderRadius: BorderRadius.circular(18),
                   child: Container(
                     height: size.height * 0.28,
-                    width: 320,
+                    width: size.width > 600 ? size.width * 0.25 : 320,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(19),
-                      
+                      color: Colors.white,
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(18),
-                      child: CachedNetworkImage(
-                        imageUrl: "https://picsum.photos/seed/$index/500/300",
-                        placeholder: (context, url) => const SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: secondaryColor,
-                            ),
-                          ),
+                        borderRadius: BorderRadius.circular(18),
+                        child: Image.network(
+                          // images[index],
+                          getOptimizedImageUrl(
+                              originalUrl: images[index],
+                              device:
+                                  isMobile ? Device.mobile : Device.desktop),
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: secondaryColor,
+                                ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(Icons.image),
+                        )
+
+                        //  Image.network(
+                        //     'https://picsum.photos/seed/$ind/500/300',
+                        //     fit: BoxFit.cover,
+                        //   )
                         ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        fit: BoxFit.cover,
-                      ),
-            
-                    ),
                   ),
                 );
               },

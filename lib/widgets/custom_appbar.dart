@@ -27,15 +27,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset(
-              'assets/icons/logo.png',
-              height: 46,
+            GestureDetector(
+              onTap: isMobile
+                  ? () {
+                      // Scaffold.of(context).openDrawer();
+                      context.go('/');
+                    }
+                  : () {},
+              child: Image.asset(
+                'assets/icons/logo.png',
+                height: 46,
+              ),
             ),
             if (isMobile)
               LinearGradientText(
                   child: Text(
                 "E-Cell",
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontFamily: 'Lora',
+                    ),
               )),
             if (!isMobile)
               Row(
@@ -93,7 +103,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           child: Text(
             title,
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: primaryColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ),
       ),
