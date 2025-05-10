@@ -159,6 +159,7 @@ class _EventdetailsState extends State<Eventdetails> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          
                           LinearGradientText(
                               child: Text(
                             "Gallery",
