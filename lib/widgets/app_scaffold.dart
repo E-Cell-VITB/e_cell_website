@@ -1,6 +1,11 @@
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/screens/auth/login.dart';
+import 'package:e_cell_website/screens/auth/signup.dart';
+import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
+import 'package:e_cell_website/services/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'custom_appbar.dart';
 
@@ -14,6 +19,8 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _provider = Provider.of<AuthProvider>(context);
+    final currentuser = _provider.user;
     return Scaffold(
       appBar: const CustomAppBar(),
       drawer: Drawer(
@@ -67,23 +74,55 @@ class AppScaffold extends StatelessWidget {
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    backgroundColor: secondaryColor,
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                child: Builder(
+                  builder: (context) => ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      backgroundColor: secondaryColor,
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                  ),
-                  onPressed: () {
-                    // Navigator.pushNamed(context, JoinPage.joinPageRoute);
-                    Navigator.pop(context);
-                    context.go("/joinus");
-                  },
-                  child: Text(
-                    "Join Us",
-                    style: Theme.of(context).textTheme.titleMedium,
+                    onPressed: () {
+                      if(currentuser!=null){
+                        _provider.logout();
+
+                      }
+                      else{
+                      showDialog(
+                          context: context,
+                          builder: (dialogContext) {
+                            final authprovider =
+                                Provider.of<AuthProvider>(dialogContext);
+
+                            return Dialog(
+                              backgroundColor: Colors.white,
+                              child: GradientBox(
+                                radius: 8,
+                                height: 500,
+                                child: authprovider.page == Pages.login
+                                    ? Login()
+                                    : Signup(),
+                              ),
+                            );
+                          })
+                        .then((_) {
+                          
+                          final authProvider =
+                              Provider.of<AuthProvider>(context,listen: false);
+                          authProvider.setPage(Pages.login);
+                        });
+                      }
+                      // Navigator.pushNamed(context, JoinPage.joinPageRoute);
+                      // Navigator.pop(context);
+                      // context.go("/joinus");
+                    },
+                    child: Text(
+                      currentuser!=null?"Log out":
+                      "Log in",
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                   ),
                 ),
               ),
