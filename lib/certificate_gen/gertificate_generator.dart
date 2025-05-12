@@ -151,7 +151,7 @@ class CertificateDialogs {
                                     Navigator.of(context).pop();
                                     _showResultDialog(context, apiUrl: apiUrl);
                                     try {
-                                      print("api url for generation $apiUrl");
+                                      // print("api url for generation $apiUrl");
                                       await provider.fetchCertificate(
                                         identifier: identifierController.text,
                                         apiUrl: apiUrl,
