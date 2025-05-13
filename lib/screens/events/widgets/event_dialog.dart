@@ -28,21 +28,33 @@ class ShowEventBox {
               ),
               borderRadius: BorderRadius.circular(18),
             ),
-            child: Container(
-              height: isMobile ? null : size.height * 0.65,
-              width: isMobile ? size.width * 0.9 : size.width * 0.6,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: eventBoxLinearGradient,
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                String nameToUrlFormat(String name) {
+                  return name.toLowerCase().replaceAll(RegExp(r'\s+'), '-');
+                }
+
+                // Navigate with both ID and name
+                context.go('/events/${event.id}-${nameToUrlFormat(event.name)}',
+                    extra: event);
+              },
+              child: Container(
+                height: isMobile ? null : size.height * 0.65,
+                width: isMobile ? size.width * 0.9 : size.width * 0.6,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: eventBoxLinearGradient,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(18),
                 ),
-                borderRadius: BorderRadius.circular(18),
+                padding: EdgeInsets.all(isMobile ? 20.0 : 35.0),
+                child: isMobile
+                    ? _buildMobileLayout(context, size, event)
+                    : _buildDesktopLayout(context, size, event),
               ),
-              padding: EdgeInsets.all(isMobile ? 20.0 : 35.0),
-              child: isMobile
-                  ? _buildMobileLayout(context, size, event)
-                  : _buildDesktopLayout(context, size, event),
             ),
           ),
         );

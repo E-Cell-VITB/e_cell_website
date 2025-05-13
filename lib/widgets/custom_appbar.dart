@@ -1,7 +1,6 @@
 import 'package:e_cell_website/const/theme.dart';
-import 'package:e_cell_website/screens/auth/login.dart';
-import 'package:e_cell_website/screens/auth/signup.dart';
-import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
+
+import 'package:e_cell_website/screens/auth/widgets/gradient_box_auth.dart';
 import 'package:e_cell_website/services/providers/auth_provider.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +12,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<AuthProvider>(context);
-    final currentuser = _provider.user;
-    final username = _provider.Username;
+    final provider = Provider.of<AuthProvider>(context);
+    final currentuser = provider.user;
+    final username = provider.username;
     // Check if the screen width is less than 768px (mobile view)
     bool isMobile = MediaQuery.of(context).size.width < 720;
 
@@ -67,25 +66,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             if (!isMobile)
-              (_provider.user != null && _provider.Username != null)
+              (provider.user != null && provider.username != null)
                   ? DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                       value: username!,
-                      icon: Icon(Icons.arrow_drop_down,
+                      icon: const Icon(Icons.arrow_drop_down,
                           color: Colors.amberAccent),
                       items: [
                         DropdownMenuItem(
                           value: username,
-                          child: Text(username!),
+                          child: Text(username),
                         ),
-                        DropdownMenuItem(
+                        const DropdownMenuItem(
                           value: 'logout',
                           child: Text("Logout"),
                         ),
                       ],
                       onChanged: (String? value) {
                         if (value == 'logout') {
-                          _provider.logout(); // refresh UI
+                          provider.logout(); // refresh UI
                         }
                       },
                     ))
@@ -100,7 +99,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       onPressed: () {
                         if (currentuser != null) {
-                          _provider.logout();
+                          provider.logout();
                         } else {
                           showDialog(
                               context: context,
@@ -110,15 +109,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
                                 return Dialog(
                                   backgroundColor: Colors.white,
-                                  child: GradientBox(
-                                    radius: 8,
+                                  child: GradientBoxAuth(
+                                    radius: 16,
                                     height:
-                                        MediaQuery.sizeOf(context).height * 0.7,
+                                        MediaQuery.sizeOf(context).height * 0.8,
                                     width:
-                                        MediaQuery.sizeOf(context).width * 0.30,
-                                    child: authprovider.page == Pages.login
-                                        ? Login()
-                                        : Signup(),
+                                        MediaQuery.sizeOf(context).width * 0.4,
+                                    child: authprovider.page.widget,
                                   ),
                                 );
                               }).then((_) {

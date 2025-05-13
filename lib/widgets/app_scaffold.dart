@@ -1,6 +1,5 @@
 import 'package:e_cell_website/const/theme.dart';
-import 'package:e_cell_website/screens/auth/login.dart';
-import 'package:e_cell_website/screens/auth/signup.dart';
+
 import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
 import 'package:e_cell_website/services/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +18,8 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<AuthProvider>(context);
-    final currentuser = _provider.user;
+    final provider = Provider.of<AuthProvider>(context);
+    final currentuser = provider.user;
     return Scaffold(
       appBar: const CustomAppBar(),
       drawer: Drawer(
@@ -85,32 +84,25 @@ class AppScaffold extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      if(currentuser!=null){
-                        _provider.logout();
+                      if (currentuser != null) {
+                        provider.logout();
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (dialogContext) {
+                              final authprovider =
+                                  Provider.of<AuthProvider>(dialogContext);
 
-                      }
-                      else{
-                      showDialog(
-                          context: context,
-                          builder: (dialogContext) {
-                            final authprovider =
-                                Provider.of<AuthProvider>(dialogContext);
-
-                            return Dialog(
-                              backgroundColor: Colors.white,
-                              child: GradientBox(
-                                radius: 8,
-                                height: 500,
-                                child: authprovider.page == Pages.login
-                                    ? Login()
-                                    : Signup(),
-                              ),
-                            );
-                          })
-                        .then((_) {
-                          
+                              return Dialog(
+                                backgroundColor: Colors.white,
+                                child: GradientBox(
+                                    radius: 12,
+                                    height: 500,
+                                    child: authprovider.page.widget),
+                              );
+                            }).then((_) {
                           final authProvider =
-                              Provider.of<AuthProvider>(context,listen: false);
+                              Provider.of<AuthProvider>(context, listen: false);
                           authProvider.setPage(Pages.login);
                         });
                       }
@@ -119,8 +111,7 @@ class AppScaffold extends StatelessWidget {
                       // context.go("/joinus");
                     },
                     child: Text(
-                      currentuser!=null?"Log out":
-                      "Log in",
+                      currentuser != null ? "Log out" : "Log in",
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
