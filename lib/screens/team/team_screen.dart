@@ -8,6 +8,7 @@ import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/loading_indicator.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class TeamScreen extends StatelessWidget {
@@ -17,116 +18,150 @@ class TeamScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return ParticleBackground(
-      child: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            width: size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                LinearGradientText(
-                  child: Text(
-                    "Our Team",
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                SizedBox(
-                  width: size.width * 0.8,
-                  child: RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: size.width > 600
-                                ? "Meet the changemakers of E-Cell VITB. "
-                                : "Meet the changemakers ",
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          TextSpan(
-                            text: "✨",
-                            style:
-                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox(
+                width: size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    LinearGradientText(
+                      child: Text(
+                        "Our Team",
+                        style: Theme.of(context).textTheme.displayLarge,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    SizedBox(
+                      width: size.width * 0.8,
+                      child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: size.width > 600
+                                    ? "Meet the changemakers of E-Cell VITB. "
+                                    : "Meet the changemakers ",
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                              TextSpan(
+                                text: "✨",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
                                       color: secondaryColor,
                                       fontWeight: FontWeight.bold,
                                     ),
-                          ),
-                        ],
-                      )),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                Consumer<TeamProvider>(
-                  builder: (context, teamProvider, _) {
-                    return StreamBuilder<List<TeamMemberModel>>(
-                      stream: teamProvider.teamMembersStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return SizedBox(
-                            height: size.height * 0.6,
-                            child: const Center(
-                              child: LoadingIndicator(),
-                            ),
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          return Center(
-                              child: Text("Error: ${snapshot.error}"));
-                        }
+                              ),
+                            ],
+                          )),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Consumer<TeamProvider>(
+                      builder: (context, teamProvider, _) {
+                        return StreamBuilder<List<TeamMemberModel>>(
+                          stream: teamProvider.teamMembersStream,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return SizedBox(
+                                height: size.height * 0.5,
+                                child: const Center(
+                                  child: LoadingIndicator(),
+                                ),
+                              );
+                            }
+                            if (snapshot.hasError) {
+                              return Center(
+                                  child: Text("Error: ${snapshot.error}"));
+                            }
 
-                        final teamMembers = snapshot.data ?? [];
-                        return Column(
-                          children: Department.values.map((dept) {
-                            List<TeamMemberModel> departmentMembers =
-                                teamMembers
-                                    .where((member) =>
-                                        member.department == dept.name)
-                                    .toList();
+                            final teamMembers = snapshot.data ?? [];
+                            return Column(
+                              children: Department.values.map((dept) {
+                                List<TeamMemberModel> departmentMembers =
+                                    teamMembers
+                                        .where((member) =>
+                                            member.department == dept.name)
+                                        .toList();
 
-                            List<TeamMemberModel> sortedTeamMembers =
-                                teamProvider.teamMemberService
-                                    .sortDepartmentMembers(
-                                        departmentMembers, dept.name);
+                                List<TeamMemberModel> sortedTeamMembers =
+                                    teamProvider.teamMemberService
+                                        .sortDepartmentMembers(
+                                            departmentMembers, dept.name);
 
-                            return departmentMembers.isNotEmpty
-                                ? TeamContainer(
-                                    size: size,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(children: [
-                                        LinearGradientText(
-                                          child: Text(
-                                            dept.toString(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineMedium,
-                                          ),
+                                return departmentMembers.isNotEmpty
+                                    ? TeamContainer(
+                                        size: size,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(children: [
+                                            LinearGradientText(
+                                              child: Text(
+                                                dept.toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineMedium,
+                                              ),
+                                            ),
+                                            ResponsiveProfileCards(
+                                              teamMembers: sortedTeamMembers,
+                                            ),
+                                          ]),
                                         ),
-                                        ResponsiveProfileCards(
-                                          teamMembers: sortedTeamMembers,
-                                        ),
-                                      ]),
-                                    ),
-                                  )
-                                : const SizedBox();
-                          }).toList(),
+                                      )
+                                    : const SizedBox();
+                              }).toList(),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
+                    ),
+                    const SizedBox(height: 24),
+                    const Footer(),
+                  ],
                 ),
-                const SizedBox(height: 24),
-                const Footer(),
-              ],
+              ),
             ),
           ),
-        ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                context.goNamed('recruitmentScreen');
+              },
+              icon: const Icon(Icons.arrow_forward, color: Colors.white),
+              label: const Text(
+                "Join E-Cell",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: secondaryColor,
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                elevation: 8,
+                shadowColor: secondaryColor.withOpacity(0.5),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -144,7 +179,8 @@ class ResponsiveProfileCards extends StatelessWidget {
 
         return isMobile
             ? SingleChildScrollView(
-                child: Column(
+                scrollDirection: Axis.horizontal,
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: List.generate(
@@ -155,6 +191,7 @@ class ResponsiveProfileCards extends StatelessWidget {
                 ),
               )
             : SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
@@ -188,7 +225,8 @@ class TeamContainer extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         // width: size.width * 0.8,
         // height: size.height * 0.5,
-        // constraints: BoxConstraints(minWidth: size.width * 0.3),
+        constraints: BoxConstraints(
+            minWidth: size.width * 0.3, maxWidth: size.width * 0.82),
         decoration: BoxDecoration(
           color: containerBgColor,
           borderRadius: BorderRadius.circular(24.0),

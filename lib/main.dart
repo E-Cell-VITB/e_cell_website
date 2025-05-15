@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
       child: ToastificationWrapper(
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
-          title: 'E-Cell_VITB',
+          title: 'E-Cell VITB',
           // onGenerateRoute: AppNavigator.generateRoute,
           routerConfig: appRouter,
           theme: getAppTheme(),

@@ -5,6 +5,8 @@ import 'package:e_cell_website/screens/events/events_screen.dart';
 import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
 import 'package:e_cell_website/screens/gallery/gallery_screen.dart';
 import 'package:e_cell_website/screens/home/home_page.dart';
+import 'package:e_cell_website/screens/recruitment/applications/recruitment_form_screen.dart';
+import 'package:e_cell_website/screens/recruitment/recruitment_list/user_open_recruitment.dart';
 import 'package:e_cell_website/screens/team/team_screen.dart';
 import 'package:e_cell_website/services/providers/events_provider.dart';
 import 'package:e_cell_website/widgets/app_scaffold.dart';
@@ -112,6 +114,21 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: '/team',
           builder: (context, state) => const TeamScreen(),
+          routes: [
+            GoRoute(
+              path: 'recruitment',
+              name: 'recruitmentScreen',
+              builder: (context, state) => const UserOpenRecruitmentsList(),
+            ),
+            GoRoute(
+              path: 'recruitment/:id',
+              name: 'recruitmentApplications',
+              builder: (context, state) {
+                final recruitmentId = state.pathParameters['id']!;
+                return RecruitmentFormScreen(recruitmentId: recruitmentId);
+              },
+            ),
+          ],
         ),
         GoRoute(
           path: '/blogs',

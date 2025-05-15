@@ -66,7 +66,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             if (!isMobile)
-              (provider.user != null && provider.username != null)
+              (provider.user != null && provider.currentUserModel != null)
                   ? DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                       value: username!,
@@ -102,26 +102,36 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           provider.logout();
                         } else {
                           showDialog(
-                              context: context,
-                              builder: (dialogContext) {
-                                final authprovider =
-                                    Provider.of<AuthProvider>(dialogContext);
-
-                                return Dialog(
-                                  backgroundColor: Colors.white,
-                                  child: GradientBoxAuth(
-                                    radius: 16,
-                                    height:
-                                        MediaQuery.sizeOf(context).height * 0.8,
-                                    width:
-                                        MediaQuery.sizeOf(context).width * 0.4,
-                                    child: authprovider.page.widget,
+                            context: context,
+                            builder: (dialogContext) {
+                              return Dialog(
+                                backgroundColor: Colors.white,
+                                child: SizedBox(
+                                  height:
+                                      MediaQuery.sizeOf(context).height * 0.8,
+                                  width: MediaQuery.sizeOf(context).width * 0.4,
+                                  child: Consumer<AuthProvider>(
+                                    builder: (context, auth, _) {
+                                      return GradientBoxAuth(
+                                        radius: 16,
+                                        height:
+                                            MediaQuery.sizeOf(context).height *
+                                                0.8,
+                                        width:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.4,
+                                        child: auth.page.widget,
+                                      );
+                                    },
                                   ),
-                                );
-                              }).then((_) {
+                                ),
+                              );
+                            },
+                          ).then((_) {
                             final authProvider = Provider.of<AuthProvider>(
                                 context,
                                 listen: false);
+
                             authProvider.setPage(Pages.login);
                           });
                         }
