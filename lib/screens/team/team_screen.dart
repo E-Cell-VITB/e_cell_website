@@ -134,33 +134,47 @@ class TeamScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: 20,
-            right: 20,
-            child: ElevatedButton.icon(
-              onPressed: () {
-                context.goNamed('recruitmentScreen');
-              },
-              icon: const Icon(Icons.arrow_forward, color: Colors.white),
-              label: const Text(
-                "Join E-Cell",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              bottom: 20,
+              right: 20,
+              child: InkWell(
+                onTap: () {
+                  context.goNamed('recruitmentScreen');
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: linerGradient,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 8,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.arrow_forward, color: backgroundColor),
+                      SizedBox(width: 8),
+                      Text(
+                        "Join E-Cell",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: backgroundColor,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: secondaryColor,
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                elevation: 8,
-                shadowColor: secondaryColor.withOpacity(0.5),
-              ),
-            ),
-          )
+              ))
         ],
       ),
     );

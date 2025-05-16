@@ -239,11 +239,12 @@ class UserOpenRecruitmentsList extends StatelessWidget {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: snapshot.data!.docs.length,
-                        separatorBuilder: (context, index) => Divider(
-                          height: 1,
-                          thickness: 1,
-                          color: primaryColor.withOpacity(0.5),
-                        ),
+                        separatorBuilder: (context, index) {
+                          return Divider(
+                              height: 1.5,
+                              thickness: 1,
+                              color: primaryColor.withOpacity(0.5));
+                        },
                         itemBuilder: (context, index) {
                           final doc = snapshot.data!.docs[index];
                           final department = doc['department'] as String;
@@ -256,8 +257,8 @@ class UserOpenRecruitmentsList extends StatelessWidget {
                           return Container(
                             decoration: BoxDecoration(
                               color: index.isEven
-                                  ? backgroundColor.withOpacity(0.3)
-                                  : Colors.transparent,
+                                  ? backgroundColor.withOpacity(0.9)
+                                  : backgroundColor.withOpacity(0.6),
                             ),
                             child: ListTile(
                               contentPadding: EdgeInsets.symmetric(
@@ -364,9 +365,15 @@ class UserOpenRecruitmentsList extends StatelessWidget {
                                         "You need to log in before joining the E-Cell family.",
                                   );
 
+                                  // Store the document ID for later use
+                                  final String documentId = doc.id;
+
+                                  // Create a flag to track if authentication was successful
+                                  bool authSuccessful = false;
+
                                   showDialog(
                                     context: context,
-                                    // barrierDismissible: false,
+                                    barrierDismissible: true,
                                     builder: (dialogContext) {
                                       return Dialog(
                                         backgroundColor: Colors.white,
@@ -379,15 +386,18 @@ class UserOpenRecruitmentsList extends StatelessWidget {
                                                   0.4,
                                           child: Consumer<AuthProvider>(
                                             builder: (context, auth, _) {
+                                              // Check if user has logged in during this dialog session
                                               if (auth.currentUserModel !=
-                                                  null) {
-                                                Future.microtask(() {
-                                                  context.goNamed(
-                                                    'recruitmentApplications',
-                                                    pathParameters: {
-                                                      'id': doc.id,
-                                                    },
-                                                  );
+                                                      null &&
+                                                  !authSuccessful) {
+                                                // Mark that auth was successful to prevent duplicate navigation
+                                                authSuccessful = true;
+
+                                                // Close the dialog after a short delay to allow state to settle
+                                                WidgetsBinding.instance
+                                                    .addPostFrameCallback((_) {
+                                                  Navigator.of(dialogContext).pop(
+                                                      true); // Pass true to indicate success
                                                 });
                                               }
 
@@ -408,12 +418,32 @@ class UserOpenRecruitmentsList extends StatelessWidget {
                                         ),
                                       );
                                     },
-                                  ).then((_) {
-                                    authProvider.setPage(Pages.login);
+                                  ).then((result) {
+                                    if (result == true) {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
+                                        if (ModalRoute.of(context) != null &&
+                                            Navigator.of(context).canPop()) {
+                                          // Use the router safely
+                                          GoRouter.of(context).goNamed(
+                                            'recruitmentApplications',
+                                            pathParameters: {
+                                              'id': documentId,
+                                            },
+                                          );
+                                        } else {
+                                          print(
+                                              "Navigation context is no longer valid. Using fallback method.");
+                                        }
+                                      });
+                                    } else {
+                                      authProvider.setPage(Pages.login);
+                                    }
                                   });
 
                                   return;
                                 }
+
                                 context.goNamed(
                                   'recruitmentApplications',
                                   pathParameters: {

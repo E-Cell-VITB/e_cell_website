@@ -101,6 +101,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         if (currentuser != null) {
                           provider.logout();
                         } else {
+                          bool authSuccessful = false;
                           showDialog(
                             context: context,
                             builder: (dialogContext) {
@@ -112,6 +113,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   width: MediaQuery.sizeOf(context).width * 0.4,
                                   child: Consumer<AuthProvider>(
                                     builder: (context, auth, _) {
+                                      if (auth.currentUserModel != null &&
+                                          !authSuccessful) {
+                                        authSuccessful = true;
+
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          Navigator.of(dialogContext).pop(true);
+                                        });
+                                      }
+
                                       return GradientBoxAuth(
                                         radius: 16,
                                         height:

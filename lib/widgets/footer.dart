@@ -244,6 +244,7 @@ mentorship, networking, and industry collaborations.""",
       {'name': 'Events', 'route': '/events'},
       {'name': 'Blogs', 'route': '/blogs'},
       {'name': 'Team', 'route': '/team'},
+      {'name': 'Join E-Cell', 'route': '/team/recruitment'}
     ];
 
     return Column(
@@ -363,7 +364,7 @@ mentorship, networking, and industry collaborations.""",
         ),
         const SizedBox(height: 10),
         InkWell(
-          onTap: () => _launchUrl('mailto:president.ecell@vishnu.edu.in'),
+          onTap: () => _launchUrl('mailto:Info.ecell@vishnu.edu.in'),
           child: const Row(
             children: [
               Icon(
@@ -373,7 +374,7 @@ mentorship, networking, and industry collaborations.""",
               ),
               SizedBox(width: 10),
               Text(
-                'president.ecell@vishnu.edu.in',
+                'Info.ecell@vishnu.edu.in',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14,

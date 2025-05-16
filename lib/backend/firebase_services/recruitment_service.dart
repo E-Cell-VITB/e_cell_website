@@ -44,14 +44,17 @@ class RecruitmentService {
   // Submit a new application
   Future<DocumentReference> submitApplication(
       RecruitmentForm application) async {
-    // Convert application to JSON
     final applicationData = application.toJson();
 
-    // Add timestamp
     applicationData['submittedAt'] = FieldValue.serverTimestamp();
 
-    // Add to Firestore
-    return _firestore.collection(_applicationsCollection).add(applicationData);
+    final docRef = await _firestore
+        .collection(_applicationsCollection)
+        .add(applicationData);
+
+    await docRef.update({'applicationId': docRef.id});
+
+    return docRef;
   }
 
   // Update an existing application
