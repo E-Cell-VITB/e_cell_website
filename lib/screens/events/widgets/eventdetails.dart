@@ -538,7 +538,7 @@ class _EventDetailsState extends State<EventDetails> {
       ),
       mainAxisSpacing: 4,
       crossAxisSpacing: 4,
-      itemCount: widget.event.allPhotos.length,
+      itemCount: widget.event.allPhotos.length, 
       itemBuilder: (context, index) {
         final ratio = _getRandomAspectRatio();
 
