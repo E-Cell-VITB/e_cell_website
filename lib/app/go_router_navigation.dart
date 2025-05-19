@@ -121,11 +121,15 @@ final GoRouter appRouter = GoRouter(
               builder: (context, state) => const UserOpenRecruitmentsList(),
             ),
             GoRoute(
-              path: 'recruitment/:id',
+              path: 'recruitment/:id/:department',
               name: 'recruitmentApplications',
               builder: (context, state) {
                 final recruitmentId = state.pathParameters['id']!;
-                return RecruitmentFormScreen(recruitmentId: recruitmentId);
+                final department = state.pathParameters['department']!;
+                return RecruitmentFormScreen(
+                  recruitmentId: recruitmentId,
+                  dept: department,
+                );
               },
             ),
           ],
