@@ -21,7 +21,7 @@ class RecruitmentService {
           .snapshots();
     } catch (e) {
       // Log the error for debugging
-      print('Error getting open recruitments: $e');
+
       // Rethrow to allow the provider to handle it
       throw Exception('Failed to load recruitments: $e');
     }
@@ -135,9 +135,6 @@ class EmailService {
             }),
           )
           .timeout(const Duration(seconds: 30));
-
-      print('Response status: ${response.statusCode}');
-      print('Raw response: ${response.body}');
 
       final data = jsonDecode(response.body);
 
