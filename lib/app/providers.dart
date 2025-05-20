@@ -1,6 +1,7 @@
 import 'package:e_cell_website/services/providers/auth_provider.dart';
 import 'package:e_cell_website/services/providers/blogs_provider.dart';
 import 'package:e_cell_website/services/providers/certificate_provider.dart';
+import 'package:e_cell_website/services/providers/event_register_provider.dart';
 import 'package:e_cell_website/services/providers/events_provider.dart';
 import 'package:e_cell_website/services/providers/gallery_provider.dart';
 import 'package:e_cell_website/services/providers/recruitment_provider.dart';
@@ -13,6 +14,7 @@ import 'package:provider/single_child_widget.dart';
 
 class AppProviders {
   static List<SingleChildWidget> providers = [
+    ChangeNotifierProvider(create: (_)=>EventRegisterProvider()),
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => BlogProvider()),
     ChangeNotifierProvider(create: (_) => TeamProvider()),
