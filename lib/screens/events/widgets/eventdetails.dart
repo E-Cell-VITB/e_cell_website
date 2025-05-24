@@ -409,97 +409,65 @@ class _EventDetailsState extends State<EventDetails> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: List.generate(
-                    widget.event.socialLink.length,
-                    (index) {
-                      SocialLink socialLink = widget.event.socialLink[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            launchUrl(Uri.parse(socialLink.url),
-                                webOnlyWindowName: '_self');
-                          },
-                          child: Tooltip(
-                            message: socialLink.urlType.toString(),
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: List.generate(
+                  widget.event.socialLink.length,
+                  (index) {
+                    SocialLink socialLink = widget.event.socialLink[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: InkWell(
+                        onTap: () {
+                          launchUrl(Uri.parse(socialLink.url),
+                              webOnlyWindowName: '_self');
+                        },
+                        child: Tooltip(
+                          message: socialLink.urlType.toString(),
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          textStyle: TextStyle(color: Colors.white),
+                          verticalOffset: 12,
+                          child: Container(
+                            height: 46,
+                            width: 46,
                             decoration: BoxDecoration(
-                              color: Colors.black87,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            textStyle: TextStyle(color: Colors.white),
-                            verticalOffset: 12,
-                            child: Container(
-                              height: 46,
-                              width: 46,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                gradient: LinearGradient(
-                                  colors: eventBoxLinearGradient,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.3),
-                                    spreadRadius: 1,
-                                    blurRadius: 3,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
+                              borderRadius: BorderRadius.circular(15),
+                              gradient: LinearGradient(
+                                colors: eventBoxLinearGradient,
                               ),
-                              child: Center(
-                                child: Image.asset(
-                                  socialLink.urlType.icon,
-                                  fit: BoxFit.contain,
-                                  height: 26,
-                                  width: 26,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: Offset(0, 2),
                                 ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Image.asset(
+                                socialLink.urlType.icon,
+                                fit: BoxFit.contain,
+                                height: 26,
+                                width: 26,
                               ),
                             ),
                           ),
                         ),
-                      );
-                    },
-                  )
-
-                  // [
-
-                  // Link 3
-                  // Padding(
-                  //   padding: const EdgeInsets.only(bottom: 8.0),
-                  //   child: GestureDetector(
-                  //     onTap: () {
-                  //       // Action for link 3
-                  //       launchUrl(Uri.parse('https://example.com/link3'),
-                  //           webOnlyWindowName: '_self');
-                  //     },
-                  //     child: Container(
-                  //       height: 46,
-                  //       width: 46,
-                  //       decoration: BoxDecoration(
-                  //         color: Colors.green,
-                  //         borderRadius: BorderRadius.circular(15),
-                  //         boxShadow: [
-                  //           BoxShadow(
-                  //             color: Colors.black.withOpacity(0.3),
-                  //             spreadRadius: 1,
-                  //             blurRadius: 3,
-                  //             offset: Offset(0, 2),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //       child: Icon(Icons.share, size: 30, color: Colors.white),
-                  //     ),
-                  //   ),
-                  // ),
-                  // ],
-                  ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ),
 
         // Main floating button that toggles the menu
-        GestureDetector(
+        InkWell(
           onTap: () {
             setState(() {
               _isMenuOpen = !_isMenuOpen;
@@ -538,7 +506,7 @@ class _EventDetailsState extends State<EventDetails> {
       ),
       mainAxisSpacing: 4,
       crossAxisSpacing: 4,
-      itemCount: widget.event.allPhotos.length, 
+      itemCount: widget.event.allPhotos.length,
       itemBuilder: (context, index) {
         final ratio = _getRandomAspectRatio();
 

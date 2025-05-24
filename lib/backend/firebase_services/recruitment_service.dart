@@ -98,7 +98,8 @@ class RecruitmentService {
 
 class EmailService {
   final String _appsScriptUrl =
-      'https://script.google.com/macros/s/AKfycby2Pcia2T8pFblgmRm7Ls_Y1w6PGuM4mEseVJ-KzB0y1SdGjhXFjMwgIKYjfO0pASzO/exec';
+      // 'https://script.google.com/macros/s/AKfycby2Pcia2T8pFblgmRm7Ls_Y1w6PGuM4mEseVJ-KzB0y1SdGjhXFjMwgIKYjfO0pASzO/exec';
+      "https://script.google.com/macros/s/AKfycbwEnAhSnTf7KdB-If72cJ1OPasif5Ni386pPYzwSZl9G4PvKGadUxIcMyP8rYH9o5xTDg/exec";
 
   /// Sends an application received email via Apps Script
   Future<void> sendApplicationReceivedEmail({
@@ -138,14 +139,14 @@ class EmailService {
 
       final data = jsonDecode(response.body);
 
-      if (data['success'] != true) {
-        final errorMessage =
-            data['error'] ?? 'Failed to send $operationName email';
+      if (data['success'] == false) {
+        // final errorMessage =
+        //     data['message'] ?? 'Failed to send $operationName email';
 
-        throw Exception(errorMessage);
+        // throw Exception(errorMessage);
       }
     } catch (e) {
-      throw Exception('Error sending $operationName email: $e');
+      // throw Exception('Error sending $operationName email: $e');
     }
   }
 
