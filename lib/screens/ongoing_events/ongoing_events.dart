@@ -1,22 +1,20 @@
 import 'package:e_cell_website/const/theme.dart';
+
 import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
-import 'package:e_cell_website/screens/events/widgets/register_form.dart';
 import 'package:e_cell_website/screens/events/widgets/time_box.dart';
-import 'package:e_cell_website/services/providers/event_register_provider.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class Ongoing_Events extends StatelessWidget {
-  Ongoing_Events({super.key});
+import 'widgets/count_down_time.dart';
+
+class OngoingEvents extends StatelessWidget {
+  const OngoingEvents({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final _register_provider = Provider.of<EventRegisterProvider>(context);
     double screenwidth = MediaQuery.sizeOf(context).width;
     final bool isMobile = screenwidth < 600;
-
     return Scaffold(
       body: ParticleBackground(
         child: SingleChildScrollView(
@@ -35,7 +33,7 @@ class Ongoing_Events extends StatelessWidget {
                         : Theme.of(context).textTheme.displayLarge,
                   )),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 SelectableText(
@@ -43,17 +41,17 @@ class Ongoing_Events extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 35,
                 ),
                 Container(
                   height: isMobile ? 100 : 180,
                   width: MediaQuery.sizeOf(context).width * 0.9,
                   decoration: BoxDecoration(
-                      color: Color(0xFF303030),
+                      color: const Color(0xFF303030),
                       borderRadius: BorderRadius.circular(9)),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 35,
                 ),
                 SizedBox(
@@ -68,35 +66,13 @@ class Ongoing_Events extends StatelessWidget {
                 SizedBox(
                   height: isMobile ? 15 : 35,
                 ),
-                SizedBox(
-                  width: isMobile ? screenwidth * 0.8 : screenwidth * 0.4,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TimeBox(count: "02", type: "Days"),
-                      LinearGradientText(
-                          child: Text(
-                        ":",
-                        style: Theme.of(context).textTheme.displayLarge,
-                      )),
-                      TimeBox(count: "12", type: "Hours"),
-                      LinearGradientText(
-                          child: Text(
-                        ":",
-                        style: Theme.of(context).textTheme.displayLarge,
-                      )),
-                      TimeBox(count: "30", type: "Minutes"),
-                      LinearGradientText(
-                          child: Text(
-                        ":",
-                        style: Theme.of(context).textTheme.displayLarge,
-                      )),
-                      TimeBox(count: "30", type: "Seconds"),
-                    ],
-                  ),
+                CountdownTimerWidget(
+                  startDateTime: DateTime.now(),
+                  endDateTime: DateTime(2025, 6, 1, 12, 0, 0),
+                  isMobile: MediaQuery.of(context).size.width < 600,
+                  screenWidth: MediaQuery.of(context).size.width,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 45,
                 ),
                 SizedBox(
@@ -132,7 +108,7 @@ class Ongoing_Events extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        padding: EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(15),
                         height: isMobile ? 80 : 120,
                         width: isMobile ? 170 : 280,
                         decoration: BoxDecoration(
@@ -172,7 +148,7 @@ class Ongoing_Events extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(15),
                         height: isMobile ? 80 : 120,
                         width: isMobile ? 170 : 280,
                         decoration: BoxDecoration(
@@ -294,24 +270,7 @@ class Ongoing_Events extends StatelessWidget {
                                     ),
 
                                     //register button
-
                                     GestureDetector(
-                                      onTap: () async {
-                                        final textfields=await _register_provider.displayTextFeilds("Sandeep");
-                                        showDialog(
-                                            context: context,
-                                            builder: (dialogContext) {
-                                              return Dialog(
-                                                backgroundColor: Colors.white,
-                                                child: GradientBox(
-                                                  radius: 12,
-                                                  height:600,
-                                                  width: MediaQuery.sizeOf(context).width *0.35,
-                                                  child: RegisterForm(textfeilds: textfields,),
-                                                ),
-                                              );
-                                            });
-                                      },
                                       child: Container(
                                         padding: EdgeInsets.symmetric(
                                             vertical: isMobile ? 5 : 10,
@@ -319,7 +278,7 @@ class Ongoing_Events extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(7),
-                                          gradient: LinearGradient(
+                                          gradient: const LinearGradient(
                                               colors: linerGradient),
                                         ),
                                         child: Center(
@@ -331,7 +290,7 @@ class Ongoing_Events extends StatelessWidget {
                                               fontWeight: FontWeight.bold),
                                         )),
                                       ),
-                                    ),
+                                    )
                                   ],
                                 )
                               ],

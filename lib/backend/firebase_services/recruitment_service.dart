@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_cell_website/backend/models/recruitment_form.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class RecruitmentService {
   final FirebaseFirestore _firestore;
@@ -19,7 +21,7 @@ class RecruitmentService {
           .snapshots();
     } catch (e) {
       // Log the error for debugging
-      print('Error getting open recruitments: $e');
+
       // Rethrow to allow the provider to handle it
       throw Exception('Failed to load recruitments: $e');
     }
@@ -92,4 +94,62 @@ class RecruitmentService {
 
     return null;
   }
+}
+
+class EmailService {
+  final String _appsScriptUrl =
+      // 'https://script.google.com/macros/s/AKfycby2Pcia2T8pFblgmRm7Ls_Y1w6PGuM4mEseVJ-KzB0y1SdGjhXFjMwgIKYjfO0pASzO/exec';
+      "https://script.google.com/macros/s/AKfycbwEnAhSnTf7KdB-If72cJ1OPasif5Ni386pPYzwSZl9G4PvKGadUxIcMyP8rYH9o5xTDg/exec";
+
+  /// Sends an application received email via Apps Script
+  Future<void> sendApplicationReceivedEmail({
+    required String email,
+    required String name,
+    required String position,
+  }) async {
+    await _sendEmail(
+      action: 'applicationReceived',
+      email: email,
+      name: name,
+      position: position,
+      operationName: 'application submission',
+    );
+  }
+
+  /// Private helper method to handle all types of email sending
+  Future<void> _sendEmail({
+    required String action,
+    required String email,
+    required String name,
+    required String position,
+    required String operationName,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse(_appsScriptUrl),
+            body: jsonEncode({
+              'action': action,
+              'email': email,
+              'name': name,
+              'position': position,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      final data = jsonDecode(response.body);
+
+      if (data['success'] == false) {
+        // final errorMessage =
+        //     data['message'] ?? 'Failed to send $operationName email';
+
+        // throw Exception(errorMessage);
+      }
+    } catch (e) {
+      // throw Exception('Error sending $operationName email: $e');
+    }
+  }
+
+  /// Returns the current Apps Script URL
+  String getAppsScriptUrl() => _appsScriptUrl;
 }

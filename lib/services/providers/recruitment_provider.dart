@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 
 class RecruitmentProvider extends ChangeNotifier {
   final RecruitmentService _recruitmentService;
-
+  final EmailService _emailService = EmailService();
   // State variables
   bool _isLoading = false;
   String? _errorMessage;
@@ -57,8 +57,24 @@ class RecruitmentProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> checkEmail(String email, String recruitmentId) async {
+    try {
+      final hasApplied =
+          await _recruitmentService.hasUserApplied(recruitmentId, email);
+
+      if (hasApplied) {
+        _handleError('You have already applied for this recruitment');
+        return;
+      }
+    } catch (e) {
+      _handleError('Failed to submit application: ${e.toString()}');
+      return;
+    }
+  }
+
   // Submit a new application
-  Future<String?> submitApplication(RecruitmentForm application) async {
+  Future<String?> submitApplication(
+      RecruitmentForm application, String dept) async {
     _setLoading(true);
 
     try {
@@ -76,7 +92,11 @@ class RecruitmentProvider extends ChangeNotifier {
 
       // Update the application with the new ID
       _currentApplication = application.copyWith(applicationId: docRef.id);
-
+      await _emailService.sendApplicationReceivedEmail(
+        email: application.emailAddress,
+        name: application.name,
+        position: dept,
+      );
       _setLoading(false);
       return docRef.id;
     } catch (e) {

@@ -11,10 +11,12 @@ import 'package:provider/provider.dart';
 
 class RecruitmentFormScreen extends StatefulWidget {
   final String recruitmentId;
+  final String dept;
 
   const RecruitmentFormScreen({
     super.key,
     required this.recruitmentId,
+    required this.dept,
   });
 
   @override
@@ -111,8 +113,10 @@ class _RecruitmentFormScreenState extends State<RecruitmentFormScreen> {
       final recruitmentProvider =
           Provider.of<RecruitmentProvider>(context, listen: false);
 
-      final applicationId =
-          await recruitmentProvider.submitApplication(recruitmentForm);
+      final applicationId = await recruitmentProvider.submitApplication(
+        recruitmentForm,
+        widget.dept,
+      );
 
       if (applicationId != null) {
         setState(() {
@@ -152,6 +156,14 @@ class _RecruitmentFormScreenState extends State<RecruitmentFormScreen> {
       isCurrentStepValid = _clubInvolvementController.text.isNotEmpty;
     }
 
+    if (!_isValidEmail(_emailController.text)) {
+      showCustomToast(
+        title: "Incorrect Email",
+        description: "Only Vishnu Emails are allowed..",
+      );
+      return;
+    }
+
     if (!isCurrentStepValid) {
       showCustomToast(
         title: "Form Incomplete",
@@ -177,7 +189,8 @@ class _RecruitmentFormScreenState extends State<RecruitmentFormScreen> {
 
   bool _isValidEmail(String email) {
     final emailRegExp = RegExp(r'^[a-zA-Z0-9._%+-]+@vishnu\.edu\.in$');
-    return emailRegExp.hasMatch(email);
+
+    return emailRegExp.hasMatch(email.trim());
   }
 
   @override
@@ -295,6 +308,9 @@ class _RecruitmentFormScreenState extends State<RecruitmentFormScreen> {
       isActive: _currentStep >= 0,
       content: Column(
         children: [
+          const SizedBox(
+            height: 10,
+          ),
           _buildTextField(
             controller: _nameController,
             labelText: 'Full Name',

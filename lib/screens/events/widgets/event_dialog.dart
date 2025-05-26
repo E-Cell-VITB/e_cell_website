@@ -1,6 +1,5 @@
 import 'package:e_cell_website/backend/models/event.dart';
 import 'package:e_cell_website/const/theme.dart';
-import 'package:e_cell_website/screens/events/ongoing_events.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -150,15 +149,14 @@ class ShowEventBox {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-           Navigator.push(context, MaterialPageRoute(builder: (context)=>Ongoing_Events()));
-          // Navigator.pop(context);
-          // String nameToUrlFormat(String name) {
-          //   return name.toLowerCase().replaceAll(RegExp(r'\s+'), '-');
-          // }
+          Navigator.pop(context);
+          String nameToUrlFormat(String name) {
+            return name.toLowerCase().replaceAll(RegExp(r'\s+'), '-');
+          }
 
-          // // Navigate with both ID and name
-          // context.go('/events/${event.id}-${nameToUrlFormat(event.name)}',
-          //     extra: event);
+          // Navigate with both ID and name
+          context.go('/events/${event.id}-${nameToUrlFormat(event.name)}',
+              extra: event);
         },
         child: Container(
           height: isDesktop ? size.height * 0.05 : 40,
