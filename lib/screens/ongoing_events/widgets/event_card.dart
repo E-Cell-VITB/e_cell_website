@@ -8,49 +8,52 @@ class EventCard extends StatelessWidget {
   final String description;
   final String eventtype;
   final DateTime eventdate;
-  final String reward;
-   EventCard({
-    required this.eventname,
-    required this.description,
-    required this.eventtype,
-    required this.eventdate,
-    required this.reward,
-    super.key});
+  final double reward;
+  EventCard(
+      {required this.eventname,
+      required this.description,
+      required this.eventtype,
+      required this.eventdate,
+      required this.reward,
+      super.key});
 
-  String remaining_days(DateTime date){
+  String remaining_days(DateTime date) {
     final now = DateTime.now();
-  final difference = date.difference(now);
+    final difference = date.difference(now);
 
-  if (difference.isNegative) {
-    return 'Event has ended';
+    if (difference.isNegative) {
+      return 'Event has ended';
+    }
+
+    final days = difference.inDays;
+    final hours = difference.inHours % 24;
+    final minutes = difference.inMinutes % 60;
+    final seconds = difference.inSeconds % 60;
+
+    if (days > 0) {
+      return '$days days left';
+    } else if (hours > 0) {
+      return '$hours hours left';
+    } else if (minutes > 0) {
+      return '$minutes minutes left';
+    } else {
+      return '$seconds seconds left';
+    }
   }
 
-  final days = difference.inDays;
-  final hours = difference.inHours % 24;
-  final minutes = difference.inMinutes % 60;
-  final seconds = difference.inSeconds % 60;
-
-  if (days > 0) {
-    return '$days days left';
-  } else if (hours > 0) {
-    return '$hours hours left';
-  } else if (minutes > 0) {
-    return '$minutes minutes left';
-  } else {
-    return '$seconds seconds left';
-  }
-  }
-
-  
   @override
   Widget build(BuildContext context) {
-    bool isMobile=MediaQuery.of(context).size.width<700;
+    bool isMobile = MediaQuery.of(context).size.width < 700;
     return GradientBox(
       radius: 18,
-      height:isMobile?150: 250,
-      width:isMobile?MediaQuery.of(context).size.width*0.9: MediaQuery.of(context).size.width * 0.8,
+      height: isMobile ? 150 : 250,
+      width: isMobile
+          ? MediaQuery.of(context).size.width * 0.9
+          : MediaQuery.of(context).size.width * 0.8,
       child: Padding(
-        padding: isMobile?EdgeInsets.symmetric(vertical: 12,horizontal: 20) :EdgeInsets.symmetric(vertical: 18.0,horizontal: 40),
+        padding: isMobile
+            ? EdgeInsets.symmetric(vertical: 12, horizontal: 20)
+            : EdgeInsets.symmetric(vertical: 18.0, horizontal: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -60,8 +63,8 @@ class EventCard extends StatelessWidget {
               children: [
                 LinearGradientText(
                     child: Text(
-                    eventname,
-                  style: TextStyle(fontSize:isMobile?18: 30),
+                  eventname,
+                  style: TextStyle(fontSize: isMobile ? 18 : 30),
                 )),
                 Row(
                   children: [
@@ -78,7 +81,9 @@ class EventCard extends StatelessWidget {
             ),
             SelectableText(
               description,
-              style: TextStyle(color: Color(0xFFC4C4C4),fontSize:isMobile?8: 16),
+              style: TextStyle(
+                  color: Color(0xFFC4C4C4), fontSize: isMobile ? 8 : 16),
+              maxLines: isMobile ? 3 : 4,
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,22 +91,35 @@ class EventCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    detail_tile(isMobile,  Icons.groups_3_outlined, eventtype),
+                    detail_tile(isMobile, Icons.groups_3_outlined, eventtype),
                     SizedBox(
-                      width:isMobile?10: 16,
+                      width: isMobile ? 10 : 16,
                     ),
-                    detail_tile(isMobile, Icons.calendar_month_outlined, DateFormat('dd-MM-yyyy').format(eventdate)),
+                    detail_tile(isMobile, Icons.calendar_month_outlined,
+                        DateFormat('dd-MM-yyyy').format(eventdate)),
                     SizedBox(
-                      width:isMobile?10:16,
+                      width: isMobile ? 10 : 16,
                     ),
-                    detail_tile(isMobile, Icons.emoji_events_outlined, reward),
+                    if (reward != 0)
+                      detail_tile(isMobile, Icons.emoji_events_outlined,
+                          reward.toString()),
                   ],
                 ),
                 Row(
                   children: [
-                    LinearGradientText(child: Text("Register Now",style: TextStyle(fontSize:isMobile?9: 16),)),
-                    SizedBox(width: 8,),
-                    Icon(Icons.keyboard_double_arrow_right_outlined,color: Colors.amberAccent,size:isMobile?8: 15,),
+                    LinearGradientText(
+                        child: Text(
+                      "Register Now",
+                      style: TextStyle(fontSize: isMobile ? 9 : 16),
+                    )),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Icon(
+                      Icons.keyboard_double_arrow_right_outlined,
+                      color: Colors.amberAccent,
+                      size: isMobile ? 8 : 15,
+                    ),
                   ],
                 )
               ],
@@ -112,11 +130,13 @@ class EventCard extends StatelessWidget {
     );
   }
 
-  Widget detail_tile(bool isMobile,IconData icon, String heading) {
+  Widget detail_tile(bool isMobile, IconData icon, String heading) {
     return Container(
-      height:isMobile?20: 40,
-      width:isMobile?60: 160,
-      padding:isMobile?EdgeInsets.all(2): EdgeInsets.symmetric(vertical: 10,horizontal: 15),
+      height: isMobile ? 20 : 40,
+      width: isMobile ? 60 : 160,
+      padding: isMobile
+          ? EdgeInsets.all(2)
+          : EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
         color: Color.fromARGB(255, 43, 43, 43),
@@ -124,7 +144,17 @@ class EventCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [Icon(icon,size:isMobile?6: 20,color: Colors.white,), Text(heading,style: TextStyle(fontSize: isMobile?6:16),)],
+        children: [
+          Icon(
+            icon,
+            size: isMobile ? 6 : 20,
+            color: Colors.white,
+          ),
+          Text(
+            heading,
+            style: TextStyle(fontSize: isMobile ? 6 : 16),
+          )
+        ],
       ),
     );
   }
