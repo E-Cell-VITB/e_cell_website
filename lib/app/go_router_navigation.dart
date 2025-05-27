@@ -7,6 +7,7 @@ import 'package:e_cell_website/screens/gallery/gallery_screen.dart';
 import 'package:e_cell_website/screens/home/home_page.dart';
 import 'package:e_cell_website/screens/ongoing_events/ongoing_events_detail.dart';
 import 'package:e_cell_website/screens/ongoing_events/ongoing_events.dart';
+import 'package:e_cell_website/screens/ongoing_events/registration_form.dart';
 import 'package:e_cell_website/screens/recruitment/applications/recruitment_form_screen.dart';
 import 'package:e_cell_website/screens/recruitment/recruitment_list/user_open_recruitment.dart';
 import 'package:e_cell_website/screens/team/team_screen.dart';
@@ -156,10 +157,8 @@ final GoRouter appRouter = GoRouter(
                 builder: (context, state) {
                   final eventId = state.pathParameters['eventId']!;
                   // Placeholder for registration form screen
-                  return Scaffold(
-                    body: Center(
-                        child:
-                            Text('Registration Form for Event ID: $eventId')),
+                  return OngoingEventRegister(
+                    eventId: eventId,
                   );
                 },
               ),

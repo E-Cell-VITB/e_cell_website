@@ -784,7 +784,7 @@ class HeadingWidget extends StatelessWidget {
 
 class GradientBox extends StatelessWidget {
   final Widget child;
-  final double height;
+  final double? height;
   final double? width;
   final double radius;
   final VoidCallback? onTap;
@@ -793,7 +793,7 @@ class GradientBox extends StatelessWidget {
     super.key,
     required this.radius,
     required this.child,
-    required this.height,
+    this.height,
     this.width,
     this.onTap,
   });

@@ -15,8 +15,8 @@ class OngoingEventProvider extends ChangeNotifier {
   String? _errorEvents;
   String? _errorSchedules;
   String? _errorUpdates;
+  String? _errorRegistration;
 
-  // Getters
   List<OngoingEvent> get events => _events;
   OngoingEvent? get currentEvent => _currentEvent;
   List<Schedule> get schedules => _schedules;
@@ -27,8 +27,8 @@ class OngoingEventProvider extends ChangeNotifier {
   String? get errorEvents => _errorEvents;
   String? get errorSchedules => _errorSchedules;
   String? get errorUpdates => _errorUpdates;
+  String? get errorRegistration => _errorRegistration;
 
-  // Set loading state and notify listeners
   void _setLoading(String type, bool value) {
     switch (type) {
       case 'events':
@@ -44,7 +44,6 @@ class OngoingEventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Fetch all events from Firestore
   Future<void> fetchEvents() async {
     _setLoading('events', true);
     try {
@@ -58,7 +57,6 @@ class OngoingEventProvider extends ChangeNotifier {
     }
   }
 
-  // Fetch a single event by ID
   Future<void> fetchEventById(String eventId) async {
     _setLoading('events', true);
     try {
@@ -72,7 +70,6 @@ class OngoingEventProvider extends ChangeNotifier {
     }
   }
 
-  // Fetch schedules for an event
   Future<void> fetchSchedules(String eventId) async {
     _setLoading('schedules', true);
     try {
@@ -86,7 +83,6 @@ class OngoingEventProvider extends ChangeNotifier {
     }
   }
 
-  // Fetch updates for an event
   Future<void> fetchUpdates(String eventId) async {
     _setLoading('updates', true);
     try {
@@ -97,6 +93,29 @@ class OngoingEventProvider extends ChangeNotifier {
       _updates = [];
     } finally {
       _setLoading('updates', false);
+    }
+  }
+
+  Future<void> submitRegistration(String eventId, String? teamName,
+      List<Map<String, dynamic>> participants) async {
+    try {
+      _errorRegistration = null;
+      await _eventService.submitRegistration(eventId, teamName, participants);
+      notifyListeners();
+    } catch (e) {
+      _errorRegistration = 'Failed to submit registration: $e';
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<bool> checkUserRegistration(String eventId) async {
+    try {
+      return await _eventService.checkUserRegistration(eventId);
+    } catch (e) {
+      _errorRegistration = 'Failed to check registration: $e';
+      notifyListeners();
+      return false;
     }
   }
 }

@@ -1,8 +1,11 @@
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/screens/auth/widgets/gradient_box_auth.dart';
 import 'package:e_cell_website/screens/ongoing_events/widgets/count_down_time.dart';
 import 'package:e_cell_website/screens/ongoing_events/widgets/evaluation_criteria.dart';
 import 'package:e_cell_website/screens/ongoing_events/widgets/guests_and_judges.dart';
 import 'package:e_cell_website/screens/ongoing_events/widgets/social_links.dart';
+import 'package:e_cell_website/services/const/toaster.dart';
+import 'package:e_cell_website/services/providers/auth_provider.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
@@ -685,14 +688,30 @@ class OngoingEventDetails extends StatelessWidget {
                             SizedBox(
                               width: isMobile
                                   ? screenWidth * 0.8
-                                  : screenWidth * 0.4,
+                                  : isTablet
+                                      ? screenWidth * 0.5
+                                      : screenWidth * 0.4,
+                              height: isMobile
+                                  ? 180
+                                  : isTablet
+                                      ? 200
+                                      : 225, // Responsive height
                               child: Center(
                                 child: Stack(
                                   children: [
                                     Image.asset(
                                       "assets/images/ticket.png",
-                                      height: 225,
-                                      width: screenWidth * 0.8,
+                                      height: isMobile
+                                          ? 180
+                                          : isTablet
+                                              ? 200
+                                              : 225, // Match SizedBox height
+                                      width: isMobile
+                                          ? screenWidth * 0.8
+                                          : isTablet
+                                              ? screenWidth * 0.5
+                                              : screenWidth * 0.4,
+                                      fit: BoxFit.cover,
                                     ),
                                     Positioned.fill(
                                       child: Align(
@@ -705,8 +724,16 @@ class OngoingEventDetails extends StatelessWidget {
                                           children: [
                                             Image.asset(
                                               "assets/images/Ecell.png",
-                                              height: isMobile ? 80 : 180,
-                                              width: isMobile ? 80 : 180,
+                                              height: isMobile
+                                                  ? 60
+                                                  : isTablet
+                                                      ? 120
+                                                      : 180,
+                                              width: isMobile
+                                                  ? 60
+                                                  : isTablet
+                                                      ? 120
+                                                      : 180,
                                               fit: BoxFit.cover,
                                             ),
                                             Column(
@@ -716,29 +743,45 @@ class OngoingEventDetails extends StatelessWidget {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 LinearGradientText(
-                                                    child: Text(
-                                                        "Grab your Spot",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: isMobile
-                                                                ? 18
-                                                                : 25))),
-
-                                                SizedBox(
-                                                  height: isMobile ? 8 : 15,
+                                                  child: Text(
+                                                    "Grab your Spot",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: isMobile
+                                                          ? 16
+                                                          : isTablet
+                                                              ? 20
+                                                              : 25,
+                                                    ),
+                                                  ),
                                                 ),
-                                                //time remaining
+                                                SizedBox(
+                                                    height: isMobile
+                                                        ? 6
+                                                        : isTablet
+                                                            ? 10
+                                                            : 15),
+                                                // Time remaining
                                                 Container(
-                                                  height: isMobile ? 20 : 30,
-                                                  width: isMobile ? 90 : 118,
+                                                  height: isMobile
+                                                      ? 18
+                                                      : isTablet
+                                                          ? 24
+                                                          : 30,
+                                                  width: isMobile
+                                                      ? 80
+                                                      : isTablet
+                                                          ? 100
+                                                          : 118,
                                                   decoration: BoxDecoration(
-                                                      color:
-                                                          const Color.fromARGB(
-                                                              255, 39, 39, 39),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20)),
+                                                    color: const Color.fromARGB(
+                                                        255, 39, 39, 39),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      isMobile ? 15 : 20,
+                                                    ),
+                                                  ),
                                                   child: Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -747,74 +790,196 @@ class OngoingEventDetails extends StatelessWidget {
                                                         CrossAxisAlignment
                                                             .center,
                                                     children: [
-                                                      const Icon(
+                                                      Icon(
                                                         Icons
                                                             .access_time_outlined,
                                                         color: Colors.amber,
-                                                        size: 18,
+                                                        size: isMobile
+                                                            ? 14
+                                                            : isTablet
+                                                                ? 16
+                                                                : 18,
                                                       ),
-                                                      const SizedBox(width: 8),
+                                                      SizedBox(
+                                                          width:
+                                                              isMobile ? 6 : 8),
                                                       LinearGradientText(
-                                                          child: Text(remaining_days(
-                                                              event.registrationEnds ??
-                                                                  event
-                                                                      .eventDate))),
+                                                        child: Text(
+                                                          remaining_days(
+                                                            event.registrationEnds ??
+                                                                event.eventDate,
+                                                          ),
+                                                          style: TextStyle(
+                                                            fontSize: isMobile
+                                                                ? 10
+                                                                : isTablet
+                                                                    ? 12
+                                                                    : 14,
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ],
                                                   ),
                                                 ),
                                                 SizedBox(
-                                                  height: isMobile ? 8 : 15,
-                                                ),
-
-                                                //register button
-
+                                                    height: isMobile
+                                                        ? 6
+                                                        : isTablet
+                                                            ? 10
+                                                            : 15),
+                                                // Register button
                                                 GestureDetector(
-                                                  onTap: () async {
-                                                    print(
-                                                        'Navigating to /onGoingEvents/register/$eventId');
-                                                    context.go(
-                                                        '/onGoingEvents/register/$eventId');
+                                                  onTap: () {
+                                                    final authProvider =
+                                                        Provider.of<
+                                                                AuthProvider>(
+                                                            context,
+                                                            listen: false);
+                                                    if (authProvider
+                                                            .currentUserModel ==
+                                                        null) {
+                                                      WidgetsBinding.instance
+                                                          .addPostFrameCallback(
+                                                              (_) {
+                                                        showCustomToast(
+                                                          title: "Hold Up!",
+                                                          description:
+                                                              "You need to log in before registering for an event.",
+                                                        );
+                                                      });
+
+                                                      showDialog<bool>(
+                                                        context: context,
+                                                        barrierDismissible:
+                                                            true,
+                                                        builder:
+                                                            (dialogContext) {
+                                                          return Dialog(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            child: SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.8,
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.4,
+                                                              child:
+                                                                  GradientBoxAuth(
+                                                                radius: 16,
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height *
+                                                                    0.8,
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.4,
+                                                                child: Consumer<
+                                                                    AuthProvider>(
+                                                                  builder:
+                                                                      (context,
+                                                                          auth,
+                                                                          _) {
+                                                                    return auth
+                                                                        .page
+                                                                        .widget;
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ).then((result) {
+                                                        if (result == true &&
+                                                            authProvider
+                                                                    .currentUserModel !=
+                                                                null) {
+                                                          WidgetsBinding
+                                                              .instance
+                                                              .addPostFrameCallback(
+                                                                  (_) {
+                                                            context.go(
+                                                                '/onGoingEvents/register/${event.id}');
+                                                          });
+                                                        } else if (result !=
+                                                            true) {
+                                                          WidgetsBinding
+                                                              .instance
+                                                              .addPostFrameCallback(
+                                                                  (_) {
+                                                            authProvider
+                                                                .setPage(Pages
+                                                                    .login);
+                                                          });
+                                                        }
+                                                      });
+                                                    } else {
+                                                      WidgetsBinding.instance
+                                                          .addPostFrameCallback(
+                                                              (_) {
+                                                        context.go(
+                                                            '/onGoingEvents/register/${event.id}');
+                                                      });
+                                                    }
                                                   },
                                                   child: Container(
                                                     padding:
                                                         EdgeInsets.symmetric(
-                                                            vertical: isMobile
-                                                                ? 5
-                                                                : 10,
-                                                            horizontal: isMobile
-                                                                ? 15
-                                                                : 30),
+                                                      vertical: isMobile
+                                                          ? 4
+                                                          : isTablet
+                                                              ? 8
+                                                              : 10,
+                                                      horizontal: isMobile
+                                                          ? 12
+                                                          : isTablet
+                                                              ? 20
+                                                              : 30,
+                                                    ),
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              7),
+                                                        isMobile ? 5 : 7,
+                                                      ),
                                                       gradient:
                                                           const LinearGradient(
                                                               colors:
                                                                   linerGradient),
                                                     ),
                                                     child: Center(
-                                                        child: Text(
-                                                      "Registe Now!",
-                                                      style: TextStyle(
+                                                      child: Text(
+                                                        "Register Now!",
+                                                        style: TextStyle(
                                                           color: Colors.black,
-                                                          fontSize:
-                                                              isMobile ? 8 : 12,
+                                                          fontSize: isMobile
+                                                              ? 10
+                                                              : isTablet
+                                                                  ? 11
+                                                                  : 12,
                                                           fontWeight:
-                                                              FontWeight.bold),
-                                                    )),
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ],
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
-                            )
+                            ),
                         ],
                       ),
                     ),
