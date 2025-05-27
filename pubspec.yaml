@@ -95,7 +95,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/images/partner/
-    - assets/credentials.json
+    # - assets/credentials.json
     # - assets/lotties/
     # - assets/svgs/
   #   - images/a_dot_ham.jpeg

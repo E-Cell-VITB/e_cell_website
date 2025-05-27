@@ -14,14 +14,14 @@ import 'package:provider/single_child_widget.dart';
 
 class AppProviders {
   static List<SingleChildWidget> providers = [
-    ChangeNotifierProvider(create: (_)=>EventRegisterProvider()),
+    ChangeNotifierProvider(create: (_) => EventRegisterProvider()),
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => BlogProvider()),
     ChangeNotifierProvider(create: (_) => TeamProvider()),
     ChangeNotifierProvider(create: (_) => SpeakerProvider()),
     ChangeNotifierProvider(create: (_) => EventProvider()),
     ChangeNotifierProvider(create: (_) => GalleryProvider()),
-    ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
+    // ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
     ChangeNotifierProvider(create: (_) => CertificateProvider()),
     ChangeNotifierProvider(create: (_) => AuthProvider()),
     ChangeNotifierProvider(create: (_) => RecruitmentProvider()),
