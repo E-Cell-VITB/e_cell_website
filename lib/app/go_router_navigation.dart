@@ -156,7 +156,6 @@ final GoRouter appRouter = GoRouter(
                 path: '/register/:eventId',
                 builder: (context, state) {
                   final eventId = state.pathParameters['eventId']!;
-                  // Placeholder for registration form screen
                   return OngoingEventRegister(
                     eventId: eventId,
                   );

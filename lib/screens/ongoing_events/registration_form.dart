@@ -524,7 +524,7 @@ class _OngoingEventRegisterState extends State<OngoingEventRegister> {
           Provider.of<OngoingEventProvider>(context, listen: false);
       await provider.submitRegistration(
         widget.eventId,
-        event.isTeamEvent ? _teamName : '',
+        event.isTeamEvent ? _teamName : 'individual',
         participants,
       );
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -561,145 +561,221 @@ class _OngoingEventRegisterState extends State<OngoingEventRegister> {
     }
     final controller = _controllers[controllerKey]!;
 
-    String? validator(String? value) {
-      if (field.isRequired && (value == null || value.isEmpty)) {
-        return '${field.fieldName[0].toUpperCase()}${field.fieldName.substring(1)} is required';
+    // Capitalize field name for display
+    final capitalizedFieldName =
+        '${field.fieldName[0].toUpperCase()}${field.fieldName.substring(1)}';
+
+    // Common input decoration
+    InputDecoration inputDecoration({String? labelText}) {
+      return InputDecoration(
+        labelText: labelText ?? capitalizedFieldName,
+        labelStyle: const TextStyle(color: Colors.grey),
+        filled: true,
+        fillColor: backgroundColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      );
+    }
+
+    // Validator function for all field types
+    String? validator(dynamic value) {
+      // Check for required fields
+      if (field.isRequired) {
+        if (value == null || (value is String && value.isEmpty)) {
+          return '$capitalizedFieldName is required';
+        }
+      }
+
+      // Type-specific validation
+      if (value != null && value is String && value.isNotEmpty) {
+        switch (field.inputType.toLowerCase()) {
+          case 'number':
+            final number = num.tryParse(value);
+            if (number == null) {
+              return '$capitalizedFieldName must be a valid number';
+            }
+            break;
+          case 'email':
+            final emailRegex =
+                RegExp(r'^[a-zA-Z0-9._%+-]+@(vishnu\.edu\.in|gmail\.com)$');
+            if (!emailRegex.hasMatch(value)) {
+              return '$capitalizedFieldName must be a valid email (e.g., @vishnu.edu.in or @gmail.com)';
+            }
+            break;
+          case 'phonenumber':
+            if (value.length != 10 || !RegExp(r'^\d{10}$').hasMatch(value)) {
+              return '$capitalizedFieldName must be exactly 10 digits';
+            }
+            break;
+          // case 'text':
+          //   // Optional: Add specific validation for text (e.g., max length)
+          //   if (value.length > 100) {
+          //     return '$capitalizedFieldName must be 100 characters or less';
+          //   }
+          //   break;
+        }
       }
       return null;
     }
 
-    if (field.fieldName.toLowerCase() == 'department') {
-      return DropdownButtonFormField<Department>(
-        decoration: InputDecoration(
-          labelText:
-              '${field.fieldName[0].toUpperCase()}${field.fieldName.substring(1)}',
-          labelStyle: const TextStyle(color: Colors.grey),
-          filled: true,
-          fillColor: backgroundColor,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+    // Handle different field types
+    switch (field.inputType.toLowerCase()) {
+      case 'boolean':
+        return DropdownButtonFormField<bool>(
+          decoration: inputDecoration(),
+          dropdownColor: Colors.black87,
+          style: const TextStyle(color: Colors.white),
+          value: participants[index][field.fieldName] is bool
+              ? participants[index][field.fieldName]
+              : null,
+          items: const [
+            DropdownMenuItem<bool>(
+              value: true,
+              child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: Text(
+                  'True',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+            DropdownMenuItem<bool>(
+              value: false,
+              child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: Text(
+                  'False',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+          onChanged: (bool? value) {
+            if (value != null) {
+              setState(() {
+                participants[index][field.fieldName] = value;
+              });
+            }
+          },
+          validator: (bool? value) => validator(value),
+        );
+
+      case 'department':
+        double width = MediaQuery.of(context).size.width;
+        return SizedBox(
+          width: isMobile ? 250 : width * 0.6,
+          child: DropdownButtonFormField<Department>(
+            isExpanded: true,
+            decoration: inputDecoration(
+              labelText: field.fieldName.isNotEmpty
+                  ? capitalizedFieldName
+                  : 'Default Label',
+            ),
+            dropdownColor: Colors.black87,
+            style: const TextStyle(color: Colors.white),
+            value: participants[index][field.fieldName] != null
+                ? Department.values.firstWhere(
+                    (e) => e.toString() == participants[index][field.fieldName],
+                    orElse: () => Department.other,
+                  )
+                : null,
+            items: Department.values.map((Department dept) {
+              return DropdownMenuItem<Department>(
+                value: dept,
+                child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Text(
+                    dept.toString().split('.').last,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: isMobile
+                          ? 12
+                          : isTablet
+                              ? 14
+                              : 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+            onChanged: (Department? value) {
+              if (value != null) {
+                setState(() {
+                  participants[index][field.fieldName] = value.toString();
+                });
+              }
+            },
+            validator: (Department? value) => validator(value),
           ),
-        ),
-        dropdownColor: Colors.black87,
-        style: const TextStyle(color: Colors.white),
-        value: participants[index][field.fieldName] != null
-            ? Department.values.firstWhere(
-                (e) => e.toString() == participants[index][field.fieldName],
-                orElse: () => Department.other)
-            : null,
-        items: Department.values.map((Department dept) {
-          return DropdownMenuItem<Department>(
-            value: dept,
-            child: Directionality(
-              textDirection: TextDirection.ltr,
-              child: Text(
-                dept.toString().split('.').last,
-                style: TextStyle(
+        );
+
+      case 'year':
+        return DropdownButtonFormField<int>(
+          decoration: inputDecoration(),
+          dropdownColor: Colors.black87,
+          style: const TextStyle(color: Colors.white),
+          value: participants[index][field.fieldName] is int
+              ? participants[index][field.fieldName]
+              : null,
+          items: List.generate(
+            4,
+            (i) => DropdownMenuItem<int>(
+              value: i + 1,
+              child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: Text(
+                  '${i + 1}',
+                  style: TextStyle(
                     fontSize: isMobile
                         ? 12
                         : isTablet
                             ? 14
                             : 16,
-                    color: Colors.white),
-              ),
-            ),
-          );
-        }).toList(),
-        onChanged: (Department? value) {
-          if (value != null) {
-            setState(() {
-              participants[index][field.fieldName] = value.toString();
-            });
-          }
-        },
-        validator: (Department? value) {
-          if (field.isRequired && value == null) {
-            return '${field.fieldName[0].toUpperCase()}${field.fieldName.substring(1)} is required';
-          }
-          return null;
-        },
-      );
-    } else if (field.fieldName.toLowerCase() == 'year') {
-      return DropdownButtonFormField<int>(
-        decoration: InputDecoration(
-          labelText:
-              '${field.fieldName[0].toUpperCase()}${field.fieldName.substring(1)}',
-          labelStyle: const TextStyle(color: Colors.grey),
-          filled: true,
-          fillColor: backgroundColor,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-        ),
-        dropdownColor: Colors.black87,
-        style: const TextStyle(color: Colors.white),
-        value: participants[index][field.fieldName] is int
-            ? participants[index][field.fieldName]
-            : null,
-        items: List.generate(
-          4,
-          (i) => DropdownMenuItem<int>(
-            value: i + 1,
-            child: Directionality(
-              textDirection: TextDirection.ltr,
-              child: Text(
-                '${i + 1}',
-                style: TextStyle(
-                  fontSize: isMobile
-                      ? 12
-                      : isTablet
-                          ? 14
-                          : 16,
-                  color: Colors.white,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        onChanged: (int? value) {
-          if (value != null) {
+          onChanged: (int? value) {
+            if (value != null) {
+              setState(() {
+                participants[index][field.fieldName] = value;
+              });
+            }
+          },
+          validator: (int? value) => validator(value),
+        );
+
+      default:
+        return TextFormField(
+          controller: controller,
+          decoration: inputDecoration(),
+          style: const TextStyle(color: Colors.white),
+          textDirection: TextDirection.ltr,
+          keyboardType: field.inputType.toLowerCase() == 'number'
+              ? TextInputType.number
+              : field.inputType.toLowerCase() == 'email'
+                  ? TextInputType.emailAddress
+                  : field.inputType.toLowerCase() == 'phonenumber'
+                      ? TextInputType.phone
+                      : TextInputType.text,
+          validator: validator,
+          onChanged: (value) {
             setState(() {
-              participants[index][field.fieldName] = value;
+              if (field.inputType.toLowerCase() == 'number') {
+                participants[index][field.fieldName] =
+                    value.isNotEmpty ? num.tryParse(value) ?? value : value;
+              } else {
+                participants[index][field.fieldName] = value;
+              }
             });
-          }
-        },
-        validator: (int? value) {
-          if (field.isRequired && value == null) {
-            return '${field.fieldName[0].toUpperCase()}${field.fieldName.substring(1)} is required';
-          }
-          return null;
-        },
-      );
-    } else {
-      return TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText:
-              '${field.fieldName[0].toUpperCase()}${field.fieldName.substring(1)}',
-          labelStyle: const TextStyle(color: Colors.grey),
-          filled: true,
-          fillColor: backgroundColor,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-        ),
-        style: const TextStyle(color: Colors.white),
-        textDirection: TextDirection.ltr,
-        keyboardType: field.inputType.toLowerCase() == 'number'
-            ? TextInputType.number
-            : field.inputType.toLowerCase() == 'email'
-                ? TextInputType.emailAddress
-                : TextInputType.text,
-        validator: validator,
-        onChanged: (value) {
-          setState(() {
-            participants[index][field.fieldName] = value;
-          });
-        },
-      );
+          },
+        );
     }
   }
 

@@ -811,7 +811,7 @@ class OngoingEventDetails extends StatelessWidget {
                                                           ),
                                                           style: TextStyle(
                                                             fontSize: isMobile
-                                                                ? 10
+                                                                ? 8
                                                                 : isTablet
                                                                     ? 12
                                                                     : 14,
@@ -980,6 +980,7 @@ class OngoingEventDetails extends StatelessWidget {
                                 ),
                               ),
                             ),
+                          const SizedBox(height: 16),
                         ],
                       ),
                     ),
