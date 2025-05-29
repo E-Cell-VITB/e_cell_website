@@ -127,7 +127,7 @@ class RegistrationService {
         teamName: event.isTeamEvent ? teamName : null,
         isTeamEvent: event.isTeamEvent,
         participantEmails: participantEmails,
-        ctaLink: 'https://ecell-vitb.web.app/#/events',
+        ctaLink: 'https://ecell-vitb.web.app/#/onGoingEvents',
       );
 
       if (result['success'] == true) {

@@ -24,6 +24,7 @@ class OngoingEvent {
   final int maxTeamSize;
   final List<EvaluationCriteria> evaluationTemplate;
   final List<RegistrationField> registrationTemplate;
+  bool isEventLive;
 
   OngoingEvent({
     this.id,
@@ -49,6 +50,7 @@ class OngoingEvent {
     required this.registrationTemplate,
     required this.registrationStarts,
     required this.registrationEnds,
+    this.isEventLive = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -82,6 +84,7 @@ class OngoingEvent {
       'registrationEnds': registrationEnds != null
           ? Timestamp.fromDate(registrationEnds!)
           : null,
+      'isEventLive': isEventLive,
     };
   }
 
@@ -124,7 +127,8 @@ class OngoingEvent {
                 .toList() ??
             [],
         registrationStarts: (map['registrationStarts'] as Timestamp?)?.toDate(),
-        registrationEnds: (map['registrationEnds'] as Timestamp?)?.toDate());
+        registrationEnds: (map['registrationEnds'] as Timestamp?)?.toDate(),
+        isEventLive: map['isEventLive'] as bool? ?? false);
   }
 }
 

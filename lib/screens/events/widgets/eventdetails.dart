@@ -400,7 +400,6 @@ class _EventDetailsState extends State<EventDetails> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        // Animated links menu - will be visible when _isMenuOpen is true
         AnimatedContainer(
           duration: Duration(milliseconds: 200),
           height: _isMenuOpen ? null : 0,

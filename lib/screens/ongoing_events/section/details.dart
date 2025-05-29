@@ -40,7 +40,7 @@ class DetailsSection extends StatelessWidget {
             style: isMobile
                 ? Theme.of(context).textTheme.bodySmall
                 : Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.left,
+            textAlign: TextAlign.center,
             maxLines: isMobile ? 4 : 6,
           ),
         ),

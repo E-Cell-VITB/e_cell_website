@@ -58,6 +58,10 @@ class OngoingEventsPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: provider.events.asMap().entries.map((entry) {
                           final event = entry.value;
+                          bool isEventLive = event.isEventLive;
+                          if (!isEventLive) {
+                            return const SizedBox.shrink();
+                          }
                           return Column(
                             children: [
                               GestureDetector(
