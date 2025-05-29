@@ -1,60 +1,73 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:e_cell_website/const/app_logs.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/retry.dart';
 
-class EventRegisterService {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+class EmailService {
+  final String _appsScriptUrl =
+      'https://script.google.com/macros/s/AKfycbwW3dCjjnL0EcgEAvFbN9-83X4oU8jEjpuyYJnyBM1SveUnV0WUgn1V8IwjI06978cugQ/exec';
 
-  Future<DocumentReference?> getDocByname(String event_name) async {
+  /// Sends thank-you emails for event registrations via Apps Script with retry logic
+  Future<Map<String, dynamic>> sendThankYouEmails({
+    required String eventName,
+    required String eventDate,
+    String? teamName,
+    required bool isTeamEvent,
+    required List<String> participantEmails,
+    required String ctaLink,
+  }) async {
+    final payload = {
+      'eventName': eventName,
+      'eventDate': eventDate,
+      'teamName': teamName,
+      'isTeamEvent': isTeamEvent,
+      'participantEmails': participantEmails,
+      'ctaLink': ctaLink,
+    };
+
+    // Initialize RetryClient with 3 retry attempts
+    final client = RetryClient(http.Client(),
+        retries: 3,
+        delay: (retryCount) => Duration(milliseconds: 500 * retryCount));
+
     try {
-      final snapshot = await firestore
-          .collection('ongoing_events')
-          .where('name', isEqualTo: event_name)
-          .limit(1)
-          .get();
-      if (snapshot.docs.isNotEmpty) {
-        return snapshot.docs.first.reference;
+      AppLogger.log('Sending thank-you emails to: $_appsScriptUrl');
+      AppLogger.log('Payload: ${jsonEncode(payload)}');
+
+      final response = await client
+          .post(
+        Uri.parse(_appsScriptUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(payload),
+      )
+          .timeout(const Duration(seconds: 30), onTimeout: () {
+        throw TimeoutException(
+            'Request to Apps Script timed out after 30 seconds');
+      });
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        AppLogger.log('Response: ${response.statusCode} - ${response.body}');
+        return data; // Return response data for processing
       } else {
-        return null;
+        AppLogger.log(
+            'Apps Script API error: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'Failed to send thank-you emails: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      throw Exception("Event not found");
+      AppLogger.log('Error sending thank-you emails: $e');
+      throw Exception('Error sending thank-you emails: $e');
+    } finally {
+      client.close(); // Close the RetryClient
     }
   }
 
-  Future<List<Map<String, dynamic>>> getTextFeilds(String event_name) async {
-    try {
-      final reference = await getDocByname(event_name);
-      if (reference == null) {
-        throw Exception("Event not found");
-      }
-      final snapshot = await reference.get();
-      final data = snapshot.data() as Map<String, dynamic>;
-      final textfeilds = data['registrationTemplate'];
-      List<Map<String, dynamic>> result = [];
-      for (var feild in textfeilds) {
-        result.add(Map<String, dynamic>.from(feild));
-      }
-      return result;
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-  }
-
-  Future<void> addData(Map<String, String> data, String event_name) async {
-    final reference = await getDocByname(event_name);
-
-    try {
-      if (reference != null) {
-        print("hi\n\n\n\n\n");
-        await reference
-            .collection('Registrations')
-            .doc(data['Team Name'])
-            .set(data);
-        print("hi\n\n\n\n\n");
-      } else {
-        throw Exception("Can't find the document");
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-  }
+  /// Returns the current Apps Script URL
+  String getAppsScriptUrl() => _appsScriptUrl;
 }

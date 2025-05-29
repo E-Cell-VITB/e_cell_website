@@ -78,19 +78,41 @@ class OngoingEventService {
       }
 
       final batch = _firestore.batch();
-      final registeredUsersRef = _firestore
-          .collection(_eventsCollection)
-          .doc(eventId)
-          .collection('registered_users');
 
+      // Reference to the event document
+      final eventRef = _firestore.collection(_eventsCollection).doc(eventId);
+
+      // Reference to the registered users collection
+      final registeredUsersRef = eventRef.collection('registered_users');
       final docRef = registeredUsersRef.doc();
+
+      // Store registration data
       batch.set(docRef, {
-        'team_name': teamName ??
-            'Individual', // Store team_name, default for individual events
-        'participants': participants, // Store participants as a list
+        'team_name': teamName ?? 'Individual',
+        'participants': participants,
         'registeredAt': Timestamp.now(),
         'userId': _auth.currentUser!.uid,
       });
+
+      // Get the event to check if it's a team event
+      final eventDoc = await eventRef.get();
+      if (!eventDoc.exists) {
+        throw Exception('Event does not exist');
+      }
+      final eventData = eventDoc.data()!;
+      final isTeamEvent = eventData['isTeamEvent'] as bool? ?? false;
+
+      // Update numTeams and numParticipants atomically
+      if (isTeamEvent) {
+        batch.update(eventRef, {
+          'numTeams': FieldValue.increment(1),
+          'numParticipants': FieldValue.increment(participants.length),
+        });
+      } else {
+        batch.update(eventRef, {
+          'numParticipants': FieldValue.increment(1),
+        });
+      }
 
       await batch.commit();
     } catch (e) {

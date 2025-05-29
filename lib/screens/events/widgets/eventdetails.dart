@@ -295,7 +295,7 @@ class _EventDetailsState extends State<EventDetails> {
                             SizedBox(
                               height: 40,
                             ),
-                            _eventGallery(isMobile, size),
+                            eventGallery(isMobile, size),
                           ],
                         ),
                       ),
@@ -497,7 +497,7 @@ class _EventDetailsState extends State<EventDetails> {
     );
   }
 
-  MasonryGridView _eventGallery(bool isMobile, Size size) {
+  MasonryGridView eventGallery(bool isMobile, Size size) {
     return MasonryGridView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,

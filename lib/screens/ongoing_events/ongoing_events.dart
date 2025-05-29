@@ -1,5 +1,6 @@
 import 'package:e_cell_website/screens/ongoing_events/widgets/event_card.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
+import 'package:e_cell_website/widgets/loading_indicator.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ class OngoingEventsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final size = MediaQuery.of(context).size;
     final isMobile = screenWidth < 600;
 
     return ChangeNotifierProvider(
@@ -27,7 +29,11 @@ class OngoingEventsPage extends StatelessWidget {
                   child: Consumer<OngoingEventProvider>(
                     builder: (context, provider, child) {
                       if (provider.isLoadingEvents) {
-                        return const Center(child: CircularProgressIndicator());
+                        return SizedBox(
+                            height: size.height * 0.6,
+                            child: const Center(
+                              child: LoadingIndicator(),
+                            ));
                       }
                       if (provider.errorEvents != null) {
                         return Center(

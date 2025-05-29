@@ -1,8 +1,41 @@
 import 'package:e_cell_website/backend/models/ongoing_events.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/services/enums/url_type.dart';
+import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+class SocialLinksSection extends StatelessWidget {
+  final dynamic event;
+  final bool isMobile;
+
+  const SocialLinksSection({
+    required this.event,
+    required this.isMobile,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (event.socialLink.isNotEmpty) ...[
+          LinearGradientText(
+            child: Text(
+              'Connect With Us',
+              style: isMobile
+                  ? Theme.of(context).textTheme.headlineSmall
+                  : Theme.of(context).textTheme.headlineMedium,
+            ),
+          ),
+          const SizedBox(height: 8),
+          buildSocialLinksSection(event),
+          const SizedBox(height: 24),
+        ],
+      ],
+    );
+  }
+}
 
 Widget buildSocialLinksSection(OngoingEvent currentEvent) {
   if (currentEvent.socialLink.isEmpty) {

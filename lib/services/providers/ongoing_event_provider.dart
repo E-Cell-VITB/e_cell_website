@@ -101,6 +101,7 @@ class OngoingEventProvider extends ChangeNotifier {
     try {
       _errorRegistration = null;
       await _eventService.submitRegistration(eventId, teamName, participants);
+      await fetchEventById(eventId);
       notifyListeners();
     } catch (e) {
       _errorRegistration = 'Failed to submit registration: $e';
