@@ -1,4 +1,3 @@
-import 'package:e_cell_website/const/app_logs.dart';
 import 'package:e_cell_website/screens/ongoing_events/forms/registration_submission.dart';
 import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
 import 'package:e_cell_website/screens/ongoing_events/widgets/gradient_button.dart';
