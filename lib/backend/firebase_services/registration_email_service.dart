@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:e_cell_website/const/app_logs.dart';
 import 'package:http/http.dart' as http;
 
-class EmailService {
+class RegistrationEmailService {
   final String _appsScriptUrl =
-      'https://script.google.com/macros/s/AKfycbx4R0andWUOgWmnynWvAQYbehsHqpR8tvpfpzn8UNih2UUAbkGNkdJPG5j82enXBvc0Rw/exec';
+      "https://script.google.com/macros/s/AKfycbx6WNDWD8XHkp82bMgHwW9kZMP5yEc5YmiquadIoYzMGbrVw2GKu4PrUSbhyywsd7RUcQ/exec";
 
-  /// Sends thank-you emails for event registrations via Apps Script with retry logic
   Future<Map<String, dynamic>> sendThankYouEmails({
     required String eventName,
     required String eventDate,
@@ -26,7 +25,6 @@ class EmailService {
     };
 
     try {
-      AppLogger.log('Sending thank-you emails for event: $eventName');
       final response = await http
           .post(
             Uri.parse(_appsScriptUrl),
@@ -35,8 +33,8 @@ class EmailService {
           .timeout(const Duration(seconds: 30));
 
       final data = jsonDecode(response.body) as Map<String, dynamic>;
-      AppLogger.log(
-          'Response status: ${response.statusCode}, success: ${data['success']}');
+      // AppLogger.log(
+      //     'Response status: ${response.statusCode}, success: ${data['success']}');
 
       if (response.statusCode == 200 && data['success'] == true) {
         return data;

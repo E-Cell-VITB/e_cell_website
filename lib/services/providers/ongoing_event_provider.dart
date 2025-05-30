@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_cell_website/backend/firebase_services/ongoing_event_service.dart';
 import 'package:e_cell_website/backend/models/ongoing_events.dart';
+import 'package:e_cell_website/const/app_logs.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class OngoingEventProvider extends ChangeNotifier {
@@ -28,6 +31,7 @@ class OngoingEventProvider extends ChangeNotifier {
   String? get errorSchedules => _errorSchedules;
   String? get errorUpdates => _errorUpdates;
   String? get errorRegistration => _errorRegistration;
+  bool _isRegistered = false;
 
   void _setLoading(String type, bool value) {
     switch (type) {
@@ -119,4 +123,61 @@ class OngoingEventProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  // Future<bool> checkUserRegistration(String eventId) async {
+  //   try {
+  //     final user = FirebaseAuth.instance.currentUser;
+  //     if (user == null) return false;
+
+  //     final query = await FirebaseFirestore.instance
+  //         .collection('events')
+  //         .doc(eventId)
+  //         .collection('registrations')
+  //         .where('userId', isEqualTo: user.uid)
+  //         .get();
+
+  //     _isRegistered = query.docs.isNotEmpty;
+  //     return _isRegistered;
+  //   } catch (e) {
+  //     _errorRegistration = 'Error checking registration: $e';
+  //     AppLogger.log('Error checking registration: $e');
+  //     notifyListeners();
+  //     return false;
+  //   }
+  // }
+
+  // Future<DocumentReference> submitRegistration(
+  //   String eventId,
+  //   String? teamName,
+  //   List<Map<String, dynamic>> participants,
+  // ) async {
+  //   try {
+  //     final user = FirebaseAuth.instance.currentUser;
+  //     if (user == null) {
+  //       throw Exception('User not authenticated');
+  //     }
+
+  //     final registrationData = {
+  //       'userId': user.uid,
+  //       'teamName': teamName,
+  //       'participants': participants,
+  //       'timestamp': FieldValue.serverTimestamp(),
+  //     };
+
+  //     final docRef = await FirebaseFirestore.instance
+  //         .collection('ongoing_events')
+  //         .doc(eventId)
+  //         .collection('registered_users')
+  //         .add(registrationData);
+
+  //     _errorRegistration = null;
+  //     notifyListeners();
+  //     return docRef;
+  //   } catch (e) {
+  //     _errorRegistration = 'Failed to submit registration: $e';
+  //     AppLogger.log('Error submitting registration: $e');
+  //     notifyListeners();
+  //     rethrow;
+  //   }
+  // }
 }
