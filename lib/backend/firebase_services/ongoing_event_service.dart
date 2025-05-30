@@ -58,7 +58,7 @@ class OngoingEventService {
           .collection(_eventsCollection)
           .doc(eventId)
           .collection('updates')
-          .orderBy('timestamp', descending: true)
+          .orderBy('updateLiveStartTime', descending: true)
           .get();
 
       return snapshot.docs

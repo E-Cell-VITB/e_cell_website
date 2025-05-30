@@ -204,14 +204,16 @@ class EventUpdate {
   final String message;
   final String? imageUrl;
   final String updateType;
-  final Timestamp timestamp;
+  final Timestamp updateLiveStartTime;
+  final Timestamp updateLiveEndTime;
 
   EventUpdate({
     this.id,
     required this.message,
     this.imageUrl,
     required this.updateType,
-    required this.timestamp,
+    required this.updateLiveStartTime,
+    required this.updateLiveEndTime,
   });
 
   Map<String, dynamic> toMap() {
@@ -219,18 +221,19 @@ class EventUpdate {
       'message': message,
       'imageUrl': imageUrl,
       'updateType': updateType,
-      'timestamp': timestamp,
+      'updateLiveStartTime': updateLiveStartTime,
+      'updateLiveEndTime': updateLiveEndTime,
     };
   }
 
   factory EventUpdate.fromMap(Map<String, dynamic> map, String id) {
     return EventUpdate(
-      id: id,
-      message: map['message'] as String? ?? '',
-      imageUrl: map['imageUrl'] as String?,
-      updateType: map['updateType'] as String? ?? '',
-      timestamp: map['timestamp'] as Timestamp? ?? Timestamp.now(),
-    );
+        id: id,
+        message: map['message'] as String? ?? '',
+        imageUrl: map['imageUrl'] as String?,
+        updateType: map['updateType'] as String? ?? '',
+        updateLiveStartTime: map['updateLiveStartTime'],
+        updateLiveEndTime: map['updateLiveEndTime']);
   }
 }
 

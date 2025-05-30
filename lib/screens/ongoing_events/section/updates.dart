@@ -1,5 +1,5 @@
+import 'package:e_cell_website/const/app_logs.dart';
 import 'package:e_cell_website/const/theme.dart';
-import 'package:e_cell_website/main.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/loading_indicator.dart';
@@ -22,14 +22,25 @@ class EventUpdatesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
+    // Filter live updates
+    final liveUpdates = provider.updates.where((update) {
+      final startTime = update.updateLiveStartTime.toDate();
+      final endTime = update.updateLiveEndTime.toDate();
+      final now = DateTime.now();
+      AppLogger.log(
+          'Update: ${update.message}, Start: $startTime, End: $endTime, IsLive: ${now.isAfter(startTime) && now.isBefore(endTime)}');
+      return now.isAfter(startTime) && now.isBefore(endTime);
+    }).toList();
+
     return Column(
       children: [
         if (provider.isLoadingUpdates)
           SizedBox(
-              height: screenHeight * 0.6,
-              child: const Center(
-                child: LoadingIndicator(),
-              ))
+            height: screenHeight * 0.6,
+            child: const Center(
+              child: LoadingIndicator(),
+            ),
+          )
         else if (provider.errorUpdates != null)
           Text(
             'Error: ${provider.errorUpdates}',
@@ -43,7 +54,7 @@ class EventUpdatesSection extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           )
-        else if (provider.updates.isNotEmpty) ...[
+        else if (liveUpdates.isNotEmpty) ...[
           LinearGradientText(
             child: Text(
               'Event Updates',
@@ -71,26 +82,41 @@ class EventUpdatesSection extends StatelessWidget {
                     ? 16
                     : 24,
             alignment: WrapAlignment.center,
-            children: provider.updates.asMap().entries.map((entry) {
+            children: liveUpdates.asMap().entries.map((entry) {
               final index = entry.key;
               final update = entry.value;
               // Calculate dynamic width based on number of updates
-              final updateCount = provider.updates.length;
+              final updateCount = liveUpdates.length;
+
               double containerWidth;
               if (isMobile) {
-                containerWidth = updateCount == 1
-                    ? screenWidth * 0.9
-                    : screenWidth * 0.85; // Slightly narrower for multiple
+                containerWidth =
+                    updateCount == 1 ? screenWidth * 0.9 : screenWidth * 0.85;
               } else if (isTablet) {
-                containerWidth = updateCount <= 2
-                    ? screenWidth * 0.45
-                    : screenWidth * 0.3; // 2 or 3 columns
+                containerWidth =
+                    updateCount <= 2 ? screenWidth * 0.45 : screenWidth * 0.3;
               } else {
                 containerWidth = updateCount < 2
                     ? 400
                     : updateCount <= 4
                         ? 300
-                        : 250; // 2, 3, or 4 columns
+                        : 250;
+              }
+
+              // Determine border color based on updateType
+              Color borderColor;
+              switch (update.updateType) {
+                case 'Announcement':
+                  borderColor = secondaryColor.withOpacity(0.5);
+                  break;
+                case 'Alert':
+                  borderColor = Colors.redAccent.withOpacity(0.7);
+                  break;
+                case 'Info':
+                  borderColor = Colors.blueAccent.withOpacity(0.7);
+                  break;
+                default:
+                  borderColor = secondaryColor.withOpacity(0.3);
               }
 
               return AnimatedContainer(
@@ -115,8 +141,8 @@ class EventUpdatesSection extends StatelessWidget {
                     ),
                   ],
                   border: Border.all(
-                    color: secondaryColor.withOpacity(0.3),
-                    width: 1,
+                    color: borderColor,
+                    width: 2,
                   ),
                 ),
                 child: Column(
@@ -146,37 +172,26 @@ class EventUpdatesSection extends StatelessWidget {
                               update.imageUrl!, index + 1, updateCount),
                           child: Image.network(
                             update.imageUrl!,
-                            width: double.infinity,
-                            height: isMobile
-                                ? 120
-                                : isTablet
-                                    ? 140
-                                    : 160,
+                            width: containerWidth -
+                                (isMobile ? 24 : 32), // Account for padding
+                            height: containerWidth -
+                                (isMobile ? 24 : 32), // Square aspect ratio
                             fit: BoxFit.cover,
                             loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) return child;
                               return Container(
-                                  width: double.infinity,
-                                  height: isMobile
-                                      ? 120
-                                      : isTablet
-                                          ? 140
-                                          : 160,
-                                  color: Colors.white.withOpacity(0.2),
-                                  child: SizedBox(
-                                      height: screenHeight * 0.6,
-                                      child: const Center(
-                                        child: LoadingIndicator(),
-                                      )));
+                                width: containerWidth - (isMobile ? 24 : 32),
+                                height: containerWidth - (isMobile ? 24 : 32),
+                                color: Colors.white.withOpacity(0.2),
+                                child: const Center(
+                                  child: LoadingIndicator(),
+                                ),
+                              );
                             },
                             errorBuilder: (context, error, stackTrace) =>
                                 Container(
-                              width: double.infinity,
-                              height: isMobile
-                                  ? 120
-                                  : isTablet
-                                      ? 140
-                                      : 160,
+                              width: containerWidth - (isMobile ? 24 : 32),
+                              height: containerWidth - (isMobile ? 24 : 32),
                               color: Colors.grey.shade300,
                               child: const Center(
                                 child: Icon(Icons.broken_image,
@@ -187,7 +202,6 @@ class EventUpdatesSection extends StatelessWidget {
                         ),
                       ),
                     ],
-                    const SizedBox(height: 8),
                   ],
                 ),
               );
@@ -216,7 +230,6 @@ class EventUpdatesSection extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Header with close button
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Row(
@@ -229,7 +242,6 @@ class EventUpdatesSection extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Image with zoom
                 Flexible(
                   child: InteractiveViewer(
                     minScale: 0.5,
@@ -240,15 +252,13 @@ class EventUpdatesSection extends StatelessWidget {
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
                         return Container(
-                            height: isMobile ? 200 : 300,
-                            width: double.infinity,
-                            color: Colors.white.withOpacity(0.2),
-                            child: SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.6,
-                                child: const Center(
-                                  child: LoadingIndicator(),
-                                )));
+                          height: isMobile ? 200 : 300,
+                          width: double.infinity,
+                          color: Colors.white.withOpacity(0.2),
+                          child: const Center(
+                            child: LoadingIndicator(),
+                          ),
+                        );
                       },
                       errorBuilder: (context, error, stackTrace) => Container(
                         height: isMobile ? 200 : 300,
@@ -261,7 +271,6 @@ class EventUpdatesSection extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Caption
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: Text(

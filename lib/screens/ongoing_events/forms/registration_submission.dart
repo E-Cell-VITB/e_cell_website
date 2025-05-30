@@ -26,7 +26,6 @@ class RegistrationService {
       final provider =
           Provider.of<OngoingEventProvider>(context, listen: false);
       final isRegistered = await provider.checkUserRegistration(eventId);
-
       if (isRegistered) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showCustomToast(

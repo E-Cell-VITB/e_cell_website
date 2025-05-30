@@ -1,7 +1,5 @@
 import 'package:e_cell_website/backend/models/event.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/details.dart';
-import 'package:e_cell_website/screens/ongoing_events/section/evaluation_criteria.dart';
-import 'package:e_cell_website/screens/ongoing_events/section/event_photos.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/guests_and_judges.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/registration_ticket.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/schedule_table.dart';
@@ -100,11 +98,11 @@ class OngoingEventDetails extends StatelessWidget {
                                   isMobile: isMobile,
                                   isTablet: isTablet,
                                   screenWidth: screenWidth),
-                              EvaluationCriteriaSection(
-                                  event: event,
-                                  isMobile: isMobile,
-                                  isTablet: isTablet,
-                                  screenWidth: screenWidth),
+                              // EvaluationCriteriaSection(
+                              //     event: event,
+                              //     isMobile: isMobile,
+                              //     isTablet: isTablet,
+                              //     screenWidth: screenWidth),
                               EventScheduleSection(
                                   provider: provider,
                                   isMobile: isMobile,
@@ -117,10 +115,10 @@ class OngoingEventDetails extends StatelessWidget {
                               GuestsAndJudgesSection(
                                   event: event, isMobile: isMobile),
                               // SocialLinksSection(event: event, isMobile: isMobile),
-                              EventPhotosSection(
-                                  event: event,
-                                  isMobile: isMobile,
-                                  isTablet: isTablet),
+                              // EventPhotosSection(
+                              //     event: event,
+                              //     isMobile: isMobile,
+                              //     isTablet: isTablet),
                               EventTicketSection(
                                   event: event,
                                   isMobile: isMobile,

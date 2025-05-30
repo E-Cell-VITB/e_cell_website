@@ -161,16 +161,18 @@ class DetailsSection extends StatelessWidget {
                     : 24,
           ),
           const SizedBox(width: 8),
-          Text(
-            text,
-            style: TextStyle(
-                fontSize: isMobile
-                    ? 12
-                    : isTablet
-                        ? 14
-                        : 16),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          Flexible(
+            child: Text(
+              text,
+              style: TextStyle(
+                  fontSize: isMobile
+                      ? 12
+                      : isTablet
+                          ? 14
+                          : 16),
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
