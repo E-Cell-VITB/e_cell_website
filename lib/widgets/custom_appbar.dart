@@ -63,7 +63,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   _navItem("Gallery", context, "/gallery"),
                   _navItem("Team", context, "/team"),
                   _navItem("Blogs", context, "/blogs"),
-                  // _navItem("OnGoing", context, "/onGoingEvents"),
+                  _navItem("Ongoing", context, "/onGoingEvents"),
                 ],
               ),
             if (!isMobile)

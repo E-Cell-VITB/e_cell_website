@@ -97,7 +97,7 @@ class Footer extends StatelessWidget {
             children: [
               _buildSectionTitle('Stay Updated!'),
               const SizedBox(height: 15),
-              _buildSubscribeForm(),
+              // _buildSubscribeForm(),
               const SizedBox(height: 25),
               _buildSectionTitle('Connect With Us'),
               const SizedBox(height: 15),
@@ -131,7 +131,7 @@ class Footer extends StatelessWidget {
         // Stay Updated section
         _buildSectionTitle('Stay Updated!'),
         const SizedBox(height: 15),
-        _buildSubscribeForm(),
+        // _buildSubscribeForm(),
         const SizedBox(height: 25),
 
         // Connect with us section
@@ -271,54 +271,54 @@ mentorship, networking, and industry collaborations.""",
   }
 
   // Subscribe form
-  Widget _buildSubscribeForm() {
-    return const SubscriptionForm();
+  // Widget _buildSubscribeForm() {
+  // return const SubscriptionForm();
 
-    //  Row(
-    //   children: [
-    //     Expanded(
-    //       child: Container(
-    //         height: 40,
-    //         decoration: BoxDecoration(
-    //           color: const Color(0xFF333333),
-    //           borderRadius: BorderRadius.circular(5),
-    //         ),
-    //         child: const TextField(
-    //           style: TextStyle(color: Colors.white),
-    //           decoration: InputDecoration(
-    //             contentPadding: EdgeInsets.symmetric(horizontal: 15),
-    //             hintText: 'Enter your email',
-    //             hintStyle: TextStyle(color: Colors.grey),
-    //             border: InputBorder.none,
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //     const SizedBox(width: 12),
-    //     InkWell(
-    //       onTap: () {},
-    //       child: Container(
-    //         height: 40,
-    //         padding: const EdgeInsets.symmetric(horizontal: 15),
-    //         decoration: BoxDecoration(
-    //           gradient: const LinearGradient(colors: linerGradient),
-    //           borderRadius: BorderRadius.circular(12),
-    //         ),
-    //         child: const Center(
-    //           child: Text(
-    //             'Subscribe',
-    //             style: TextStyle(
-    //               color: Colors.black,
-    //               fontWeight: FontWeight.bold,
-    //               fontSize: 14,
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   ],
-    // );
-  }
+  //  Row(
+  //   children: [
+  //     Expanded(
+  //       child: Container(
+  //         height: 40,
+  //         decoration: BoxDecoration(
+  //           color: const Color(0xFF333333),
+  //           borderRadius: BorderRadius.circular(5),
+  //         ),
+  //         child: const TextField(
+  //           style: TextStyle(color: Colors.white),
+  //           decoration: InputDecoration(
+  //             contentPadding: EdgeInsets.symmetric(horizontal: 15),
+  //             hintText: 'Enter your email',
+  //             hintStyle: TextStyle(color: Colors.grey),
+  //             border: InputBorder.none,
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //     const SizedBox(width: 12),
+  //     InkWell(
+  //       onTap: () {},
+  //       child: Container(
+  //         height: 40,
+  //         padding: const EdgeInsets.symmetric(horizontal: 15),
+  //         decoration: BoxDecoration(
+  //           gradient: const LinearGradient(colors: linerGradient),
+  //           borderRadius: BorderRadius.circular(12),
+  //         ),
+  //         child: const Center(
+  //           child: Text(
+  //             'Subscribe',
+  //             style: TextStyle(
+  //               color: Colors.black,
+  //               fontWeight: FontWeight.bold,
+  //               fontSize: 14,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   ],
+  // );
+  // }
 
   // Contact info
   Widget _buildContactInfo() {

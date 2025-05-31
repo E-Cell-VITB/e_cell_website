@@ -295,7 +295,7 @@ class _EventDetailsState extends State<EventDetails> {
                             SizedBox(
                               height: 40,
                             ),
-                            _eventGallery(isMobile, size),
+                            eventGallery(isMobile, size),
                           ],
                         ),
                       ),
@@ -400,7 +400,6 @@ class _EventDetailsState extends State<EventDetails> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        // Animated links menu - will be visible when _isMenuOpen is true
         AnimatedContainer(
           duration: Duration(milliseconds: 200),
           height: _isMenuOpen ? null : 0,
@@ -497,7 +496,7 @@ class _EventDetailsState extends State<EventDetails> {
     );
   }
 
-  MasonryGridView _eventGallery(bool isMobile, Size size) {
+  MasonryGridView eventGallery(bool isMobile, Size size) {
     return MasonryGridView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -784,7 +783,7 @@ class HeadingWidget extends StatelessWidget {
 
 class GradientBox extends StatelessWidget {
   final Widget child;
-  final double height;
+  final double? height;
   final double? width;
   final double radius;
   final VoidCallback? onTap;
@@ -793,7 +792,7 @@ class GradientBox extends StatelessWidget {
     super.key,
     required this.radius,
     required this.child,
-    required this.height,
+    this.height,
     this.width,
     this.onTap,
   });

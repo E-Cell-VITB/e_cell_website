@@ -11,5 +11,4 @@ enum Designation {
       Designation.associate => "Associate",
     };
   }
-  // }
 }

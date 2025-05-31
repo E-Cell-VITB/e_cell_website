@@ -87,7 +87,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
 
   Widget _separator(BuildContext context) {
     return LinearGradientText(
-      child: Text(":", style: Theme.of(context).textTheme.displayLarge),
+      child: Text(":", style: Theme.of(context).textTheme.displaySmall),
     );
   }
 }
@@ -109,14 +109,14 @@ class TimeBox extends StatelessWidget {
         ),
         GradientBox(
           radius: isMobile ? 9 : 18,
-          height: isMobile ? 60 : 100,
-          width: isMobile ? 60 : 100,
+          height: isMobile ? 40 : 100,
+          width: isMobile ? 50 : 100,
           child: Center(
               child: LinearGradientText(
                   child: Text(
             count,
             style: isMobile
-                ? Theme.of(context).textTheme.displaySmall
+                ? Theme.of(context).textTheme.labelLarge
                 : Theme.of(context).textTheme.displayMedium,
           ))),
         ),

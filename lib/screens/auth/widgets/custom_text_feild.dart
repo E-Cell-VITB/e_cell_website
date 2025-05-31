@@ -8,7 +8,7 @@ class CustomTextFormField extends StatefulWidget {
   final String? hintText;
   final bool isPassword;
   final TextInputType keyboard;
-  final IconData prefixIcon;
+  final IconData? prefixIcon;
   final bool isMobile;
 
   const CustomTextFormField({
@@ -19,7 +19,7 @@ class CustomTextFormField extends StatefulWidget {
     this.hintText,
     this.isPassword = false,
     this.keyboard = TextInputType.text,
-    required this.prefixIcon,
+    this.prefixIcon,
     this.isMobile = true,
   });
 
