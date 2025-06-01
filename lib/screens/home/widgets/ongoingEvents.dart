@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class OngoingEventsWidget extends StatefulWidget {
   final OngoingEventProvider? provider;
-  OngoingEventsWidget({super.key, required this.provider});
+  const OngoingEventsWidget({super.key, required this.provider});
 
   @override
   State<OngoingEventsWidget> createState() => _OngoingEventsWidgetState();
@@ -77,12 +77,12 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
 
     // Responsive font sizes
     final titleFontSize = isMobile
-        ? 20.0
+        ? 21.0
         : isTablet
             ? 22.0
             : size.width * 0.025;
     final subtitleFontSize = isMobile
-        ? 12.0
+        ? 11.0
         : isTablet
             ? 14.0
             : 16.0;
@@ -104,20 +104,20 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
             ? 55.0
             : 60.0;
     final buttonWidth = isMobile
-        ? 200.0
+        ? 180.0
         : isTablet
-            ? 320.0
-            : 340.0;
+            ? 240.0
+            : 280.0;
     final verticalSpacing = isMobile
         ? 10.0
         : isTablet
             ? 12.0
             : 15.0;
     final buttonPadding = isMobile
-        ? const EdgeInsets.symmetric(horizontal: 1, vertical: 8)
+        ? const EdgeInsets.symmetric(horizontal: 0, vertical: 8)
         : isTablet
-            ? const EdgeInsets.symmetric(horizontal: 16, vertical: 16)
-            : const EdgeInsets.symmetric(horizontal: 18, vertical: 18);
+            ? const EdgeInsets.symmetric(horizontal: 14, vertical: 16)
+            : const EdgeInsets.symmetric(horizontal: 16, vertical: 18);
 
     if (widget.provider == null) {
       print('Provider is null, returning SizedBox.shrink');
@@ -189,7 +189,7 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: verticalSpacing * 3),
+                  SizedBox(height: verticalSpacing * 1),
                   Container(
                     height: containerHeight,
                     decoration: BoxDecoration(
