@@ -248,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen>
           // Ongoing Events Section with Animation
           _buildAnimatedSection(
             sectionKey: 'ongoing',
-            child: const OngoingEventsWidget(),
+            child: OngoingEventsWidget(provider: _eventProvider),
           ),
           SizedBox(height: size.height * 0.07),
           _buildAnimatedSection(
