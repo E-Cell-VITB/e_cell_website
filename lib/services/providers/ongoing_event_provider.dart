@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_cell_website/backend/firebase_services/ongoing_event_service.dart';
 import 'package:e_cell_website/backend/models/ongoing_events.dart';
-import 'package:e_cell_website/const/app_logs.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class OngoingEventProvider extends ChangeNotifier {
@@ -31,7 +28,6 @@ class OngoingEventProvider extends ChangeNotifier {
   String? get errorSchedules => _errorSchedules;
   String? get errorUpdates => _errorUpdates;
   String? get errorRegistration => _errorRegistration;
-  bool _isRegistered = false;
 
   void _setLoading(String type, bool value) {
     switch (type) {

@@ -85,7 +85,6 @@ class EventUpdatesSection extends StatelessWidget {
             children: liveUpdates.asMap().entries.map((entry) {
               final index = entry.key;
               final update = entry.value;
-              // Calculate dynamic width based on number of updates
               final updateCount = liveUpdates.length;
 
               double containerWidth;
