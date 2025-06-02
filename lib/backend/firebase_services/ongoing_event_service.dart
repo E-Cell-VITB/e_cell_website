@@ -10,7 +10,11 @@ class OngoingEventService {
 
   Future<List<OngoingEvent>> getAllEvents() async {
     try {
-      final snapshot = await _firestore.collection(_eventsCollection).get();
+      final snapshot = await _firestore
+          .collection(_eventsCollection)
+          .where("isEventLive", isEqualTo: true)
+          .get();
+
       return snapshot.docs
           .map((doc) => OngoingEvent.fromMap(doc.data(), doc.id))
           .toList();

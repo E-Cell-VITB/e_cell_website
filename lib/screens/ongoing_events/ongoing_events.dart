@@ -64,7 +64,7 @@ class OngoingEventsPage extends StatelessWidget {
                           }
                           return Column(
                             children: [
-                              GestureDetector(
+                              InkWell(
                                 onTap: () {
                                   context.go('/onGoingEvents/${event.id}');
                                 },

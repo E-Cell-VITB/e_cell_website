@@ -9,7 +9,7 @@ class EventCard extends StatelessWidget {
   final String eventtype;
   final DateTime eventdate;
   final double reward;
-  EventCard(
+  const EventCard(
       {required this.eventname,
       required this.description,
       required this.eventtype,
@@ -17,7 +17,7 @@ class EventCard extends StatelessWidget {
       required this.reward,
       super.key});
 
-  String remaining_days(DateTime date) {
+  String remainingDays(DateTime date) {
     final now = DateTime.now();
     final difference = date.difference(now);
 
@@ -52,8 +52,8 @@ class EventCard extends StatelessWidget {
           : MediaQuery.of(context).size.width * 0.8,
       child: Padding(
         padding: isMobile
-            ? EdgeInsets.symmetric(vertical: 12, horizontal: 20)
-            : EdgeInsets.symmetric(vertical: 18.0, horizontal: 40),
+            ? const EdgeInsets.symmetric(vertical: 12, horizontal: 20)
+            : const EdgeInsets.symmetric(vertical: 18.0, horizontal: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -68,13 +68,13 @@ class EventCard extends StatelessWidget {
                 )),
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.access_time_outlined,
                       color: Colors.amber,
                       size: 18,
                     ),
-                    SizedBox(width: 8),
-                    LinearGradientText(child: Text(remaining_days(eventdate))),
+                    const SizedBox(width: 8),
+                    LinearGradientText(child: Text(remainingDays(eventdate))),
                   ],
                 ),
               ],
@@ -82,7 +82,7 @@ class EventCard extends StatelessWidget {
             SelectableText(
               description,
               style: TextStyle(
-                  color: Color(0xFFC4C4C4), fontSize: isMobile ? 8 : 16),
+                  color: const Color(0xFFC4C4C4), fontSize: isMobile ? 8 : 16),
               maxLines: isMobile ? 3 : 4,
             ),
             Row(
@@ -112,7 +112,7 @@ class EventCard extends StatelessWidget {
                       "Register Now",
                       style: TextStyle(fontSize: isMobile ? 9 : 16),
                     )),
-                    SizedBox(
+                    const SizedBox(
                       width: 8,
                     ),
                     Icon(
@@ -135,11 +135,11 @@ class EventCard extends StatelessWidget {
       height: isMobile ? 20 : 40,
       width: isMobile ? 60 : 160,
       padding: isMobile
-          ? EdgeInsets.all(2)
-          : EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          ? const EdgeInsets.all(2)
+          : const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
-        color: Color.fromARGB(255, 43, 43, 43),
+        color: const Color.fromARGB(255, 43, 43, 43),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

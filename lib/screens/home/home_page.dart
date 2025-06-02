@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen>
     'vision': false,
     'partner': false,
     'speakers': false,
-    'ongoing': false, // Added ongoing events section
+    'ongoing': false,
   };
 
   @override
@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen>
       'vision': true,
       'partner': true,
       'speakers': true,
-      'ongoing': true, // Added ongoing events section
+      'ongoing': true,
     };
     setState(() {});
   }
