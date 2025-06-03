@@ -1,6 +1,7 @@
 import 'package:e_cell_website/const/const_labels.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/home/widgets/motobox.dart';
+import 'package:e_cell_website/screens/home/widgets/ongoingEvents.dart';
 import 'package:e_cell_website/screens/home/widgets/partnerbox.dart';
 import 'package:e_cell_website/screens/home/widgets/slogan_text.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
@@ -8,11 +9,8 @@ import 'package:e_cell_website/widgets/footer.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
 import 'package:visibility_detector/visibility_detector.dart';
-
 import 'widgets/speakers.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,7 +38,9 @@ class _HomeScreenState extends State<HomeScreen>
     'vision': false,
     'partner': false,
     'speakers': false,
+    'ongoing': false, // Added ongoing events section
   };
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -127,6 +127,7 @@ class _HomeScreenState extends State<HomeScreen>
       'vision': true,
       'partner': true,
       'speakers': true,
+      'ongoing': true, // Added ongoing events section
     };
     setState(() {});
   }
@@ -205,15 +206,7 @@ class _HomeScreenState extends State<HomeScreen>
                         child: LinearGradientText(
                           child: Text(
                             'E-CELL',
-                            style:
-                                //  GoogleFonts.lora(
-                                //   fontSize: size.width * 0.15,
-                                //   fontWeight: FontWeight.w500,
-                                //   letterSpacing: 2,
-                                //   color: primaryColor,
-                                // ),
-
-                                TextStyle(
+                            style: TextStyle(
                               fontFamily: 'Lora',
                               fontSize: size.width * 0.14,
                               fontWeight: FontWeight.w600,
@@ -252,128 +245,13 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-          SizedBox(
-            height: size.width * 0.02,
+          SizedBox(height: size.width * 0.02),
+          // Ongoing Events Section with Animation
+          _buildAnimatedSection(
+            sectionKey: 'ongoing',
+            child: OngoingEventsWidget(provider: _eventProvider),
           ),
-
-          //Ongoing events
-          SizedBox(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                LinearGradientText(
-                    child: Text(
-                  "Ongoing Events-Don't Miss Out!",
-                  style: TextStyle(
-                      fontSize: (size.width > 450) ? size.width * 0.025 : 20,
-                      fontWeight: FontWeight.bold),
-                )),
-                SizedBox(
-                  height: 15,
-                ),
-                SelectableText(
-                  "Don’t wait—exciting events are happening right now. Find your spot and register!",
-                  style: TextStyle(color: Color(0xFFA9A9A9), fontSize: 14),
-                ),
-                SizedBox(
-                  height: 45,
-                ),
-                Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xFF0D0D0D),
-                        Color(0xFF1F1E1E),
-                        Color(0xFF000000),
-                      ],
-                    ),
-                    border: Border.all(
-                      color: Color(0xFF3C3C3C),
-                      style: BorderStyle.solid,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: provider.isLoadingEvents
-                      ? SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ))
-                      : Center(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(provider.events.length,
-                                  (index) {
-                                return Row(
-                                  children: [
-                                    if (index != 0)
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8),
-                                        child: Text(
-                                          "•",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: Text(
-                                        provider.events[index].name,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }),
-                            ),
-                          ),
-                        ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                InkWell(
-                  onTap: () {
-                    context.go('/onGoingEvents');
-                  },
-                  child: Container(
-                    width: 360,
-                    padding: EdgeInsets.symmetric(horizontal: 18, vertical: 18),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Color(0xFF101010),
-                        border: Border.all(
-                          color: Color(0xFF3C3C3C),
-                          style: BorderStyle.solid,
-                        )),
-                    child: Center(
-                        child: Text(
-                      "See What’s Happening Now!",
-                      style: TextStyle(fontSize: 14),
-                    )),
-                  ),
-                )
-              ],
-            ),
-          ),
-
-          SizedBox(height: size.width * 0.06),
-
-          // About Us Section with Animation
+          SizedBox(height: size.height * 0.07),
           _buildAnimatedSection(
             sectionKey: 'about',
             child: SizedBox(
@@ -394,9 +272,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: size.height * 0.025,
-                  ),
+                  SizedBox(height: size.height * 0.025),
                   SizedBox(
                     width: (size.width > 450)
                         ? size.width * 0.65
@@ -413,11 +289,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-
-          SizedBox(
-            height: size.width * 0.04,
-          ),
-
+          SizedBox(height: size.width * 0.04),
           // Our Motto Section with Animation
           _buildAnimatedSection(
             sectionKey: 'motto',
@@ -475,11 +347,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-
-          SizedBox(
-            height: size.width * 0.04,
-          ),
-
+          SizedBox(height: size.width * 0.04),
           // Our Vision Section with Animation
           _buildAnimatedSection(
             sectionKey: 'vision',
@@ -499,9 +367,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: size.height * 0.025,
-                  ),
+                  SizedBox(height: size.height * 0.025),
                   SizedBox(
                     width: (size.width > 450)
                         ? size.width * 0.65
@@ -518,11 +384,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-
-          SizedBox(
-            height: size.width * 0.06,
-          ),
-
+          SizedBox(height: size.width * 0.06),
           // Partner Section with Animation
           _buildAnimatedSection(
             sectionKey: 'partner',
@@ -578,11 +440,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-
-          SizedBox(
-            height: size.width * 0.04,
-          ),
-
+          SizedBox(height: size.width * 0.04),
           SizedBox(
             width: (size.width > 450) ? size.width * 0.8 : size.width * 0.6,
             child: SloganText(
@@ -593,10 +451,7 @@ class _HomeScreenState extends State<HomeScreen>
               textAlign: TextAlign.center,
             ),
           ),
-
-          SizedBox(
-            height: size.width * 0.04,
-          ),
+          SizedBox(height: size.width * 0.04),
           _buildAnimatedSection(
             sectionKey: "speakers",
             child: SizedBox(
@@ -624,9 +479,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-          Footer(
-            key: _footerSectionKey,
-          )
+          Footer(key: _footerSectionKey),
         ],
       ),
     );
