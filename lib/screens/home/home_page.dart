@@ -3,10 +3,13 @@ import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/home/widgets/motobox.dart';
 import 'package:e_cell_website/screens/home/widgets/partnerbox.dart';
 import 'package:e_cell_website/screens/home/widgets/slogan_text.dart';
+import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
 import 'package:e_cell_website/widgets/footer.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -28,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen>
   final GlobalKey _clgNameKey = GlobalKey();
   final GlobalKey _aboutSectionKey = GlobalKey();
   final GlobalKey _footerSectionKey = GlobalKey();
+  late OngoingEventProvider? _eventProvider;
 
   // Animation controllers for each section
   Map<String, bool> _sectionVisible = {
@@ -37,10 +41,20 @@ class _HomeScreenState extends State<HomeScreen>
     'partner': false,
     'speakers': false,
   };
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _eventProvider = Provider.of<OngoingEventProvider>(context, listen: false);
+  }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _eventProvider != null) {
+        _eventProvider!.fetchEvents();
+      }
+    });
 
     _controller = AnimationController(
       vsync: this,
@@ -164,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<OngoingEventProvider>(context);
     final size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
@@ -240,6 +255,123 @@ class _HomeScreenState extends State<HomeScreen>
           SizedBox(
             height: size.width * 0.02,
           ),
+
+          //Ongoing events
+          SizedBox(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                LinearGradientText(
+                    child: Text(
+                  "Ongoing Events-Don't Miss Out!",
+                  style: TextStyle(
+                      fontSize: (size.width > 450) ? size.width * 0.025 : 20,
+                      fontWeight: FontWeight.bold),
+                )),
+                SizedBox(
+                  height: 15,
+                ),
+                SelectableText(
+                  "Don’t wait—exciting events are happening right now. Find your spot and register!",
+                  style: TextStyle(color: Color(0xFFA9A9A9), fontSize: 14),
+                ),
+                SizedBox(
+                  height: 45,
+                ),
+                Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFF0D0D0D),
+                        Color(0xFF1F1E1E),
+                        Color(0xFF000000),
+                      ],
+                    ),
+                    border: Border.all(
+                      color: Color(0xFF3C3C3C),
+                      style: BorderStyle.solid,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: provider.isLoadingEvents
+                      ? SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ))
+                      : Center(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(provider.events.length,
+                                  (index) {
+                                return Row(
+                                  children: [
+                                    if (index != 0)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: Text(
+                                          "•",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: Text(
+                                        provider.events[index].name,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ),
+                          ),
+                        ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                InkWell(
+                  onTap: () {
+                    context.go('/onGoingEvents');
+                  },
+                  child: Container(
+                    width: 360,
+                    padding: EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Color(0xFF101010),
+                        border: Border.all(
+                          color: Color(0xFF3C3C3C),
+                          style: BorderStyle.solid,
+                        )),
+                    child: Center(
+                        child: Text(
+                      "See What’s Happening Now!",
+                      style: TextStyle(fontSize: 14),
+                    )),
+                  ),
+                )
+              ],
+            ),
+          ),
+
+          SizedBox(height: size.width * 0.06),
 
           // About Us Section with Animation
           _buildAnimatedSection(
