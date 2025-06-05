@@ -166,7 +166,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
           participants = List.generate(_teamSize!, (_) => <String, dynamic>{});
           for (var participant in participants) {
             participant.addAll({
-              'ischeckedIn': false,
+              'isCheckedIn': false,
               'checkedInBy': '',
               'checkedInAt': null,
             });
