@@ -27,8 +27,8 @@ class EventUpdatesSection extends StatelessWidget {
       final startTime = update.updateLiveStartTime.toDate();
       final endTime = update.updateLiveEndTime.toDate();
       final now = DateTime.now();
-      AppLogger.log(
-          'Update: ${update.message}, Start: $startTime, End: $endTime, IsLive: ${now.isAfter(startTime) && now.isBefore(endTime)}');
+      // AppLogger.log(
+      //     'Update: ${update.message}, Start: $startTime, End: $endTime, IsLive: ${now.isAfter(startTime) && now.isBefore(endTime)}');
       return now.isAfter(startTime) && now.isBefore(endTime);
     }).toList();
 
