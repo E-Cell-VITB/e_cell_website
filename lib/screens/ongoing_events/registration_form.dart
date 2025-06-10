@@ -74,20 +74,24 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
           }
         }
       }
-      setState(() {
-        _registeredEmails = emails.toList();
-        _registeredTeamNames = teamNames.toList();
-        _isCheckingRegistration = false;
-      });
+      if (mounted) {
+        setState(() {
+          _registeredEmails = emails.toList();
+          _registeredTeamNames = teamNames.toList();
+          _isCheckingRegistration = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _isCheckingRegistration = false;
-      });
-      showCustomToast(
-        title: 'Error',
-        description: 'Failed to fetch registered data: $e',
-        type: ToastificationType.error,
-      );
+      if (mounted) {
+        setState(() {
+          _isCheckingRegistration = false;
+        });
+        showCustomToast(
+          title: 'Error',
+          description: 'Failed to fetch registered data: $e',
+          type: ToastificationType.error,
+        );
+      }
     }
   }
 
@@ -105,11 +109,13 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
     });
 
     Future.delayed(const Duration(milliseconds: 500), () {
-      setState(() {
-        _teamNameValidationStatus =
-            !_registeredTeamNames.contains(teamName.toLowerCase());
-        _isCheckingTeamName = false;
-      });
+      if (mounted) {
+        setState(() {
+          _teamNameValidationStatus =
+              !_registeredTeamNames.contains(teamName.toLowerCase());
+          _isCheckingTeamName = false;
+        });
+      }
     });
   }
 
@@ -126,11 +132,13 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
     });
 
     Future.delayed(const Duration(milliseconds: 500), () {
-      setState(() {
-        _emailValidationStatus[controllerKey] =
-            !_registeredEmails.contains(email.toLowerCase());
-        _emailLoadingStatus[controllerKey] = false;
-      });
+      if (mounted) {
+        setState(() {
+          _emailValidationStatus[controllerKey] =
+              !_registeredEmails.contains(email.toLowerCase());
+          _emailLoadingStatus[controllerKey] = false;
+        });
+      }
     });
   }
 
@@ -163,14 +171,15 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
         }
         setState(() {
           _teamName = _teamNameController.text;
-          participants = List.generate(_teamSize!, (_) => <String, dynamic>{});
-          for (var participant in participants) {
-            participant.addAll({
-              'ischeckedIn': false,
-              'checkedInBy': '',
-              'checkedInAt': null,
-            });
-          }
+
+          participants = List.generate(
+              _teamSize!,
+              (_) => <String, dynamic>{
+                    'isCheckedIn': false,
+                    'checkedInBy': '',
+                    'checkedInAt': null,
+                  });
+
           _currentStage = RegistrationStage.memberDetails;
         });
       }
@@ -203,31 +212,25 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
           );
           return;
         }
+
         setState(() => _isSubmitting = true);
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          RegistrationSubmission.handleRegistration(
-            context,
-            event,
-            widget.eventId,
-            participants,
-            _teamName,
-            () {
-              if (mounted) {
-                setState(() {
-                  _isCheckingRegistration = false;
-                });
-              }
-            },
-            () {
-              if (mounted) {
-                setState(() {
-                  _isCheckingTeamName = false;
-                });
-              }
-            },
-          );
-        });
+        RegistrationSubmission.handleRegistration(
+          context,
+          event,
+          widget.eventId,
+          participants,
+          _teamName,
+          () {
+            if (mounted) {
+              setState(() => _isCheckingRegistration = false);
+            }
+          },
+          () {
+            if (mounted) {
+              setState(() => _isSubmitting = false);
+            }
+          },
+        );
       }
     }
   }
@@ -393,7 +396,10 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                                                         .teamDetails
                                                 ? 'CANCEL'
                                                 : 'BACK',
-                                            onPressed: _moveToPreviousStage,
+                                            onPressed: _isSubmitting ||
+                                                    _isCheckingRegistration
+                                                ? null
+                                                : _moveToPreviousStage,
                                             isMobile: isMobile,
                                             isTablet: isTablet,
                                           ),
@@ -450,43 +456,76 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                                     else
                                       GradientButton(
                                         text: 'Submit Registration',
-                                        onPressed: () {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            if (_emailValidationStatus[
-                                                        '0_email'] ==
-                                                    false ||
-                                                _emailLoadingStatus[
-                                                        '0_email'] ==
-                                                    true) {
-                                              showCustomToast(
-                                                title: 'Invalid Email',
-                                                description:
-                                                    'Please enter a valid and non-duplicate email',
-                                                type: ToastificationType.error,
-                                              );
-                                              return;
-                                            }
-                                            setState(
-                                                () => _isSubmitting = true);
-                                            WidgetsBinding.instance
-                                                .addPostFrameCallback((_) {
-                                              RegistrationSubmission
-                                                  .handleRegistration(
-                                                context,
-                                                event,
-                                                widget.eventId,
-                                                participants,
-                                                '${_teamName?[0].toUpperCase()}${_teamName?.substring(1)}',
-                                                () => setState(() =>
-                                                    _isCheckingRegistration =
-                                                        false),
-                                                () => setState(() =>
-                                                    _isSubmitting = false),
-                                              );
-                                            });
-                                          }
-                                        },
+                                        onPressed: _isSubmitting ||
+                                                _isCheckingRegistration
+                                            ? null
+                                            : () async {
+                                                if (_formKey.currentState!
+                                                    .validate()) {
+                                                  if (_emailValidationStatus[
+                                                              '0_email'] ==
+                                                          false ||
+                                                      _emailLoadingStatus[
+                                                              '0_email'] ==
+                                                          true) {
+                                                    showCustomToast(
+                                                      title: 'Invalid Email',
+                                                      description:
+                                                          'Please enter a valid and non-duplicate email',
+                                                      type: ToastificationType
+                                                          .error,
+                                                    );
+                                                    return;
+                                                  }
+                                                  setState(() {
+                                                    _isSubmitting = true;
+                                                    participants[0].addAll({
+                                                      'ischeckedIn': false,
+                                                      'checkedInBy': '',
+                                                      'checkedInAt': null,
+                                                    });
+                                                  });
+                                                  try {
+                                                    await RegistrationSubmission
+                                                        .handleRegistration(
+                                                      context,
+                                                      event,
+                                                      widget.eventId,
+                                                      participants,
+                                                      '${_teamName?[0].toUpperCase()}${_teamName?.substring(1)}',
+                                                      () {
+                                                        if (mounted) {
+                                                          setState(() =>
+                                                              _isCheckingRegistration =
+                                                                  false);
+                                                        }
+                                                      },
+                                                      () {
+                                                        if (mounted) {
+                                                          setState(() =>
+                                                              _isSubmitting =
+                                                                  false);
+                                                        }
+                                                      },
+                                                    );
+                                                  } catch (e) {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        _isSubmitting = false;
+                                                        _isCheckingRegistration =
+                                                            false;
+                                                      });
+                                                      showCustomToast(
+                                                        title: 'Error',
+                                                        description:
+                                                            'Registration failed: $e',
+                                                        type: ToastificationType
+                                                            .error,
+                                                      );
+                                                    }
+                                                  }
+                                                }
+                                              },
                                         isMobile: isMobile,
                                         isTablet: isTablet,
                                       ),

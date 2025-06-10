@@ -15,7 +15,7 @@ class OngoingEventsWidget extends StatefulWidget {
 }
 
 class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
-  Future<List<String>>? _liveEventNamesFuture;
+  Future<List<Map<String, String>>>? _liveEventNamesFuture;
 
   @override
   void initState() {
@@ -32,7 +32,8 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
     }
   }
 
-  Future<List<String>> _getLiveEventNames(OngoingEventProvider provider) async {
+  Future<List<Map<String, String>>> _getLiveEventNames(
+      OngoingEventProvider provider) async {
     if (provider.events.isEmpty) {
       try {
         await provider.fetchEvents();
@@ -43,7 +44,7 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
     }
 
     final now = DateTime.now();
-    List<String> liveEventNames = [];
+    List<Map<String, String>> liveEventNames = [];
 
     for (var event in provider.events) {
       try {
@@ -58,7 +59,7 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
             return isLive;
           });
           if (hasLiveUpdate) {
-            liveEventNames.add(event.name);
+            liveEventNames.add({'name': event.name, 'id': event.id!});
           }
         }
       } catch (e) {
@@ -135,7 +136,7 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
           );
         }
 
-        return FutureBuilder<List<String>>(
+        return FutureBuilder<List<Map<String, String>>>(
           future: _liveEventNamesFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -215,7 +216,7 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children:
                               List.generate(liveEventNames.length, (index) {
-                            final eventName = liveEventNames[index];
+                            final event = liveEventNames[index];
                             return Row(
                               children: [
                                 if (index != 0)
@@ -233,11 +234,17 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
                                 Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: isMobile ? 6 : 8),
-                                  child: Text(
-                                    eventName,
-                                    style: TextStyle(
-                                      fontSize: eventNameFontSize,
-                                      color: primaryColor,
+                                  child: MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        context.go(
+                                            '/onGoingEvents/${event['id']}');
+                                      },
+                                      child: _HoverText(
+                                        text: event['name']!,
+                                        fontSize: eventNameFontSize,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -278,6 +285,36 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
           },
         );
       },
+    );
+  }
+}
+
+// New widget to handle hover effect
+class _HoverText extends StatefulWidget {
+  final String text;
+  final double fontSize;
+
+  const _HoverText({required this.text, required this.fontSize});
+
+  @override
+  _HoverTextState createState() => _HoverTextState();
+}
+
+class _HoverTextState extends State<_HoverText> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: Text(
+        widget.text,
+        style: TextStyle(
+            fontSize: _isHovered ? widget.fontSize * 1.1 : widget.fontSize,
+            color: _isHovered ? secondaryColor : primaryColor,
+            fontWeight: _isHovered ? FontWeight.bold : FontWeight.normal),
+      ),
     );
   }
 }

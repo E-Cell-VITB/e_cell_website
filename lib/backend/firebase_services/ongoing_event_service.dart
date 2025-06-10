@@ -88,6 +88,14 @@ class OngoingEventService {
       final registeredUsersRef = eventRef.collection('registered_users');
       final docRef = registeredUsersRef.doc();
 
+      for (var i in participants) {
+        i.addAll({
+          'ischeckedIn': false,
+          'checkedInBy': '',
+          'checkedInAt': null,
+        });
+      }
+
       batch.set(docRef, {
         'team_name': teamName ?? 'Individual',
         'participants': participants,
