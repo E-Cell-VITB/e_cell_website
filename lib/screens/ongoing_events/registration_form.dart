@@ -171,13 +171,15 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
         }
         setState(() {
           _teamName = _teamNameController.text;
+
           participants = List.generate(
               _teamSize!,
               (_) => <String, dynamic>{
-                    'ischeckedIn': false,
+                    'isCheckedIn': false,
                     'checkedInBy': '',
                     'checkedInAt': null,
                   });
+
           _currentStage = RegistrationStage.memberDetails;
         });
       }
