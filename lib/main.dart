@@ -8,6 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:toastification/toastification.dart';
+import 'package:seo/seo.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 // import 'certificate_gen/gertificate_generator.dart';
 
@@ -22,6 +24,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await GoogleFonts.pendingFonts();
+  usePathUrlStrategy();
   runApp(const MyApp());
 
   // runApp(const CertificateApp());
@@ -80,13 +83,17 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: AppProviders.providers,
       child: ToastificationWrapper(
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          title: 'E-Cell VITB',
-          // onGenerateRoute: AppNavigator.generateRoute,
-          routerConfig: appRouter,
-          theme: getAppTheme(),
-          // home: const HomeScreen(),
+        child: SeoController(
+          enabled: true,
+          tree: WidgetTree(context: context),
+          child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            title: 'E-Cell VITB',
+            // onGenerateRoute: AppNavigator.generateRoute,
+            routerConfig: appRouter,
+            theme: getAppTheme(),
+            // home: const HomeScreen(),
+          ),
         ),
       ),
     );

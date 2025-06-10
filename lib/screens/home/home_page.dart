@@ -10,6 +10,7 @@ import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:seo/seo.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'widgets/speakers.dart';
 
@@ -276,11 +277,15 @@ class _HomeScreenState extends State<HomeScreen>
                     width: (size.width > 450)
                         ? size.width * 0.65
                         : size.width * 0.85,
-                    child: SelectableText(
-                      textAlign: TextAlign.center,
-                      aboutUs,
-                      style: TextStyle(
-                        fontSize: (size.width > 450) ? size.width * 0.012 : 13,
+                    child: Seo.text(
+                      text: aboutUs,
+                      child: SelectableText(
+                        textAlign: TextAlign.center,
+                        aboutUs,
+                        style: TextStyle(
+                          fontSize:
+                              (size.width > 450) ? size.width * 0.012 : 13,
+                        ),
                       ),
                     ),
                   ),

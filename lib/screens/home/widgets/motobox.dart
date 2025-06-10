@@ -1,5 +1,6 @@
 import 'package:e_cell_website/const/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:seo/seo.dart';
 
 class Motobox extends StatefulWidget {
   final String heading;
@@ -68,13 +69,16 @@ class _MotoboxState extends State<Motobox> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SelectableText(
-                      widget.heading,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: (size.width > 450)
-                            ? size.width * 0.014
-                            : size.width * 0.03,
+                    Seo.text(
+                      text: widget.heading,
+                      child: SelectableText(
+                        widget.heading,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: (size.width > 450)
+                              ? size.width * 0.014
+                              : size.width * 0.03,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 1),

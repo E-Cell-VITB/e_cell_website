@@ -6,6 +6,7 @@ import 'package:e_cell_website/services/providers/gallery_provider.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
 import 'package:e_cell_website/services/providers/recruitment_provider.dart';
 import 'package:e_cell_website/services/providers/speakers_provider.dart';
+import 'package:e_cell_website/services/providers/subscription_provider.dart';
 import 'package:e_cell_website/services/providers/team_members_provider.dart';
 import 'package:e_cell_website/services/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -23,5 +24,6 @@ class AppProviders {
     ChangeNotifierProvider(create: (_) => CertificateProvider()),
     ChangeNotifierProvider(create: (_) => AuthProvider()),
     ChangeNotifierProvider(create: (_) => RecruitmentProvider()),
+    ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
   ];
 }

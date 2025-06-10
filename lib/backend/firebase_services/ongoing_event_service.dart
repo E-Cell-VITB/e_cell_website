@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class OngoingEventService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final String _eventsCollection = 'ongoing_events';
+  final String _eventsCollection = 'ongoingEvents';
 
   Future<List<OngoingEvent>> getAllEvents() async {
     try {
