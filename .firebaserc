@@ -2,6 +2,17 @@
   "projects": {
     "default": "e-cell-vishnu-website"
   },
-  "targets": {},
+  "targets": {
+    "e-cell-vishnu-website": {
+      "hosting": {
+        "old-site": [
+          "ecell-vitb"
+        ],
+        "main-site": [
+          "ecellvitb-main"
+        ]
+      }
+    }
+  },
   "etags": {}
 }
