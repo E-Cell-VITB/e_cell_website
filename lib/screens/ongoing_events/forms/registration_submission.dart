@@ -23,6 +23,8 @@ class RegistrationSubmission {
       final provider =
           Provider.of<OngoingEventProvider>(context, listen: false);
 
+      // AppLogger.log("Paricipants: $participants");
+
       // Check for duplicate emails across all registrations
       final emailDuplicateCheck =
           await _checkDuplicateEmails(eventId, participants);
@@ -84,7 +86,7 @@ class RegistrationSubmission {
     bool hasDuplicates = false;
 
     for (var participant in participants) {
-      final email = participant['email']?.toString();
+      final email = participant['Email']?.toString();
       if (email != null && email.isNotEmpty) {
         final query = await firestore
             .collection('events')
@@ -132,8 +134,8 @@ class RegistrationSubmission {
       }
 
       final participantEmails = participants
-          .where((p) => p['email'] != null && p['email'].toString().isNotEmpty)
-          .map((p) => p['email'].toString())
+          .where((p) => p['Email'] != null && p['Email'].toString().isNotEmpty)
+          .map((p) => p['Email'].toString())
           .toList();
 
       if (participantEmails.isEmpty && context.mounted) {

@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class RegistrationEmailService {
   final String _appsScriptUrl =
-      "https://script.google.com/macros/s/AKfycbx6WNDWD8XHkp82bMgHwW9kZMP5yEc5YmiquadIoYzMGbrVw2GKu4PrUSbhyywsd7RUcQ/exec";
+      "https://script.google.com/macros/s/AKfycbxtmlC3gs2xQWV310mGZqA8wWRBV-eeVzfDqIc-XppBimd1s0aKAcPnbKBRh91-PkfAfQ/exec";
 
   Future<Map<String, dynamic>> sendThankYouEmails({
     required String eventName,
@@ -24,6 +24,8 @@ class RegistrationEmailService {
       'ctaLink': ctaLink,
     };
 
+    AppLogger.log("Pariticipants emails: $participantEmails");
+
     try {
       final response = await http
           .post(
@@ -33,8 +35,8 @@ class RegistrationEmailService {
           .timeout(const Duration(seconds: 30));
 
       final data = jsonDecode(response.body) as Map<String, dynamic>;
-      // AppLogger.log(
-      //     'Response status: ${response.statusCode}, success: ${data['success']}');
+      AppLogger.log(
+          'Response status: ${response.statusCode}, success: ${data['success']}');
 
       if (response.statusCode == 200 && data['success'] == true) {
         return data;

@@ -68,7 +68,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
           teamNames.add(teamName.toLowerCase());
         }
         for (var participant in participants) {
-          final email = participant['email']?.toString();
+          final email = participant['Email']?.toString();
           if (email != null && email.isNotEmpty) {
             emails.add(email.toLowerCase());
           }
