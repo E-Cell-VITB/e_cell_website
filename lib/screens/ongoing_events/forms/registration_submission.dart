@@ -138,14 +138,14 @@ class RegistrationSubmission {
           .map((p) => p['Email'].toString())
           .toList();
 
-      if (participantEmails.isEmpty && context.mounted) {
-        showCustomToast(
-          title: 'Email Warning',
-          description:
-              'Registration successful, but no valid emails provided for thank-you emails.',
-          type: ToastificationType.warning,
-        );
-      }
+      // if (participantEmails.isEmpty && context.mounted) {
+      //   showCustomToast(
+      //     title: 'Email Warning',
+      //     description:
+      //         'Registration successful, but no valid emails provided for thank-you emails.',
+      //     type: ToastificationType.warning,
+      //   );
+      // }
 
       final eventDate = event.eventDate.toUtc().toIso8601String();
       await emailService.sendThankYouEmails(
