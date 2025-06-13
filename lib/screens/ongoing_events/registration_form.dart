@@ -820,7 +820,8 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                 gradient: LinearGradient(
                   colors: [
                     Colors.grey[900]!,
-                    Colors.black87,
+                    Colors.black38,
+                    Colors.grey[900]!
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
