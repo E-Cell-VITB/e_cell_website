@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/ongoing_events/widgets/event_card.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
@@ -77,16 +79,20 @@ class OngoingEventsPage extends StatelessWidget {
                           return Column(
                             children: [
                               InkWell(
-                                onTap: () {
-                                  context.go('/onGoingEvents/${event.id}');
-                                },
+                                // onTap: () {
+                                //   context.go('/onGoingEvents/${event.id}');
+                                // },
                                 child: EventCard(
+                                  eventId: event.id,
+                                  eventEnds: event.estimatedEndTime,
+                                  registrationStarts: event.registrationStarts,
+                                  registrationEnds: event.registrationEnds,
+                                  eventdate: event.eventDate,
                                   eventname: event.name,
                                   description: event.description,
                                   eventtype: event.isTeamEvent
                                       ? 'Team Event'
                                       : 'Individual',
-                                  eventdate: event.eventDate,
                                   reward: event.prizePool!,
                                 ),
                               ),
