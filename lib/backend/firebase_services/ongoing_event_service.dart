@@ -8,7 +8,6 @@ class OngoingEventService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   // final String _eventsCollection = 'ongoingEvents'; // production
   final String _eventsCollection = 'ongoing_events'; //testing
-  final String _eventsCollection = 'ongoing_events';
 
   Future<List<OngoingEvent>> getAllEvents() async {
     try {

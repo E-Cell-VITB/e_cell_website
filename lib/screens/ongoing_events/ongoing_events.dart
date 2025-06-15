@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/ongoing_events/widgets/event_card.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
@@ -7,7 +5,6 @@ import 'package:e_cell_website/widgets/loading_indicator.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:e_cell_website/widgets/subscription_form.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class OngoingEventsPage extends StatelessWidget {
