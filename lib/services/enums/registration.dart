@@ -31,5 +31,6 @@ enum Department {
 
 enum RegistrationStage {
   teamDetails,
+  teamLeaderDetails,
   memberDetails,
 }
