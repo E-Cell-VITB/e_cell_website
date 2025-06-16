@@ -1,3 +1,4 @@
+import 'package:e_cell_website/backend/models/ongoing_events.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/ongoing_events/widgets/count_down_time.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DetailsSection extends StatelessWidget {
-  final dynamic event;
+  final OngoingEvent event;
   final bool isMobile;
   final bool isTablet;
   final double screenWidth;
@@ -41,11 +42,11 @@ class DetailsSection extends StatelessWidget {
                 ? Theme.of(context).textTheme.bodySmall
                 : Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
-            maxLines: isMobile ? 4 : 6,
+            // maxLines: isMobile ? 4 : 6,
           ),
         ),
         const SizedBox(height: 16),
-        if (event.bannerPhotoUrl.isNotEmpty)
+        if (event.bannerPhotoUrl.isNotEmpty) ...[
           ClipRRect(
             borderRadius: BorderRadius.circular(isMobile ? 9 : 18),
             child: Image.network(
@@ -68,11 +69,15 @@ class DetailsSection extends StatelessWidget {
               ),
             ),
           ),
-        const SizedBox(height: 16),
-        if (event.eventDate.isAfter(DateTime.now()))
+          const SizedBox(height: 16),
+        ],
+
+        if (event.registrationEnds!.isAfter(DateTime.now()))
           CountdownTimerWidget(
-            startDateTime: event.eventDate,
-            endDateTime: event.estimatedEndTime ?? event.eventDate,
+            registrationStarts: event.registrationStarts,
+            registrationEnds: event.registrationEnds,
+            eventDate: event.eventDate,
+            estimatedEventEndTime: event.estimatedEndTime,
             isMobile: isMobile,
             screenWidth: screenWidth,
           ),

@@ -1,3 +1,4 @@
+import 'package:e_cell_website/backend/models/ongoing_events.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/services/const/toaster.dart';
 import 'package:e_cell_website/services/providers/auth_provider.dart';
@@ -8,7 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class EventTicketSection extends StatelessWidget {
-  final dynamic event;
+  final OngoingEvent event;
   final bool isMobile;
   final bool isTablet;
   final DateTime Function(DateTime) truncateToSeconds;
@@ -21,7 +22,7 @@ class EventTicketSection extends StatelessWidget {
     super.key,
   });
 
-  String remaining_days(DateTime date) {
+  String remainingDays(DateTime date) {
     final now = DateTime.now();
     final difference = date.difference(now);
     if (difference.isNegative) {
@@ -54,16 +55,16 @@ class EventTicketSection extends StatelessWidget {
             truncateToSeconds(event.registrationStarts!) !=
                 truncateToSeconds(event.createdAt.toDate()))
           SizedBox(
-            width: isMobile
-                ? screenWidth * 0.95
-                : isTablet
-                    ? screenWidth * 0.5
-                    : screenWidth * 0.4,
-            height: isMobile
-                ? 180
-                : isTablet
-                    ? 200
-                    : 225,
+            // width: isMobile
+            //     ? screenWidth * 0.95
+            //     : isTablet
+            //         ? screenWidth * 0.5
+            //         : screenWidth * 0.4,
+            // height: isMobile
+            //     ? 180
+            //     : isTablet
+            //         ? 200
+            //         : 225,
             child: Center(
               child: Stack(
                 children: [
@@ -75,10 +76,10 @@ class EventTicketSection extends StatelessWidget {
                             ? 200
                             : 225,
                     width: isMobile
-                        ? screenWidth * 0.95
+                        ? screenWidth * 0.90
                         : isTablet
                             ? screenWidth * 0.5
-                            : screenWidth * 0.4,
+                            : screenWidth * 0.45,
                     fit: BoxFit.contain,
                   ),
                   Positioned.fill(
@@ -86,7 +87,7 @@ class EventTicketSection extends StatelessWidget {
                       alignment: Alignment.center,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Image.asset(
                             "assets/images/Ecell.png",
@@ -157,7 +158,7 @@ class EventTicketSection extends StatelessWidget {
                                     SizedBox(width: isMobile ? 3 : 7),
                                     LinearGradientText(
                                       child: Text(
-                                        remaining_days(event.registrationEnds ??
+                                        remainingDays(event.registrationEnds ??
                                             event.eventDate),
                                         style: TextStyle(
                                           fontSize: isMobile
@@ -177,7 +178,7 @@ class EventTicketSection extends StatelessWidget {
                                       : isTablet
                                           ? 10
                                           : 15),
-                              GestureDetector(
+                              InkWell(
                                 onTap: () {
                                   final authProvider =
                                       Provider.of<AuthProvider>(context,
