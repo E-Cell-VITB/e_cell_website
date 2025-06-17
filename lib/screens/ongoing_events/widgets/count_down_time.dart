@@ -56,6 +56,10 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
         now.isBefore(widget.estimatedEventEndTime!)) {
       _targetTime = widget.estimatedEventEndTime;
       _statusText = 'Event is ongoing';
+    } else if (widget.registrationStarts == null &&
+        widget.registrationEnds == null) {
+      _targetTime = widget.eventDate;
+      _statusText = 'Registration not started yet';
     } else {
       _targetTime = null;
       _statusText = 'Event has ended';

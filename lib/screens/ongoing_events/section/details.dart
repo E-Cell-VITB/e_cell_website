@@ -72,15 +72,15 @@ class DetailsSection extends StatelessWidget {
           const SizedBox(height: 16),
         ],
 
-        if (event.registrationEnds!.isAfter(DateTime.now()))
-          CountdownTimerWidget(
-            registrationStarts: event.registrationStarts,
-            registrationEnds: event.registrationEnds,
-            eventDate: event.eventDate,
-            estimatedEventEndTime: event.estimatedEndTime,
-            isMobile: isMobile,
-            screenWidth: screenWidth,
-          ),
+        // if (event.registrationEnds!.isAfter(DateTime.now()))
+        CountdownTimerWidget(
+          registrationStarts: event.registrationStarts,
+          registrationEnds: event.registrationEnds,
+          eventDate: event.eventDate,
+          estimatedEventEndTime: event.estimatedEndTime,
+          isMobile: isMobile,
+          screenWidth: screenWidth,
+        ),
         const SizedBox(height: 16),
         Wrap(
           spacing: isMobile

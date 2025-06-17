@@ -55,6 +55,9 @@ class EventCard extends StatelessWidget {
 
   String getRegisterCTA() {
     final now = DateTime.now();
+    if (registrationStarts == null && registrationEnds == null) {
+      return 'Registration Not Started';
+    }
     if (eventEnds != null && now.isAfter(eventEnds!)) {
       return 'Event Ended';
     }
@@ -141,9 +144,9 @@ class EventCard extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        if (getRegisterCTA() == 'Register Now') {
-                          context.go('/onGoingEvents/$eventId');
-                        }
+                        // if (getRegisterCTA() == 'Register Now') {
+                        context.go('/onGoingEvents/$eventId');
+                        // }
                       },
                       child: Row(
                         children: [
