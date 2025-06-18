@@ -1,4 +1,3 @@
-import 'package:e_cell_website/const/app_logs.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';

@@ -1,7 +1,7 @@
 import 'package:e_cell_website/const/const_labels.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/home/widgets/motobox.dart';
-import 'package:e_cell_website/screens/home/widgets/ongoingEvents.dart';
+import 'package:e_cell_website/screens/home/widgets/ongoing_events.dart';
 import 'package:e_cell_website/screens/home/widgets/partnerbox.dart';
 import 'package:e_cell_website/screens/home/widgets/slogan_text.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';

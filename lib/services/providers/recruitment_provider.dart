@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_cell_website/backend/firebase_services/recruitment_service.dart';
 import 'package:e_cell_website/backend/models/recruitment_form.dart';
+import 'package:e_cell_website/const/app_logs.dart';
 import 'package:flutter/foundation.dart';
 
 class RecruitmentProvider extends ChangeNotifier {
@@ -29,7 +30,7 @@ class RecruitmentProvider extends ChangeNotifier {
       return _recruitmentService.getOpenRecruitments();
     } catch (e) {
       _errorMessage = 'Error loading recruitments: $e';
-      print(e);
+      AppLogger.log(e);
       notifyListeners();
       // Return an empty stream to avoid null issues
       return Stream<QuerySnapshot>.error(e);
