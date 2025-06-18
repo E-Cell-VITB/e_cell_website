@@ -121,7 +121,7 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
             : const EdgeInsets.symmetric(horizontal: 16, vertical: 18);
 
     if (widget.provider == null) {
-      print('Provider is null, returning SizedBox.shrink');
+      AppLogger.log('Provider is null, returning SizedBox.shrink');
       return const SizedBox.shrink();
     }
 

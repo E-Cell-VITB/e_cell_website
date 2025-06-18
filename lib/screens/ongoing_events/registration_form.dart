@@ -968,8 +968,6 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
       return null;
     }
 
-    bool hasDepartment = event.registrationTemplate
-        .any((f) => f.inputType.toLowerCase() == 'department');
     bool hasYear = event.registrationTemplate
         .any((f) => f.inputType.toLowerCase() == 'year');
     bool isDepartment = field.inputType.toLowerCase() == 'department';
