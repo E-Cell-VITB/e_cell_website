@@ -378,7 +378,7 @@ class _HomeScreenState extends State<HomeScreen>
                         : size.width * 0.85,
                     child: SelectableText(
                       textAlign: TextAlign.center,
-                      OurVision,
+                      ourVision,
                       style: TextStyle(
                         fontSize: (size.width > 450) ? size.width * 0.012 : 13,
                       ),
