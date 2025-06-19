@@ -43,25 +43,25 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
       }
     }
 
-    final now = DateTime.now();
     List<Map<String, String>> liveEventNames = [];
 
     for (var event in provider.events) {
       try {
         await provider.fetchUpdates(event.id!);
-        final updates = provider.updates;
+        // final updates = provider.updates;
 
-        if (updates.isNotEmpty) {
-          bool hasLiveUpdate = updates.any((update) {
-            final startTime = update.updateLiveStartTime.toDate();
-            final endTime = update.updateLiveEndTime.toDate();
-            final isLive = now.isAfter(startTime) && now.isBefore(endTime);
-            return isLive;
-          });
-          if (hasLiveUpdate) {
-            liveEventNames.add({'name': event.name, 'id': event.id!});
-          }
-        }
+        // if (updates.isNotEmpty) {
+        //   bool hasLiveUpdate = updates.any((update) {
+        //     final startTime = update.updateLiveStartTime.toDate();
+        //     final endTime = update.updateLiveEndTime.toDate();
+        //     final isLive = now.isAfter(startTime) && now.isBefore(endTime);
+        //     return isLive;
+        //   });
+        //   if (hasLiveUpdate) {
+        //     liveEventNames.add({'name': event.name, 'id': event.id!});
+        //   }
+        // }
+        liveEventNames.add({'name': event.name, 'id': event.id!});
       } catch (e) {
         AppLogger.log('Error fetching updates for ${event.name}: $e');
       }

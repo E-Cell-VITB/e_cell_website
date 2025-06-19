@@ -274,7 +274,17 @@ class RegisterNowButton extends StatelessWidget {
           ).then((result) {
             if (result == true && authProvider.currentUserModel != null) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.go('/onGoingEvents/register/${event.id}');
+                // context.go('/onGoingEvents/register/${event.id}');
+                if (event.id != null) {
+                  context.goNamed("ongoingEventRegister", pathParameters: {
+                    'eventId': event.id!,
+                  });
+                } else {
+                  showCustomToast(
+                    title: "Error",
+                    description: "Event ID is not available.",
+                  );
+                }
               });
             } else if (result != true) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -284,7 +294,17 @@ class RegisterNowButton extends StatelessWidget {
           });
         } else {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.go('/onGoingEvents/register/${event.id}');
+            // context.go('/onGoingEvents/register/${event.id}');
+            if (event.id != null) {
+              context.goNamed("ongoingEventRegister", pathParameters: {
+                'eventId': event.id!,
+              });
+            } else {
+              showCustomToast(
+                title: "Error",
+                description: "Event ID is not available.",
+              );
+            }
           });
         }
       },
@@ -293,7 +313,7 @@ class RegisterNowButton extends StatelessWidget {
             ? screenWidth * 0.32
             : isTablet
                 ? screenWidth * 0.25
-                : screenWidth * 0.18,
+                : screenWidth * 0.16,
         padding: EdgeInsets.symmetric(
           vertical: isMobile
               ? 3
@@ -303,8 +323,8 @@ class RegisterNowButton extends StatelessWidget {
           horizontal: isMobile
               ? 10
               : isTablet
-                  ? 20
-                  : 30,
+                  ? 16
+                  : 18,
         ),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(isMobile ? 4 : 7),

@@ -750,13 +750,13 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                 style: const TextStyle(color: Colors.white),
                 value: _teamSize,
                 items: List.generate(
-                  event.maxTeamSize,
+                  (event.maxTeamSize - (event.minTeamSize ?? 1) + 1),
                   (index) => DropdownMenuItem(
-                    value: index + 1,
+                    value: (event.minTeamSize ?? 1) + index,
                     child: Directionality(
                       textDirection: TextDirection.ltr,
                       child: Text(
-                        '${index + 1}',
+                        '${(event.minTeamSize ?? 1) + index}',
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),

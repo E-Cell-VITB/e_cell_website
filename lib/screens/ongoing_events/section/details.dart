@@ -109,7 +109,7 @@ class DetailsSection extends StatelessWidget {
               context,
               icon: Icons.group_outlined,
               text: event.isTeamEvent
-                  ? 'Team Event (Max ${event.maxTeamSize})'
+                  ? 'Team Event (${event.minTeamSize} - ${event.maxTeamSize})'
                   : 'Individual',
             ),
             if (event.prizePool != 0)

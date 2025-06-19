@@ -28,16 +28,6 @@ class EventCard extends StatelessWidget {
 
   String getEventStatus() {
     final now = DateTime.now();
-    if (eventEnds != null && eventEnds!.isBefore(now)) {
-      return 'Event has ended';
-    } else if (eventdate.isBefore(now)) {
-      return 'Event is ongoing';
-    } else if (eventdate.isAfter(now) &&
-        eventEnds != null &&
-        eventEnds!.isAfter(now)) {
-      final days = eventEnds!.difference(now).inDays;
-      return 'Event ends in $days days';
-    }
 
     if (registrationStarts != null && now.isBefore(registrationStarts!)) {
       final days = registrationStarts!.difference(now).inDays;
@@ -47,6 +37,20 @@ class EventCard extends StatelessWidget {
     if (registrationEnds != null && now.isBefore(registrationEnds!)) {
       final days = registrationEnds!.difference(now).inDays;
       return 'Registration ends in $days days';
+    }
+
+    if (eventEnds != null && eventEnds!.isBefore(now)) {
+      return 'Event has ended';
+    }
+
+    if (eventdate.isBefore(now) &&
+        (eventEnds == null || eventEnds!.isAfter(now))) {
+      return 'Event is ongoing';
+    }
+
+    if (eventdate.isAfter(now) && eventEnds != null) {
+      final days = eventEnds!.difference(now).inDays;
+      return 'Event ends in $days days';
     }
 
     final eventDays = eventdate.difference(now).inDays;
@@ -109,7 +113,13 @@ class EventCard extends StatelessWidget {
                           size: 18,
                         ),
                         const SizedBox(width: 8),
-                        LinearGradientText(child: Text(getEventStatus())),
+                        LinearGradientText(
+                            child: Text(
+                          getEventStatus(),
+                          style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              fontSize: isMobile ? 9 : 16),
+                        )),
                       ],
                     ),
                   ],
@@ -137,9 +147,9 @@ class EventCard extends StatelessWidget {
                         SizedBox(
                           width: isMobile ? 10 : 16,
                         ),
-                        if (reward != 0)
-                          detailTile(isMobile, Icons.emoji_events_outlined,
-                              reward.toString()),
+                        // if (reward != 0)
+                        //   detailTile(isMobile, Icons.emoji_events_outlined,
+                        //       reward.toString()),
                       ],
                     ),
                     InkWell(
