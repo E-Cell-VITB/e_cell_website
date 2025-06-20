@@ -86,12 +86,12 @@ class RegistrationSubmission {
     bool hasDuplicates = false;
 
     for (var participant in participants) {
-      final email = participant['Email']?.toString();
+      final email = participant['email']?.toString();
       if (email != null && email.isNotEmpty) {
         final query = await firestore
-            .collection('events')
+            .collection('ongoing_events')
             .doc(eventId)
-            .collection('registrations')
+            .collection('registered_users')
             .where('participants.email', arrayContains: email)
             .get();
 

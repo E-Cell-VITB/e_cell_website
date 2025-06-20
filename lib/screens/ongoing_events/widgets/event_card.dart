@@ -124,9 +124,10 @@ class EventCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                SelectableText(
+                Text(
                   description,
                   style: TextStyle(
+                      overflow: TextOverflow.ellipsis,
                       color: const Color(0xFFC4C4C4),
                       fontSize: isMobile ? 8 : 16),
                   maxLines: isMobile ? 3 : 4,

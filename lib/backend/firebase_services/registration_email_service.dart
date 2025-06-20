@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class RegistrationEmailService {
   final String _appsScriptUrl =
-      "https://script.google.com/macros/s/AKfycbwmtMfDC-gq1Tl7cYKIjVrM2mJWWKqUFeOjfX9Z6jG_n8nVR7ycxMTFoWpDCJgdwd0VPA/exec";
+      "https://script.google.com/macros/s/AKfycbw24N6iTH5nHqelx1RL2OnKaa1zAfzQCX8A7DQRb-dPg7JGmgc4TdtmENdQpnwbOPuXGA/exec";
 
   Future<Map<String, dynamic>> sendThankYouEmails({
     required String eventName,

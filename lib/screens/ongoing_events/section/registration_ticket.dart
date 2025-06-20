@@ -313,7 +313,7 @@ class RegisterNowButton extends StatelessWidget {
             ? screenWidth * 0.32
             : isTablet
                 ? screenWidth * 0.25
-                : screenWidth * 0.16,
+                : screenWidth * 0.15,
         padding: EdgeInsets.symmetric(
           vertical: isMobile
               ? 3
@@ -323,8 +323,8 @@ class RegisterNowButton extends StatelessWidget {
           horizontal: isMobile
               ? 10
               : isTablet
-                  ? 16
-                  : 18,
+                  ? 12
+                  : 14,
         ),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(isMobile ? 4 : 7),
