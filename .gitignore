@@ -57,3 +57,4 @@ windows/flutter/generated_plugin_registrant.h
 assets/credentials.json
 lib/app/credentials.json
 web/credentials.json
+hosting_cmd.txt

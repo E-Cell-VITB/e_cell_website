@@ -110,12 +110,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-/// firebase hosting command
-
-// firebase deploy --only hosting:ecell-vitb (use this only for main-website)
-// firebase deploy --only hosting:ecellvitb-main (use this only for main-website in domain ecellvitb.in)
-
-//new deployment command
-// firebase deploy --only hosting:main-site (live with ecellvitb.in domain)
-// firebase deploy --only hosting:old-site (live with ecellvitb.web.app domain)
