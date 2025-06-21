@@ -147,7 +147,8 @@ class RegistrationSubmission {
       //   );
       // }
 
-      final eventDate = event.eventDate.toUtc().toIso8601String();
+      final eventDate =
+          event.eventDate.toUtc().toIso8601String().split('T').first;
       await emailService.sendThankYouEmails(
         eventName: event.name,
         eventDate: eventDate,
