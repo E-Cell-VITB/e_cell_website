@@ -85,7 +85,8 @@ class TeamScreen extends StatelessWidget {
                                   child: Text("Error: ${snapshot.error}"));
                             }
 
-                            final teamMembers = snapshot.data ?? [];
+                            final teamMembers =
+                                (snapshot.data ?? []).reversed.toList();
                             return Column(
                               children: Department.values.map((dept) {
                                 List<TeamMemberModel> departmentMembers =

@@ -50,8 +50,13 @@ class OngoingEventsPage extends StatelessWidget {
                       final liveEvents = provider.events
                           .where((event) => event.isEventLive)
                           .toList();
-                      liveEvents
-                          .sort((a, b) => a.eventDate.compareTo(b.eventDate));
+                      liveEvents.sort((a, b) {
+                        // First, compare by position (lower value = higher priority)
+                        final posCompare = a.position.compareTo(b.position);
+                        if (posCompare != 0) return posCompare;
+                        // If position is the same, compare by eventDate
+                        return a.eventDate.compareTo(b.eventDate);
+                      });
 
                       if (liveEvents.isEmpty) {
                         return SizedBox(

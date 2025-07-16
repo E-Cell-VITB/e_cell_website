@@ -76,6 +76,19 @@ class EventsScreen extends StatelessWidget {
                     final filteredEvents = events
                         .where((event) => event.allPhotos.isNotEmpty)
                         .toList();
+                    filteredEvents.sort((a, b) {
+                      // First, compare by position (lower value = higher priority)
+                      final posCompare = a.position.compareTo(b.position);
+                      if (posCompare != 0) return posCompare;
+                      // If position is the same, compare by eventDate
+                      return a.eventDate.compareTo(b.eventDate);
+                    });
+
+                    // for (var event in filteredEvents) {
+                    //   print(
+                    //       'Event: ${event.name}, Position: ${event.position}, Date: ${event.eventDate}');
+                    // }
+
                     return GridView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
