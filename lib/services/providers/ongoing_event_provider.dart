@@ -48,7 +48,7 @@ class OngoingEventProvider extends ChangeNotifier {
     _setLoading('events', true);
     try {
       _events = await _eventService.getAllEvents();
-      print(_events);
+      // print(_events);
       _errorEvents = null;
     } catch (e) {
       _errorEvents = 'Failed to fetch events: $e';

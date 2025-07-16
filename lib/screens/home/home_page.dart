@@ -179,7 +179,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<OngoingEventProvider>(context);
     final size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
