@@ -8,6 +8,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:toastification/toastification.dart';
+import 'package:seo/seo.dart';
+// import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+// import 'package:web/web.dart';
 
 // import 'certificate_gen/gertificate_generator.dart';
 
@@ -22,6 +25,17 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await GoogleFonts.pendingFonts();
+  // usePathUrlStrategy();
+  // final uri = Uri.base;
+
+  // if (!uri.path.contains('/#') && uri.path != '/') {
+  //   final newUrl = '${uri.origin}/#${uri.path}';
+  //   window.location.replace(newUrl);
+  //   // print(newUrl);
+  // } else {
+  //   setUrlStrategy(const HashUrlStrategy());
+  //   runApp(const MyApp());
+  // }
   runApp(const MyApp());
 
   // runApp(const CertificateApp());
@@ -80,19 +94,19 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: AppProviders.providers,
       child: ToastificationWrapper(
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          title: 'E-Cell VITB',
-          // onGenerateRoute: AppNavigator.generateRoute,
-          routerConfig: appRouter,
-          theme: getAppTheme(),
-          // home: const HomeScreen(),
+        child: SeoController(
+          enabled: true,
+          tree: WidgetTree(context: context),
+          child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            title: 'E-Cell VITB',
+            // onGenerateRoute: AppNavigator.generateRoute,
+            routerConfig: appRouter,
+            theme: getAppTheme(),
+            // home: const HomeScreen(),
+          ),
         ),
       ),
     );
   }
 }
-
-/// firebase hosting command
-
-// firebase deploy --only hosting:ecell-vitb (use this only for main-website)

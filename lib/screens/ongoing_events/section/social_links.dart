@@ -170,7 +170,9 @@
 // }
 
 import 'package:e_cell_website/backend/models/event.dart';
+import 'package:e_cell_website/services/const/toaster.dart';
 import 'package:flutter/material.dart';
+import 'package:toastification/toastification.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FloatingSocialLinks extends StatefulWidget {
@@ -216,11 +218,10 @@ class FloatingSocialLinksState extends State<FloatingSocialLinks> {
                           if (await canLaunchUrl(uri)) {
                             await launchUrl(uri, webOnlyWindowName: '_self');
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content:
-                                      Text('Cannot launch ${socialLink.url}')),
-                            );
+                            showCustomToast(
+                                title: 'Error',
+                                description: 'Cannot launch ${socialLink.url}',
+                                type: ToastificationType.error);
                           }
                         },
                         child: Tooltip(

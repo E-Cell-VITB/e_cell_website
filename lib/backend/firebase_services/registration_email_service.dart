@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:e_cell_website/const/app_logs.dart';
 import 'package:http/http.dart' as http;
 
 class RegistrationEmailService {
   final String _appsScriptUrl =
-      "https://script.google.com/macros/s/AKfycbx6WNDWD8XHkp82bMgHwW9kZMP5yEc5YmiquadIoYzMGbrVw2GKu4PrUSbhyywsd7RUcQ/exec";
+      "https://script.google.com/macros/s/AKfycbw24N6iTH5nHqelx1RL2OnKaa1zAfzQCX8A7DQRb-dPg7JGmgc4TdtmENdQpnwbOPuXGA/exec";
 
   Future<Map<String, dynamic>> sendThankYouEmails({
     required String eventName,
@@ -24,6 +23,8 @@ class RegistrationEmailService {
       'ctaLink': ctaLink,
     };
 
+    // AppLogger.log("Pariticipants emails: $participantEmails");
+
     try {
       final response = await http
           .post(
@@ -40,12 +41,20 @@ class RegistrationEmailService {
         return data;
       } else {
         final errorMessage = data['message'] ?? 'Unknown error';
-        AppLogger.log('Failed to send emails: $errorMessage');
-        throw Exception('Failed to send thank-you emails: $errorMessage');
+        // AppLogger.log('Failed to send emails: $errorMessage');
+        return {
+          'success': false,
+          'data': null,
+          'message': 'Failed to send thank-you emails: $errorMessage',
+        };
       }
     } catch (e) {
-      AppLogger.log('Error sending thank-you emails: $e');
-      throw Exception('Error sending thank-you emails: $e');
+      // AppLogger.log('Error sending thank-you emails: $e');
+      return {
+        'success': false,
+        'data': null,
+        'message': 'Error sending thank-you emails: $e',
+      };
     }
   }
 }

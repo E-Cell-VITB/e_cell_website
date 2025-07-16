@@ -22,6 +22,7 @@ class OngoingEvent {
   final String certificatesScript;
   final bool isTeamEvent;
   final int maxTeamSize;
+  final int? minTeamSize;
   final List<EvaluationCriteria> evaluationTemplate;
   final List<RegistrationField> registrationTemplate;
   bool isEventLive;
@@ -51,6 +52,7 @@ class OngoingEvent {
     required this.registrationStarts,
     required this.registrationEnds,
     this.isEventLive = false,
+    this.minTeamSize,
   });
 
   Map<String, dynamic> toMap() {
@@ -85,6 +87,7 @@ class OngoingEvent {
           ? Timestamp.fromDate(registrationEnds!)
           : null,
       'isEventLive': isEventLive,
+      'minTeamSize': minTeamSize ?? 1,
     };
   }
 
@@ -128,6 +131,7 @@ class OngoingEvent {
             [],
         registrationStarts: (map['registrationStarts'] as Timestamp?)?.toDate(),
         registrationEnds: (map['registrationEnds'] as Timestamp?)?.toDate(),
+        minTeamSize: (map['minTeamSize'] as int?) ?? 1,
         isEventLive: map['isEventLive'] as bool? ?? false);
   }
 }

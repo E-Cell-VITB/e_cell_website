@@ -22,13 +22,36 @@
       }
     }
   },
-  "hosting": {
-    "public": "build/web",
-	"site": "ecell-vitb",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
-  }
+
+  "hosting": [
+    {
+      "target": "old-site",
+      "public": "build/web",
+
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "redirects": [
+          {
+            "source": "/",
+            "destination": "https://ecellvitb.in/",
+            "type": 301
+          }
+
+        ]
+    },
+    {
+      "target": "main-site",
+      "public": "build/web",
+
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  ]
+
 }

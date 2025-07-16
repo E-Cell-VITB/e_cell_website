@@ -74,20 +74,24 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
           }
         }
       }
-      setState(() {
-        _registeredEmails = emails.toList();
-        _registeredTeamNames = teamNames.toList();
-        _isCheckingRegistration = false;
-      });
+      if (mounted) {
+        setState(() {
+          _registeredEmails = emails.toList();
+          _registeredTeamNames = teamNames.toList();
+          _isCheckingRegistration = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _isCheckingRegistration = false;
-      });
-      showCustomToast(
-        title: 'Error',
-        description: 'Failed to fetch registered data: $e',
-        type: ToastificationType.error,
-      );
+      if (mounted) {
+        setState(() {
+          _isCheckingRegistration = false;
+        });
+        showCustomToast(
+          title: 'Error',
+          description: 'Failed to fetch registered data: $e',
+          type: ToastificationType.error,
+        );
+      }
     }
   }
 
@@ -105,11 +109,13 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
     });
 
     Future.delayed(const Duration(milliseconds: 500), () {
-      setState(() {
-        _teamNameValidationStatus =
-            !_registeredTeamNames.contains(teamName.toLowerCase());
-        _isCheckingTeamName = false;
-      });
+      if (mounted) {
+        setState(() {
+          _teamNameValidationStatus =
+              !_registeredTeamNames.contains(teamName.toLowerCase());
+          _isCheckingTeamName = false;
+        });
+      }
     });
   }
 
@@ -126,11 +132,13 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
     });
 
     Future.delayed(const Duration(milliseconds: 500), () {
-      setState(() {
-        _emailValidationStatus[controllerKey] =
-            !_registeredEmails.contains(email.toLowerCase());
-        _emailLoadingStatus[controllerKey] = false;
-      });
+      if (mounted) {
+        setState(() {
+          _emailValidationStatus[controllerKey] =
+              !_registeredEmails.contains(email.toLowerCase());
+          _emailLoadingStatus[controllerKey] = false;
+        });
+      }
     });
   }
 
@@ -163,14 +171,31 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
         }
         setState(() {
           _teamName = _teamNameController.text;
-          participants = List.generate(_teamSize!, (_) => <String, dynamic>{});
-          for (var participant in participants) {
-            participant.addAll({
-              'ischeckedIn': false,
-              'checkedInBy': '',
-              'checkedInAt': null,
-            });
+          participants =
+              List.generate(1, (_) => <String, dynamic>{'isTeamLead': true});
+          _currentStage = RegistrationStage.teamLeaderDetails;
+        });
+      }
+    } else if (_currentStage == RegistrationStage.teamLeaderDetails) {
+      if (_formKey.currentState!.validate()) {
+        bool allEmailsValid = true;
+        for (var entry in _emailValidationStatus.entries) {
+          if (entry.value == false || _emailLoadingStatus[entry.key] == true) {
+            allEmailsValid = false;
+            break;
           }
+        }
+        if (!allEmailsValid) {
+          showCustomToast(
+            title: 'Invalid Emails',
+            description: 'Please correct invalid or duplicate email addresses',
+            type: ToastificationType.error,
+          );
+          return;
+        }
+        setState(() {
+          participants.addAll(List.generate(
+              _teamSize! - 1, (_) => <String, dynamic>{'isTeamLead': false}));
           _currentStage = RegistrationStage.memberDetails;
         });
       }
@@ -191,7 +216,6 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
           );
           return;
         }
-
         final provider =
             Provider.of<OngoingEventProvider>(context, listen: false);
         final event = provider.currentEvent;
@@ -204,30 +228,23 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
           return;
         }
         setState(() => _isSubmitting = true);
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          RegistrationSubmission.handleRegistration(
-            context,
-            event,
-            widget.eventId,
-            participants,
-            _teamName,
-            () {
-              if (mounted) {
-                setState(() {
-                  _isCheckingRegistration = false;
-                });
-              }
-            },
-            () {
-              if (mounted) {
-                setState(() {
-                  _isCheckingTeamName = false;
-                });
-              }
-            },
-          );
-        });
+        RegistrationSubmission.handleRegistration(
+          context,
+          event,
+          widget.eventId,
+          participants,
+          _teamName,
+          () {
+            if (mounted) {
+              setState(() => _isCheckingRegistration = false);
+            }
+          },
+          () {
+            if (mounted) {
+              setState(() => _isSubmitting = false);
+            }
+          },
+        );
       }
     }
   }
@@ -235,13 +252,21 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
   void _moveToPreviousStage() {
     if (_currentStage == RegistrationStage.teamDetails) {
       context.pop();
-    } else if (_currentStage == RegistrationStage.memberDetails) {
+    } else if (_currentStage == RegistrationStage.teamLeaderDetails) {
       setState(() {
         _currentStage = RegistrationStage.teamDetails;
         participants = [{}];
         _controllers.clear();
         _emailValidationStatus.clear();
         _emailLoadingStatus.clear();
+      });
+    } else if (_currentStage == RegistrationStage.memberDetails) {
+      setState(() {
+        _currentStage = RegistrationStage.teamLeaderDetails;
+        participants = [participants.first]; // Retain only team leader details
+        _controllers.removeWhere((key, _) => !key.startsWith('0_'));
+        _emailValidationStatus.removeWhere((key, _) => !key.startsWith('0_'));
+        _emailLoadingStatus.removeWhere((key, _) => !key.startsWith('0_'));
       });
     }
   }
@@ -267,6 +292,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
       create: (context) =>
           OngoingEventProvider()..fetchEventById(widget.eventId),
       child: Scaffold(
+        backgroundColor: Colors.black87,
         body: Consumer<OngoingEventProvider>(
           builder: (context, provider, child) {
             if (provider.isLoadingEvents || _isCheckingRegistration) {
@@ -318,12 +344,12 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                             : 24.0,
                   ),
                   child: GradientBox(
-                    radius: 18,
-                    width: isMobile ? screenWidth * 0.9 : screenWidth * 0.5,
+                    radius: 24,
+                    width: isMobile ? screenWidth * 0.95 : screenWidth * 0.6,
                     child: Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: isMobile ? 2 : 54,
-                        vertical: isMobile ? 2 : 54,
+                        horizontal: isMobile ? 16 : 48,
+                        vertical: isMobile ? 24 : 48,
                       ),
                       child: Form(
                         key: _formKey,
@@ -331,17 +357,20 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(isMobile ? 16 : 0),
+                              padding: EdgeInsets.all(isMobile ? 16 : 24),
                               child: LinearGradientText(
                                 child: Text(
-                                  '${event.name} Registration Form',
+                                  'Event Registration',
                                   style: isMobile
                                       ? Theme.of(context)
                                           .textTheme
-                                          .headlineSmall
+                                          .headlineSmall!
+                                          .copyWith(fontWeight: FontWeight.bold)
                                       : Theme.of(context)
                                           .textTheme
-                                          .displayMedium,
+                                          .displayMedium!
+                                          .copyWith(
+                                              fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -373,7 +402,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                                     ),
                                     Padding(
                                       padding:
-                                          EdgeInsets.all(isMobile ? 0 : 24),
+                                          EdgeInsets.all(isMobile ? 8 : 24),
                                       child: _buildCurrentStageContent(
                                         event,
                                         isMobile,
@@ -393,7 +422,11 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                                                         .teamDetails
                                                 ? 'CANCEL'
                                                 : 'BACK',
-                                            onPressed: _moveToPreviousStage,
+                                            onPressed: _isSubmitting ||
+                                                    _isCheckingRegistration ||
+                                                    _isCheckingTeamName
+                                                ? null
+                                                : _moveToPreviousStage,
                                             isMobile: isMobile,
                                             isTablet: isTablet,
                                           ),
@@ -416,7 +449,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                                           ),
                                         ],
                                       ),
-                                    ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -425,7 +458,15 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                                 padding: const EdgeInsets.all(16.0),
                                 child: Column(
                                   children: [
-                                    ...event.registrationTemplate.map((field) {
+                                    ...event.registrationTemplate
+                                        .where((field) => !(field.inputType
+                                                    .toLowerCase() ==
+                                                'year' &&
+                                            event.registrationTemplate.any(
+                                                (f) =>
+                                                    f.inputType.toLowerCase() ==
+                                                    'department')))
+                                        .map((field) {
                                       return Padding(
                                         padding:
                                             const EdgeInsets.only(bottom: 16.0),
@@ -435,6 +476,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                                           isMobile,
                                           isTablet,
                                           screenWidth,
+                                          event,
                                         ),
                                       );
                                     }),
@@ -450,43 +492,76 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                                     else
                                       GradientButton(
                                         text: 'Submit Registration',
-                                        onPressed: () {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            if (_emailValidationStatus[
-                                                        '0_email'] ==
-                                                    false ||
-                                                _emailLoadingStatus[
-                                                        '0_email'] ==
-                                                    true) {
-                                              showCustomToast(
-                                                title: 'Invalid Email',
-                                                description:
-                                                    'Please enter a valid and non-duplicate email',
-                                                type: ToastificationType.error,
-                                              );
-                                              return;
-                                            }
-                                            setState(
-                                                () => _isSubmitting = true);
-                                            WidgetsBinding.instance
-                                                .addPostFrameCallback((_) {
-                                              RegistrationSubmission
-                                                  .handleRegistration(
-                                                context,
-                                                event,
-                                                widget.eventId,
-                                                participants,
-                                                '${_teamName?[0].toUpperCase()}${_teamName?.substring(1)}',
-                                                () => setState(() =>
-                                                    _isCheckingRegistration =
-                                                        false),
-                                                () => setState(() =>
-                                                    _isSubmitting = false),
-                                              );
-                                            });
-                                          }
-                                        },
+                                        onPressed: _isSubmitting ||
+                                                _isCheckingRegistration
+                                            ? null
+                                            : () async {
+                                                if (_formKey.currentState!
+                                                    .validate()) {
+                                                  if (_emailValidationStatus[
+                                                              '0_email'] ==
+                                                          false ||
+                                                      _emailLoadingStatus[
+                                                              '0_email'] ==
+                                                          true) {
+                                                    showCustomToast(
+                                                      title: 'Invalid Email',
+                                                      description:
+                                                          'Please enter a valid and non-duplicate email',
+                                                      type: ToastificationType
+                                                          .error,
+                                                    );
+                                                    return;
+                                                  }
+                                                  setState(() {
+                                                    _isSubmitting = true;
+                                                    participants[0].addAll({
+                                                      'ischeckedIn': false,
+                                                      'checkedInBy': '',
+                                                      'checkedInAt': null,
+                                                    });
+                                                  });
+                                                  try {
+                                                    await RegistrationSubmission
+                                                        .handleRegistration(
+                                                      context,
+                                                      event,
+                                                      widget.eventId,
+                                                      participants,
+                                                      '${_teamName?[0].toUpperCase()}${_teamName?.substring(1)}',
+                                                      () {
+                                                        if (mounted) {
+                                                          setState(() =>
+                                                              _isCheckingRegistration =
+                                                                  false);
+                                                        }
+                                                      },
+                                                      () {
+                                                        if (mounted) {
+                                                          setState(() =>
+                                                              _isSubmitting =
+                                                                  false);
+                                                        }
+                                                      },
+                                                    );
+                                                  } catch (e) {
+                                                    if (mounted) {
+                                                      setState(() {
+                                                        _isSubmitting = false;
+                                                        _isCheckingRegistration =
+                                                            false;
+                                                      });
+                                                      showCustomToast(
+                                                        title: 'Error',
+                                                        description:
+                                                            'Registration failed: $e',
+                                                        type: ToastificationType
+                                                            .error,
+                                                      );
+                                                    }
+                                                  }
+                                                }
+                                              },
                                         isMobile: isMobile,
                                         isTablet: isTablet,
                                       ),
@@ -515,19 +590,31 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildStepIndicator(
-              RegistrationStage.teamDetails, 'Team Details', Icons.group),
-          _buildStepConnector(
-              _currentStage.index >= RegistrationStage.memberDetails.index),
-          _buildStepIndicator(
-              RegistrationStage.memberDetails, 'Member Details', Icons.person),
+          _buildStepIndicator(RegistrationStage.teamDetails, 'Team Details',
+              Icons.group, isMobile),
+          Transform.translate(
+            offset: const Offset(0, -15),
+            child: _buildStepConnector(
+              _currentStage.index >= RegistrationStage.teamLeaderDetails.index,
+            ),
+          ),
+          _buildStepIndicator(RegistrationStage.teamLeaderDetails,
+              'Team Leader', Icons.person, isMobile),
+          Transform.translate(
+            offset: const Offset(0, -15),
+            child: _buildStepConnector(
+              _currentStage.index >= RegistrationStage.memberDetails.index,
+            ),
+          ),
+          _buildStepIndicator(RegistrationStage.memberDetails, 'Members',
+              Icons.person_add_alt, isMobile),
         ],
       ),
     );
   }
 
   Widget _buildStepIndicator(
-      RegistrationStage stage, String label, IconData icon) {
+      RegistrationStage stage, String label, IconData icon, bool isMobile) {
     final isActive = _currentStage == stage;
     final isCompleted = _currentStage.index > stage.index;
 
@@ -545,25 +632,39 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: isActive
-                  ? Colors.amberAccent
-                  : isCompleted
-                      ? Colors.amberAccent.withOpacity(0.7)
-                      : Colors.white.withOpacity(0.3),
+              gradient: LinearGradient(
+                colors: isActive
+                    ? [Colors.amberAccent, Colors.orangeAccent]
+                    : isCompleted
+                        ? [
+                            Colors.amberAccent.withOpacity(0.7),
+                            Colors.orangeAccent.withOpacity(0.7)
+                          ]
+                        : [Colors.grey[700]!, Colors.grey[900]!],
+              ),
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: Center(
               child: isCompleted
-                  ? const Icon(Icons.check, color: Colors.black)
-                  : Icon(icon, color: isActive ? Colors.black : Colors.white),
+                  ? const Icon(Icons.check, color: Colors.black, size: 24)
+                  : Icon(icon,
+                      color: isActive ? Colors.black : Colors.white, size: 24),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             label,
             style: TextStyle(
-              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-              color: isActive ? Colors.amberAccent : Colors.white,
+              fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+              color: isActive ? Colors.amberAccent : Colors.white70,
+              fontSize: isMobile ? 12 : 14,
             ),
           ),
         ],
@@ -572,10 +673,17 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
   }
 
   Widget _buildStepConnector(bool isActive) {
+    double width = MediaQuery.of(context).size.width;
     return Container(
-      width: 40,
-      height: 2,
-      color: isActive ? Colors.amberAccent : Colors.white.withOpacity(0.3),
+      width: width * 0.08,
+      height: 3,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isActive
+              ? [Colors.amberAccent, Colors.orangeAccent]
+              : [Colors.grey[700]!, Colors.grey[900]!],
+        ),
+      ),
     );
   }
 
@@ -584,25 +692,35 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
     switch (_currentStage) {
       case RegistrationStage.teamDetails:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'Team Information',
+                style: TextStyle(
+                  fontSize: isMobile ? 18 : 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _teamNameController,
-                decoration: InputDecoration(
+                decoration: _inputDecoration(
                   labelText: 'Team Name',
-                  labelStyle: const TextStyle(color: Colors.grey),
-                  filled: true,
-                  fillColor: backgroundColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
+                  isMobile: isMobile,
                   suffixIcon: _isCheckingTeamName
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                      ? Transform.scale(
+                          scale: 0.6,
+                          child: const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                              color: secondaryColor,
+                            ),
+                          ),
                         )
                       : _teamNameValidationStatus == true
                           ? const Icon(Icons.check_circle, color: Colors.green)
@@ -624,27 +742,21 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<int>(
-                decoration: InputDecoration(
+                decoration: _inputDecoration(
                   labelText: 'Team Size',
-                  labelStyle: const TextStyle(color: Colors.grey),
-                  filled: true,
-                  fillColor: backgroundColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
+                  isMobile: isMobile,
                 ),
-                dropdownColor: Colors.black87,
+                dropdownColor: Colors.grey[900],
                 style: const TextStyle(color: Colors.white),
                 value: _teamSize,
                 items: List.generate(
-                  event.maxTeamSize,
+                  (event.maxTeamSize - (event.minTeamSize ?? 1) + 1),
                   (index) => DropdownMenuItem(
-                    value: index + 1,
+                    value: (event.minTeamSize ?? 1) + index,
                     child: Directionality(
                       textDirection: TextDirection.ltr,
                       child: Text(
-                        '${index + 1}',
+                        '${(event.minTeamSize ?? 1) + index}',
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),
@@ -663,31 +775,110 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
             ],
           ),
         );
+      case RegistrationStage.teamLeaderDetails:
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Team Leader Details',
+                style: TextStyle(
+                  fontSize: isMobile ? 18 : 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ...event.registrationTemplate
+                  .where((field) => !(field.inputType.toLowerCase() == 'year' &&
+                      event.registrationTemplate.any(
+                          (f) => f.inputType.toLowerCase() == 'department')))
+                  .map((field) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: _buildFormField(
+                    field,
+                    0,
+                    isMobile,
+                    isTablet,
+                    screenWidth,
+                    event,
+                  ),
+                );
+              }),
+            ],
+          ),
+        );
       case RegistrationStage.memberDetails:
         return Column(
-          children: List.generate(participants.length, (index) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Team Member ${index + 1}',
-                    style: TextStyle(
-                      fontSize: isMobile ? 16 : 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+          children: List.generate(participants.length - 1, (index) {
+            final actualIndex = index + 1; // Skip team leader (index 0)
+            return Container(
+              margin: const EdgeInsets.symmetric(vertical: 12.0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.grey[900]!,
+                    Colors.black38,
+                    Colors.grey[900]!
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
                   ),
-                  const SizedBox(height: 8),
-                  ...event.registrationTemplate.map((field) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: _buildFormField(
-                          field, index, isMobile, isTablet, screenWidth),
-                    );
-                  }),
                 ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.person_outline,
+                          color: Colors.amberAccent,
+                          size: isMobile ? 22 : 26,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Team Member ${index + 1}',
+                          style: TextStyle(
+                            fontSize: isMobile ? 16 : 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    ...event.registrationTemplate
+                        .where((field) =>
+                            !(field.inputType.toLowerCase() == 'year' &&
+                                event.registrationTemplate.any((f) =>
+                                    f.inputType.toLowerCase() == 'department')))
+                        .map((field) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: _buildFormField(
+                          field,
+                          actualIndex,
+                          isMobile,
+                          isTablet,
+                          screenWidth,
+                          event,
+                        ),
+                      );
+                    }),
+                  ],
+                ),
               ),
             );
           }),
@@ -695,8 +886,43 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
     }
   }
 
-  Widget _buildFormField(RegistrationField field, int index, bool isMobile,
-      bool isTablet, double screenWidth) {
+  InputDecoration _inputDecoration({
+    required String labelText,
+    required bool isMobile,
+    Widget? suffixIcon,
+  }) {
+    return InputDecoration(
+      labelText: labelText,
+      labelStyle: TextStyle(
+        color: Colors.grey[400],
+        fontSize: isMobile ? 14 : 16,
+      ),
+      filled: true,
+      fillColor: Colors.grey[850],
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.amberAccent, width: 2),
+      ),
+      suffixIcon: suffixIcon,
+      contentPadding: EdgeInsets.symmetric(
+        vertical: isMobile ? 12 : 16,
+        horizontal: 16,
+      ),
+    );
+  }
+
+  Widget _buildFormField(
+    RegistrationField field,
+    int index,
+    bool isMobile,
+    bool isTablet,
+    double screenWidth,
+    OngoingEvent event,
+  ) {
     final controllerKey = '${index}_${field.fieldName}';
     if (!_controllers.containsKey(controllerKey)) {
       _controllers[controllerKey] = TextEditingController(
@@ -708,39 +934,12 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
     final capitalizedFieldName =
         '${field.fieldName[0].toUpperCase()}${field.fieldName.substring(1)}';
 
-    InputDecoration inputDecoration({String? labelText}) {
-      return InputDecoration(
-        labelText: labelText ?? capitalizedFieldName,
-        labelStyle: const TextStyle(color: Colors.grey),
-        filled: true,
-        fillColor: backgroundColor,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        suffixIcon: field.inputType.toLowerCase() == 'email'
-            ? _emailLoadingStatus[controllerKey] == true
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : _emailValidationStatus[controllerKey] == true
-                    ? const Icon(Icons.check_circle, color: Colors.green)
-                    : _emailValidationStatus[controllerKey] == false
-                        ? const Icon(Icons.cancel, color: Colors.red)
-                        : null
-            : null,
-      );
-    }
-
     String? validator(dynamic value) {
       if (field.isRequired) {
         if (value == null || (value is String && value.isEmpty)) {
           return '$capitalizedFieldName is required';
         }
       }
-
       if (value != null && value is String && value.isNotEmpty) {
         switch (field.inputType.toLowerCase()) {
           case 'number':
@@ -769,11 +968,122 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
       return null;
     }
 
+    bool hasYear = event.registrationTemplate
+        .any((f) => f.inputType.toLowerCase() == 'year');
+    bool isDepartment = field.inputType.toLowerCase() == 'department';
+
+    if (isDepartment && hasYear) {
+      return Row(
+        children: [
+          Expanded(
+            child: DropdownButtonFormField<Department>(
+              isExpanded: true,
+              decoration: _inputDecoration(
+                labelText: capitalizedFieldName,
+                isMobile: isMobile,
+              ),
+              dropdownColor: Colors.grey[900],
+              style: const TextStyle(color: Colors.white),
+              value: participants[index][field.fieldName] != null
+                  ? Department.values.firstWhere(
+                      (e) =>
+                          e.toString() == participants[index][field.fieldName],
+                      orElse: () => Department.other,
+                    )
+                  : null,
+              items: Department.values.map((Department dept) {
+                return DropdownMenuItem<Department>(
+                  value: dept,
+                  child: Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Text(
+                      dept.toString().split('.').last,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: isMobile
+                            ? 12
+                            : isTablet
+                                ? 14
+                                : 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: (Department? value) {
+                if (value != null) {
+                  setState(() {
+                    participants[index][field.fieldName] = value.toString();
+                  });
+                }
+              },
+              validator: validator,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: DropdownButtonFormField<int>(
+              decoration: _inputDecoration(
+                labelText: 'Year',
+                isMobile: isMobile,
+              ),
+              dropdownColor: Colors.grey[900],
+              style: const TextStyle(color: Colors.white),
+              value: participants[index]['year'] is int
+                  ? participants[index]['year']
+                  : null,
+              items: List.generate(
+                4,
+                (i) => DropdownMenuItem<int>(
+                  value: i + 1,
+                  child: Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Text(
+                      '${i + 1}',
+                      style: TextStyle(
+                        fontSize: isMobile
+                            ? 12
+                            : isTablet
+                                ? 14
+                                : 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              onChanged: (int? value) {
+                if (value != null) {
+                  setState(() {
+                    participants[index]['year'] = value;
+                  });
+                }
+              },
+              validator: (value) {
+                if (event.registrationTemplate.any((f) =>
+                    f.inputType.toLowerCase() == 'year' && f.isRequired)) {
+                  if (value == null) {
+                    return 'Year is required';
+                  }
+                }
+                return null;
+              },
+            ),
+          ),
+        ],
+      );
+    }
+
     switch (field.inputType.toLowerCase()) {
       case 'boolean':
         return DropdownButtonFormField<bool>(
-          decoration: inputDecoration(),
-          dropdownColor: Colors.black87,
+          decoration: _inputDecoration(
+            labelText: capitalizedFieldName,
+            isMobile: isMobile,
+          ),
+          dropdownColor: Colors.grey[900],
           style: const TextStyle(color: Colors.white),
           value: participants[index][field.fieldName] is bool
               ? participants[index][field.fieldName]
@@ -803,73 +1113,30 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
           },
           validator: validator,
         );
-
       case 'department':
-        return SizedBox(
-          width: isMobile ? 250 : screenWidth * 0.6,
-          child: DropdownButtonFormField<Department>(
-            isExpanded: true,
-            decoration: inputDecoration(
-              labelText: field.fieldName.isNotEmpty
-                  ? capitalizedFieldName
-                  : 'Department',
-            ),
-            dropdownColor: Colors.black87,
-            style: const TextStyle(color: Colors.white),
-            value: participants[index][field.fieldName] != null
-                ? Department.values.firstWhere(
-                    (e) => e.toString() == participants[index][field.fieldName],
-                    orElse: () => Department.other,
-                  )
-                : null,
-            items: Department.values.map((Department dept) {
-              return DropdownMenuItem<Department>(
-                value: dept,
-                child: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Text(
-                    dept.toString().split('.').last,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: isMobile
-                          ? 12
-                          : isTablet
-                              ? 14
-                              : 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-            onChanged: (Department? value) {
-              if (value != null) {
-                setState(() {
-                  participants[index][field.fieldName] = value.toString();
-                });
-              }
-            },
-            validator: validator,
+        return DropdownButtonFormField<Department>(
+          isExpanded: true,
+          decoration: _inputDecoration(
+            labelText: capitalizedFieldName,
+            isMobile: isMobile,
           ),
-        );
-
-      case 'year':
-        return DropdownButtonFormField<int>(
-          decoration: inputDecoration(),
-          dropdownColor: Colors.black87,
+          dropdownColor: Colors.grey[900],
           style: const TextStyle(color: Colors.white),
-          value: participants[index][field.fieldName] is int
-              ? participants[index][field.fieldName]
+          value: participants[index][field.fieldName] != null
+              ? Department.values.firstWhere(
+                  (e) => e.toString() == participants[index][field.fieldName],
+                  orElse: () => Department.other,
+                )
               : null,
-          items: List.generate(
-            4,
-            (i) => DropdownMenuItem<int>(
-              value: i + 1,
+          items: Department.values.map((Department dept) {
+            return DropdownMenuItem<Department>(
+              value: dept,
               child: Directionality(
                 textDirection: TextDirection.ltr,
                 child: Text(
-                  '${i + 1}',
+                  dept.toString().split('.').last,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                   style: TextStyle(
                     fontSize: isMobile
                         ? 12
@@ -880,22 +1147,43 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                   ),
                 ),
               ),
-            ),
-          ),
-          onChanged: (int? value) {
+            );
+          }).toList(),
+          onChanged: (Department? value) {
             if (value != null) {
               setState(() {
-                participants[index][field.fieldName] = value;
+                participants[index][field.fieldName] = value.toString();
               });
             }
           },
           validator: validator,
         );
-
       default:
         return TextFormField(
           controller: controller,
-          decoration: inputDecoration(),
+          decoration: _inputDecoration(
+            labelText: capitalizedFieldName,
+            isMobile: isMobile,
+            suffixIcon: field.inputType.toLowerCase() == 'email'
+                ? _emailLoadingStatus[controllerKey] == true
+                    ? Transform.scale(
+                        scale: 0.6,
+                        child: const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.0,
+                            color: secondaryColor,
+                          ),
+                        ),
+                      )
+                    : _emailValidationStatus[controllerKey] == true
+                        ? const Icon(Icons.check_circle, color: Colors.green)
+                        : _emailValidationStatus[controllerKey] == false
+                            ? const Icon(Icons.cancel, color: Colors.red)
+                            : null
+                : null,
+          ),
           style: const TextStyle(color: Colors.white),
           textDirection: TextDirection.ltr,
           keyboardType: field.inputType.toLowerCase() == 'number'

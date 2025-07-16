@@ -6,11 +6,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 class OngoingEventService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final String _eventsCollection = 'ongoing_events';
+  // final String _eventsCollection = 'ongoingEvents'; // production
+  final String _eventsCollection = 'ongoing_events'; //testing
 
   Future<List<OngoingEvent>> getAllEvents() async {
     try {
-      final snapshot = await _firestore.collection(_eventsCollection).get();
+      final snapshot = await _firestore
+          .collection(_eventsCollection)
+          .where("isEventLive", isEqualTo: true)
+          .get();
+
       return snapshot.docs
           .map((doc) => OngoingEvent.fromMap(doc.data(), doc.id))
           .toList();
@@ -83,6 +88,14 @@ class OngoingEventService {
 
       final registeredUsersRef = eventRef.collection('registered_users');
       final docRef = registeredUsersRef.doc();
+
+      for (var i in participants) {
+        i.addAll({
+          'ischeckedIn': false,
+          'checkedInBy': '',
+          'checkedInAt': null,
+        });
+      }
 
       batch.set(docRef, {
         'team_name': teamName ?? 'Individual',

@@ -55,3 +55,6 @@ windows/flutter/generated_plugin_registrant.h
 
 # google services
 assets/credentials.json
+lib/app/credentials.json
+web/credentials.json
+hosting_cmd.txt

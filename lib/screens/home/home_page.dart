@@ -1,7 +1,7 @@
 import 'package:e_cell_website/const/const_labels.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/home/widgets/motobox.dart';
-import 'package:e_cell_website/screens/home/widgets/ongoingEvents.dart';
+import 'package:e_cell_website/screens/home/widgets/ongoing_events.dart';
 import 'package:e_cell_website/screens/home/widgets/partnerbox.dart';
 import 'package:e_cell_website/screens/home/widgets/slogan_text.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
@@ -10,6 +10,7 @@ import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:seo/seo.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'widgets/speakers.dart';
 
@@ -38,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen>
     'vision': false,
     'partner': false,
     'speakers': false,
-    'ongoing': false, // Added ongoing events section
+    'ongoing': false,
   };
 
   @override
@@ -127,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen>
       'vision': true,
       'partner': true,
       'speakers': true,
-      'ongoing': true, // Added ongoing events section
+      'ongoing': true,
     };
     setState(() {});
   }
@@ -276,11 +277,15 @@ class _HomeScreenState extends State<HomeScreen>
                     width: (size.width > 450)
                         ? size.width * 0.65
                         : size.width * 0.85,
-                    child: SelectableText(
-                      textAlign: TextAlign.center,
-                      aboutUs,
-                      style: TextStyle(
-                        fontSize: (size.width > 450) ? size.width * 0.012 : 13,
+                    child: Seo.text(
+                      text: aboutUs,
+                      child: SelectableText(
+                        textAlign: TextAlign.center,
+                        aboutUs,
+                        style: TextStyle(
+                          fontSize:
+                              (size.width > 450) ? size.width * 0.012 : 13,
+                        ),
                       ),
                     ),
                   ),
@@ -373,7 +378,7 @@ class _HomeScreenState extends State<HomeScreen>
                         : size.width * 0.85,
                     child: SelectableText(
                       textAlign: TextAlign.center,
-                      OurVision,
+                      ourVision,
                       style: TextStyle(
                         fontSize: (size.width > 450) ? size.width * 0.012 : 13,
                       ),

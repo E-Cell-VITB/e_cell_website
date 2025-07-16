@@ -53,11 +53,11 @@ class _RecruitmentFormScreenState extends State<RecruitmentFormScreen> {
     'IT',
     'AI&ML',
     'AI&DS',
+    'CSBS',
     'ECE',
+    'EEE',
     'MECH',
     'CIVIL',
-    'CHEM',
-    'EEE',
     'Other',
   ];
 

@@ -1,5 +1,6 @@
 import 'package:e_cell_website/const/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:seo/seo.dart';
 
 class Partnerbox extends StatefulWidget {
   final String heading;
@@ -69,13 +70,16 @@ class _PartnerboxState extends State<Partnerbox> {
               //   height: (size.width > 450) ? 32 : 24,
               // ),
               const Spacer(),
-              SelectableText(
-                widget.heading,
-                style: TextStyle(
-                  fontSize: (size.width > 450)
-                      ? size.width * 0.015
-                      : size.width * 0.035,
-                  fontWeight: FontWeight.bold,
+              Seo.text(
+                text: widget.heading,
+                child: SelectableText(
+                  widget.heading,
+                  style: TextStyle(
+                    fontSize: (size.width > 450)
+                        ? size.width * 0.015
+                        : size.width * 0.035,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: 10),

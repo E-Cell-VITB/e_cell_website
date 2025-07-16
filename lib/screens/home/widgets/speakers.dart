@@ -20,7 +20,7 @@ class _SpeakerCardsState extends State<SpeakerCards> {
   bool _isScrolling = true;
   int _currentPage = 0;
   Timer? _timer;
-  int _speakersLength = 0; // Track the current number of speakers
+  int _speakersLength = 0;
 
   @override
   void initState() {
@@ -68,34 +68,33 @@ class _SpeakerCardsState extends State<SpeakerCards> {
     });
   }
 
-  // Maps a card index to one of the 5 dots
   int _getActiveDotIndex(int cardIndex, int totalSpeakers) {
     if (totalSpeakers <= 5) {
       return cardIndex;
     }
-
-    // For lists longer than 5 items, we need to map them to 5 dots
-    // Calculate which segment each card belongs to
-    double segmentSize = (totalSpeakers - 1) / 4; // 4 segments for 5 dots
-
-    // Calculate which dot corresponds to the current card
+    double segmentSize = (totalSpeakers - 1) / 4;
     return (cardIndex / segmentSize).floor();
   }
 
-  // Maps a dot index to the corresponding card index
   int _getCardIndexFromDot(int dotIndex, int totalSpeakers) {
     if (totalSpeakers <= 5) {
       return dotIndex < totalSpeakers ? dotIndex : totalSpeakers - 1;
     }
-
-    // For lists longer than 5, calculate the card index
-    double segmentSize = (totalSpeakers - 1) / 4; // 4 segments for 5 dots
+    double segmentSize = (totalSpeakers - 1) / 4;
     return (dotIndex * segmentSize).round();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isTablet = size.width > 600 && size.width <= 1024;
+    final isMobile = size.width <= 600;
+
+    // Hide speakers section on tablet
+    if (isTablet) {
+      return const SizedBox.shrink();
+    }
+
     final speakerProvider = Provider.of<SpeakerProvider>(context);
 
     return StreamBuilder<List<Speaker>>(
@@ -103,9 +102,9 @@ class _SpeakerCardsState extends State<SpeakerCards> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting &&
             !snapshot.hasData) {
-          return const SizedBox(
-            height: 360,
-            child: Center(
+          return SizedBox(
+            height: size.height * 0.4,
+            child: const Center(
               child: CircularProgressIndicator(),
             ),
           );
@@ -113,37 +112,38 @@ class _SpeakerCardsState extends State<SpeakerCards> {
 
         if (snapshot.hasError) {
           return SizedBox(
-            height: 360,
+            height: size.height * 0.4,
             child: Center(
               child: Text(
                 speakerProvider.error ?? 'Failed to load speakers',
-                style: const TextStyle(color: Colors.red),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.red,
+                      fontSize: size.width * 0.04,
+                    ),
               ),
             ),
           );
         }
 
-        // Get speakers data (empty list if null)
         final speakers = snapshot.data ?? [];
 
-        // Update the speaker length for auto-scrolling
         if (_speakersLength != speakers.length) {
           _speakersLength = speakers.length;
         }
 
-        // If the current page is now out of bounds (e.g., after data update),
-        // reset to a valid page
         if (speakers.isNotEmpty && _currentPage >= speakers.length) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            setState(() {
-              _currentPage = speakers.length - 1;
-              _pageController.jumpToPage(_currentPage);
-            });
+            if (mounted) {
+              setState(() {
+                _currentPage = speakers.length - 1;
+                _pageController.jumpToPage(_currentPage);
+              });
+            }
           });
         }
 
         return SizedBox(
-          height: 360,
+          height: isMobile ? size.height * 0.495 : size.height * 0.55,
           width: size.width * 0.8,
           child: Column(
             children: [
@@ -154,13 +154,24 @@ class _SpeakerCardsState extends State<SpeakerCards> {
                     _isScrolling = true;
                   }),
                   child: speakers.isEmpty
-                      ? const Center(child: Text('No speakers available'))
+                      ? Center(
+                          child: Text(
+                            'No speakers available',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  fontSize: size.width * 0.04,
+                                ),
+                          ),
+                        )
                       : PageView.builder(
                           controller: _pageController,
                           itemCount: speakers.length,
                           itemBuilder: (context, index) {
                             return Center(
-                                child: SpeakerCard(speaker: speakers[index]));
+                              child: SpeakerCard(speaker: speakers[index]),
+                            );
                           },
                           onPageChanged: (index) {
                             setState(() {
@@ -172,7 +183,7 @@ class _SpeakerCardsState extends State<SpeakerCards> {
               ),
               if (speakers.isNotEmpty)
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
+                  padding: EdgeInsets.only(bottom: size.height * 0.02),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
@@ -193,9 +204,10 @@ class _SpeakerCardsState extends State<SpeakerCards> {
                             );
                           },
                           child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                            height: 8,
-                            width: 8,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.01),
+                            height: size.height * 0.01,
+                            width: size.height * 0.01,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: isActive
@@ -226,100 +238,49 @@ class SpeakerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen width to determine layout
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final theme = Theme.of(context);
     final isMobile = screenWidth < 600;
 
+    // Dynamic font sizes
+    final nameFontSize = isMobile ? screenWidth * 0.03 : screenWidth * 0.02;
+    final designationFontSize =
+        isMobile ? screenWidth * 0.030 : screenWidth * 0.015;
+    final aboutFontSize = isMobile ? screenWidth * 0.03 : screenWidth * 0.01;
+
+    // Dynamic dimensions
+    final margin = isMobile ? screenWidth * 0.03 : screenWidth * 0.01;
+    final padding = isMobile ? screenWidth * 0.04 : screenWidth * 0.020;
+    final borderRadius = screenWidth * 0.02;
+    final imageWidth = isMobile ? double.infinity : screenWidth * 0.15;
+    final imageHeight = isMobile ? screenHeight * 0.3 : screenHeight * 0.55;
+    final spacing = screenHeight * 0.02;
+
     return Container(
-      margin: EdgeInsets.all(isMobile ? 12.0 : 20),
+      margin: EdgeInsets.all(margin),
       decoration: BoxDecoration(
         gradient: const LinearGradient(colors: eventBoxLinearGradient),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(color: const Color(0xFFAA8A20), width: 1),
       ),
-      padding: EdgeInsets.all(isMobile ? 16.0 : 24.0),
+      padding: EdgeInsets.all(padding),
       child: isMobile
-          // Mobile layout (vertical orientation)
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Speaker Image
                 ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.network(
-                      speaker.imageUrl,
-                      width: double.infinity,
-                      height: 172,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Container(
-                          width: double.infinity,
-                          height: 172,
-                          color: Colors.grey[800],
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.white60,
-                            ),
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          width: double.infinity,
-                          height: 172,
-                          color: Colors.grey[800],
-                          child: const Icon(Icons.person,
-                              size: 50, color: Colors.white60),
-                        );
-                      },
-                    )),
-                const SizedBox(height: 20),
-                // Speaker Info
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    LinearGradientText(
-                      child: Text(
-                        speaker.name,
-                        style: TextStyle(
-                          fontSize: isMobile ? 15 : 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    LinearGradientText(
-                      child: Text(
-                        speaker.designation,
-                        style: TextStyle(
-                          fontSize: isMobile ? 13 : 18,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            )
-          // Desktop/tablet layout (horizontal orientation)
-          : Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Speaker Image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(borderRadius * 0.75),
                   child: Image.network(
                     speaker.imageUrl,
-                    width: 180,
-                    height: 240,
+                    width: imageWidth,
+                    height: imageHeight,
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
                       return Container(
-                        width: 180,
-                        height: 240,
+                        width: imageWidth,
+                        height: imageHeight,
                         color: Colors.grey[800],
                         child: const Center(
                           child: CircularProgressIndicator(
@@ -330,8 +291,8 @@ class SpeakerCard extends StatelessWidget {
                     },
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        width: 180,
-                        height: 240,
+                        width: imageWidth,
+                        height: imageHeight,
                         color: Colors.grey[800],
                         child: const Icon(Icons.person,
                             size: 50, color: Colors.white60),
@@ -339,8 +300,69 @@ class SpeakerCard extends StatelessWidget {
                     },
                   ),
                 ),
-                const SizedBox(width: 24),
-                // Speaker Info
+                SizedBox(height: spacing),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    LinearGradientText(
+                      child: Text(
+                        speaker.name,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontSize: nameFontSize,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: spacing * 0.5),
+                    LinearGradientText(
+                      child: Text(
+                        speaker.designation,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontSize: designationFontSize,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(borderRadius * 0.75),
+                  child: Image.network(
+                    speaker.imageUrl,
+                    width: imageWidth,
+                    height: imageHeight,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        width: imageWidth,
+                        height: imageHeight,
+                        color: Colors.grey[800],
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white60,
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: imageWidth,
+                        height: imageHeight,
+                        color: Colors.grey[800],
+                        child: const Icon(Icons.person,
+                            size: 50, color: Colors.white60),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(width: spacing * 1.2),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -348,27 +370,27 @@ class SpeakerCard extends StatelessWidget {
                       LinearGradientText(
                         child: Text(
                           speaker.name,
-                          style: const TextStyle(
-                            fontSize: 28,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontSize: nameFontSize,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      SizedBox(height: spacing * 0.5),
                       LinearGradientText(
                         child: Text(
                           speaker.designation,
-                          style: const TextStyle(
-                            fontSize: 18,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontSize: designationFontSize,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: spacing),
                       SelectableText(
                         maxLines: 6,
                         speaker.about.trim(),
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontSize: aboutFontSize,
                           color: Colors.white70,
                           height: 1.5,
                         ),

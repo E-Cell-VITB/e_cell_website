@@ -1,4 +1,3 @@
-import 'package:e_cell_website/const/app_logs.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
@@ -27,8 +26,8 @@ class EventUpdatesSection extends StatelessWidget {
       final startTime = update.updateLiveStartTime.toDate();
       final endTime = update.updateLiveEndTime.toDate();
       final now = DateTime.now();
-      AppLogger.log(
-          'Update: ${update.message}, Start: $startTime, End: $endTime, IsLive: ${now.isAfter(startTime) && now.isBefore(endTime)}');
+      // AppLogger.log(
+      //     'Update: ${update.message}, Start: $startTime, End: $endTime, IsLive: ${now.isAfter(startTime) && now.isBefore(endTime)}');
       return now.isAfter(startTime) && now.isBefore(endTime);
     }).toList();
 

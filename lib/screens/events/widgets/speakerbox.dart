@@ -8,10 +8,10 @@ class Speakerbox extends StatefulWidget {
   const Speakerbox({required this.guestOrJudge, super.key});
 
   @override
-  _SpeakerboxState createState() => _SpeakerboxState();
+  SpeakerboxState createState() => SpeakerboxState();
 }
 
-class _SpeakerboxState extends State<Speakerbox> {
+class SpeakerboxState extends State<Speakerbox> {
   bool _isHovered = false;
 
   @override
