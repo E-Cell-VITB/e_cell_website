@@ -1,5 +1,6 @@
 import 'package:e_cell_website/backend/models/ongoing_events.dart';
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
 import 'package:e_cell_website/screens/ongoing_events/widgets/count_down_time.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
@@ -23,55 +24,157 @@ class DetailsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        LinearGradientText(
-          child: Text(
-            event.name,
-            style: isMobile
-                ? Theme.of(context).textTheme.displayMedium
-                : Theme.of(context).textTheme.displayLarge,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: isMobile ? 10 : 16, vertical: 4),
-          child: SelectableText(
-            event.description,
-            style: isMobile
-                ? Theme.of(context).textTheme.bodySmall
-                : Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-            // maxLines: isMobile ? 4 : 6,
-          ),
-        ),
-        const SizedBox(height: 16),
-        if (event.bannerPhotoUrl.isNotEmpty) ...[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(isMobile ? 9 : 18),
-            child: Image.network(
-              event.bannerPhotoUrl,
-              height: isMobile
-                  ? 100
-                  : isTablet
-                      ? 140
-                      : 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                height: isMobile
-                    ? 100
-                    : isTablet
-                        ? 140
-                        : 180,
-                color: Colors.grey[800],
-                child: const Center(child: Text('Image not available')),
-              ),
+        isMobile?
+        GradientBox(
+          
+          radius: 20, 
+          height: 450,
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                        event.bannerPhotoUrl,
+                        height: 100,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          height: isTablet ? 180 : 290,
+                          color: Colors.grey[800],
+                          child:
+                              const Center(child: Text('Image not available')),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                    Text("ECE",
+                            style: TextStyle(
+                                color: const Color.fromARGB(255, 103, 103, 103),
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold)),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        LinearGradientText(
+                          child: Text(
+                            event.name,
+                            style: Theme.of(context).textTheme.bodySmall,
+                               
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        SelectableText(
+                          event.description,
+                          maxLines: 5,
+                          style:TextStyle(fontSize: 8, color: Colors.white),
+                        ),
+                        SizedBox(height: 15),
+                        Row(
+                          children: [
+                            _buildDetailTile(
+                              context,
+                              icon: Icons.calendar_month_outlined,
+                              text: DateFormat('dd-MM-yyyy')
+                                  .format(event.eventDate),
+                            ),
+                            SizedBox(width: 28),
+                            _buildDetailTile(
+                              context,
+                              icon: Icons.access_time_outlined,
+                              text: event.status,
+                            ),
+                          ],
+                        ),
+              ],
             ),
-          ),
-          const SizedBox(height: 16),
-        ],
-
+          )
+          ):
+        GradientBox(
+            height: isTablet ? 300 : 335,
+            width: screenWidth,
+            radius: 20,
+            child: Row(
+              children: [                
+                Container(
+                  //padding symmetric responsive
+                  padding: EdgeInsets.symmetric(
+                    vertical: isTablet ? 20 : 25,
+                    horizontal: isTablet ? 20 : 35,
+                  ),
+                  width: isTablet ? screenWidth * 0.5 : screenWidth * 0.5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("ECE",
+                          style: TextStyle(
+                              color: const Color.fromARGB(255, 103, 103, 103),
+                              fontSize: isTablet ? 16 : 25,
+                              fontWeight: FontWeight.bold)),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      LinearGradientText(
+                        child: Text(
+                          event.name,
+                          style: isTablet
+                              ? Theme.of(context).textTheme.headlineSmall
+                              : Theme.of(context).textTheme.headlineMedium,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SelectableText(
+                        event.description,
+                        maxLines: 7,
+                        style: isTablet
+                            ? Theme.of(context).textTheme.bodySmall
+                            : Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 25),
+                      Row(
+                        children: [
+                          _buildDetailTile(
+                            context,
+                            icon: Icons.calendar_month_outlined,
+                            text: DateFormat('dd-MM-yyyy')
+                                .format(event.eventDate),
+                          ),
+                          SizedBox(width: 28),
+                          _buildDetailTile(
+                            context,
+                            icon: Icons.access_time_outlined,
+                            text: event.status,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(isMobile ? 9 : 18),
+                      child: Image.network(
+                        event.bannerPhotoUrl,
+                        height: isTablet ? 180 : 290,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          height: isTablet ? 180 : 290,
+                          color: Colors.grey[800],
+                          child:
+                              const Center(child: Text('Image not available')),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )),
+        SizedBox(height: 26),
         // if (event.registrationEnds!.isAfter(DateTime.now()))
         CountdownTimerWidget(
           registrationStarts: event.registrationStarts,
@@ -81,52 +184,6 @@ class DetailsSection extends StatelessWidget {
           isMobile: isMobile,
           screenWidth: screenWidth,
         ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: isMobile
-              ? 8
-              : isTablet
-                  ? 12
-                  : 16,
-          runSpacing: isMobile
-              ? 8
-              : isTablet
-                  ? 12
-                  : 16,
-          alignment: WrapAlignment.center,
-          children: [
-            _buildDetailTile(
-              context,
-              icon: Icons.calendar_month_outlined,
-              text: DateFormat('dd-MM-yyyy').format(event.eventDate),
-            ),
-            _buildDetailTile(
-              context,
-              icon: Icons.location_on_outlined,
-              text: event.place,
-            ),
-            _buildDetailTile(
-              context,
-              icon: Icons.group_outlined,
-              text: event.isTeamEvent
-                  ? 'Team Event (${event.minTeamSize} - ${event.maxTeamSize})'
-                  : 'Individual',
-            ),
-            if (event.prizePool != 0)
-              _buildDetailTile(
-                context,
-                icon: Icons.emoji_events_outlined,
-                text: event.prizePool.toString(),
-              ),
-            _buildDetailTile(
-              context,
-              icon: Icons.access_time_outlined,
-              text: event.status,
-            ),
-          ],
-        ),
-        const SizedBox(height: 24),
-        //
       ],
     );
   }
@@ -139,18 +196,18 @@ class DetailsSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         vertical: isMobile
-            ? 8
+            ? 4
             : isTablet
-                ? 10
-                : 12,
+                ? 6
+                : 8,
         horizontal: isMobile
-            ? 12
+            ? 6
             : isTablet
-                ? 14
-                : 16,
+                ? 8
+                : 10,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(isMobile ? 9 : 18),
+        borderRadius: BorderRadius.circular(isMobile ? 9 : 26),
         color: const Color(0xFF303030),
       ),
       child: Row(
@@ -162,8 +219,8 @@ class DetailsSection extends StatelessWidget {
             size: isMobile
                 ? 16
                 : isTablet
-                    ? 20
-                    : 24,
+                    ? 12
+                    : 14,
           ),
           const SizedBox(width: 8),
           Flexible(
@@ -173,8 +230,8 @@ class DetailsSection extends StatelessWidget {
                   fontSize: isMobile
                       ? 12
                       : isTablet
-                          ? 14
-                          : 16),
+                          ? 10
+                          : 12),
               maxLines: 4,
               overflow: TextOverflow.ellipsis,
             ),

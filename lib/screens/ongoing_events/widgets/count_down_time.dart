@@ -103,7 +103,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
           child: Text(
             _statusText,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w200,
                   fontSize: widget.isMobile ? 18 : 24,
                 ),
           ),

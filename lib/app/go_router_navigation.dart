@@ -1,7 +1,6 @@
 import 'package:e_cell_website/backend/models/event.dart';
 import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/blogs/blogs_screen.dart';
-import 'package:e_cell_website/screens/eventUpdates/event_updates.dart';
 import 'package:e_cell_website/screens/events/events_screen.dart';
 import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
 import 'package:e_cell_website/screens/gallery/gallery_screen.dart';
@@ -152,27 +151,20 @@ final GoRouter appRouter = GoRouter(
                   final eventId = state.pathParameters['eventId']!;
                   return OngoingEventDetails(eventId: eventId);
                 },
-                routes: [
-                  GoRoute(
-                    path: 'register',
-                    name: 'ongoingEventRegister',
-                    builder: (context, state) {
-                      final eventId = state.pathParameters['eventId']!;
-                      return OngoingEventRegister(
-                        eventId: eventId,
-                      );
-                    },
-                  ),
-                ],
+              ),
+              GoRoute(
+                path: '/register/:eventId',
+                builder: (context, state) {
+                  final eventId = state.pathParameters['eventId']!;
+                  return OngoingEventRegister(
+                    eventId: eventId,
+                  );
+                },
               ),
             ]),
         GoRoute(
           path: '/joinus',
           builder: (context, state) => const HomeScreen(section: 'footer'),
-        ),
-        GoRoute(
-          path: '/eventUpdates',
-          builder: (context, state) => const EventUpdatesScreen(),
         ),
       ],
     ),
