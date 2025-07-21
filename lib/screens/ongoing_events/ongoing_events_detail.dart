@@ -1,11 +1,16 @@
 import 'package:e_cell_website/backend/models/event.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/details.dart';
+import 'package:e_cell_website/screens/ongoing_events/section/eventinfo.dart';
+import 'package:e_cell_website/screens/ongoing_events/section/eventschedule.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/guests_and_judges.dart';
+import 'package:e_cell_website/screens/ongoing_events/section/jury.dart';
+import 'package:e_cell_website/screens/ongoing_events/section/jury_card.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/registration_ticket.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/schedule_table.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/social_links.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/updates.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
+import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/loading_indicator.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
@@ -78,47 +83,74 @@ class OngoingEventDetails extends StatelessWidget {
                   );
                 }
 
-                return Stack(children: [
+                return Stack(
+                    children: [
                   SingleChildScrollView(
                     child: Padding(
                       padding: EdgeInsets.all(isMobile
-                          ? 12.0
+                          ? 18.0
                           : isTablet
                               ? 18.0
                               : 24.0),
                       child: Center(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
-                              maxWidth: isMobile ? screenWidth : 800),
+                              maxWidth: isMobile ? screenWidth : screenWidth* 0.8),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              LinearGradientText(
+                                child: Text(
+                                  event.name,
+                                  style: isMobile
+                                      ? Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall!
+                                          .copyWith(fontWeight: FontWeight.w200)
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium!
+                                          .copyWith(fontWeight: FontWeight.w200),
+                                ),
+                              ),
+                              const SizedBox(height: 35),
                               DetailsSection(
                                   event: event,
                                   isMobile: isMobile,
                                   isTablet: isTablet,
-                                  screenWidth: screenWidth),
+                                  screenWidth: screenWidth
+                                  ),
+
+                              const SizedBox(height: 26),
+                              JuryCard(event: event, isMobile: isMobile, isTablet: isTablet, screenWidth: screenWidth),
                               // EvaluationCriteriaSection(
                               //     event: event,
                               //     isMobile: isMobile,
                               //     isTablet: isTablet,
                               //     screenWidth: screenWidth),
-                              EventScheduleSection(
-                                  provider: provider,
-                                  isMobile: isMobile,
-                                  isTablet: isTablet),
-                              EventUpdatesSection(
-                                  provider: provider,
-                                  isMobile: isMobile,
-                                  isTablet: isTablet,
-                                  screenWidth: screenWidth),
-                              GuestsAndJudgesSection(
-                                  event: event, isMobile: isMobile),
+                              const SizedBox(height: 46),
+                              Eventschedule(event: event, isMobile: isMobile, isTablet: isTablet, screenWidth: screenWidth),
+                              const SizedBox(height: 46),
+                              // EventScheduleSection(
+                              //     provider: provider,
+                              //     isMobile: isMobile,
+                              //     isTablet: isTablet),
+                              // EventUpdatesSection(
+                              //     provider: provider,
+                              //     isMobile: isMobile,
+                              //     isTablet: isTablet,
+                              //     screenWidth: screenWidth),
+                              // GuestsAndJudgesSection(
+                              //     event: event, isMobile: isMobile),
                               // SocialLinksSection(event: event, isMobile: isMobile),
                               // EventPhotosSection(
                               //     event: event,
                               //     isMobile: isMobile,
                               //     isTablet: isTablet),
+                              Jury(event: event, isMobile: isMobile, isTablet: isTablet, screenWidth: screenWidth),
+                              const SizedBox(height: 55),
+                             Eventinfo(event: event, isMobile: isMobile, isTablet: isTablet, screenWidth: screenWidth),
+                              const SizedBox(height: 55),
                               EventTicketSection(
                                   event: event,
                                   isMobile: isMobile,

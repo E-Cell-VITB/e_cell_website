@@ -10,18 +10,17 @@ Future<void> launchURL(String url) async {
 }
 
 Future<void> launchEmail(String email, String subject, String body) async {
-  final Uri emailUri = Uri(
-    scheme: 'mailto',
-    path: email,
-    queryParameters: {
-      'subject': subject,
-      'body': body,
-    },
+  final String encodedSubject = Uri.encodeComponent(subject);
+  final String encodedBody = Uri.encodeComponent(body);
+
+  final Uri emailUri = Uri.parse(
+    'mailto:$email?subject=$encodedSubject&body=$encodedBody',
   );
 
   if (await canLaunchUrl(emailUri)) {
     await launchUrl(emailUri);
   } else {
-    throw 'Could not launch $email';
+    throw 'Could not launch $emailUri';
   }
 }
+

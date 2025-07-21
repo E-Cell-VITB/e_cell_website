@@ -151,18 +151,15 @@ final GoRouter appRouter = GoRouter(
                   final eventId = state.pathParameters['eventId']!;
                   return OngoingEventDetails(eventId: eventId);
                 },
-                routes: [
-                  GoRoute(
-                    path: 'register',
-                    name: 'ongoingEventRegister',
-                    builder: (context, state) {
-                      final eventId = state.pathParameters['eventId']!;
-                      return OngoingEventRegister(
-                        eventId: eventId,
-                      );
-                    },
-                  ),
-                ],
+              ),
+              GoRoute(
+                path: '/register/:eventId',
+                builder: (context, state) {
+                  final eventId = state.pathParameters['eventId']!;
+                  return OngoingEventRegister(
+                    eventId: eventId,
+                  );
+                },
               ),
             ]),
         GoRoute(
