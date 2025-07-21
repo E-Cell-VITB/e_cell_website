@@ -91,7 +91,7 @@ class OngoingEventService {
 
       for (var i in participants) {
         i.addAll({
-          'ischeckedIn': false,
+          'isCheckedIn': false,
           'checkedInBy': '',
           'checkedInAt': null,
         });
