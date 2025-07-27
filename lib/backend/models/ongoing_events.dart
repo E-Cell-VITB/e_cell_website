@@ -212,26 +212,23 @@ class Schedule {
 
 class EventUpdate {
   final String? id;
+  final String title;
   final String message;
-  final String? imageUrl;
-  final String updateType;
   final Timestamp updateLiveStartTime;
   final Timestamp updateLiveEndTime;
 
   EventUpdate({
     this.id,
+    required this.title,
     required this.message,
-    this.imageUrl,
-    required this.updateType,
     required this.updateLiveStartTime,
     required this.updateLiveEndTime,
   });
 
   Map<String, dynamic> toMap() {
     return {
+      'title': title,
       'message': message,
-      'imageUrl': imageUrl,
-      'updateType': updateType,
       'updateLiveStartTime': updateLiveStartTime,
       'updateLiveEndTime': updateLiveEndTime,
     };
@@ -239,10 +236,9 @@ class EventUpdate {
 
   factory EventUpdate.fromMap(Map<String, dynamic> map, String id) {
     return EventUpdate(
+        title: map['title'] as String? ?? '',
         id: id,
         message: map['message'] as String? ?? '',
-        imageUrl: map['imageUrl'] as String?,
-        updateType: map['updateType'] as String? ?? '',
         updateLiveStartTime: map['updateLiveStartTime'],
         updateLiveEndTime: map['updateLiveEndTime']);
   }
