@@ -1,9 +1,12 @@
+import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'dart:async';
 
 class EventUpdates extends StatefulWidget {
   final OngoingEventProvider provider;
@@ -31,9 +34,15 @@ class _EventUpdatesState extends State<EventUpdates>
   late Animation<double> _contentAnimation;
   late Animation<Offset> _slideAnimation;
 
+  late PageController _pageController;
+  int _currentPage = 0;
+  Timer? _autoScrollTimer;
+
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
+
     _containerController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -66,6 +75,7 @@ class _EventUpdatesState extends State<EventUpdates>
     ));
 
     _startAnimations();
+    _startAutoScroll();
   }
 
   void _startAnimations() {
@@ -75,11 +85,44 @@ class _EventUpdatesState extends State<EventUpdates>
     });
   }
 
+  void _startAutoScroll() {
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (mounted && widget.provider.updates.isNotEmpty) {
+        _goToNextPage(widget.provider.updates.length);
+      }
+    });
+  }
+
   @override
   void dispose() {
+    _autoScrollTimer?.cancel();
     _containerController.dispose();
     _contentController.dispose();
+    _pageController.dispose();
     super.dispose();
+  }
+
+  void _goToPreviousPage() {
+    final totalPages = widget.provider.updates.length;
+    if (totalPages == 0) return;
+
+    final targetPage = _currentPage > 0 ? _currentPage - 1 : totalPages - 1;
+    _pageController.animateToPage(
+      targetPage,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _goToNextPage(int totalPages) {
+    if (totalPages == 0) return;
+
+    final targetPage = _currentPage < totalPages - 1 ? _currentPage + 1 : 0;
+    _pageController.animateToPage(
+      targetPage,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   String _formatTime(dynamic timeValue) {
@@ -87,11 +130,9 @@ class _EventUpdatesState extends State<EventUpdates>
 
     DateTime? dateTime;
 
-    // Handle Firestore Timestamp
     if (timeValue is DateTime) {
       dateTime = timeValue;
     } else if (timeValue.runtimeType.toString() == 'Timestamp') {
-      // Avoid direct import to keep this file decoupled from Firestore
       dateTime = (timeValue as dynamic).toDate();
     } else if (timeValue is String) {
       try {
@@ -130,68 +171,30 @@ class _EventUpdatesState extends State<EventUpdates>
     final containerSpecs = _getContainerSpecs();
 
     return Center(
-      child: Container(
-        width: containerSpecs['width'],
-        height: containerSpecs['height'],
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFF2A2A2A),
-              const Color(0xFF1F1F1F),
-              const Color(0xFF252525),
-            ],
-            stops: const [0.0, 0.5, 1.0],
-          ),
-          borderRadius:
-              BorderRadius.circular(containerSpecs['borderRadius'] ?? 0.0),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFC79200).withOpacity(0.15),
-              blurRadius: 30,
-              offset: const Offset(0, 15),
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius:
-              BorderRadius.circular(containerSpecs['borderRadius'] ?? 0.0),
-          child: Stack(
-            children: [
-              _buildBackgroundPattern(),
-              Padding(
-                padding: EdgeInsets.all(containerSpecs['padding'] ?? 0.0),
-                child: widget.isMobile
-                    ? _buildMobileLayout(containerSpecs)
-                    : _buildDesktopLayout(containerSpecs),
+      child: GradientBox(
+        radius: 20,
+        child: Container(
+          width: containerSpecs['width'],
+          height: containerSpecs['height'],
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            gradient: const LinearGradient(colors: eventBoxLinearGradient),
+            borderRadius:
+                BorderRadius.circular(containerSpecs['borderRadius'] ?? 0.0),
+            border: Border.all(color: secondaryColor.withOpacity(0.7)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBackgroundPattern() {
-    return Positioned(
-      top: -100,
-      right: -100,
-      child: Container(
-        width: 200,
-        height: 200,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: RadialGradient(
-            colors: [
-              const Color(0xFFC79200).withOpacity(0.1),
-              Colors.transparent,
-            ],
+          child: Padding(
+            padding: EdgeInsets.all(containerSpecs['padding'] ?? 0.0),
+            child: widget.isMobile
+                ? _buildMobileLayout(containerSpecs)
+                : _buildDesktopLayout(containerSpecs),
           ),
         ),
       ),
@@ -201,8 +204,8 @@ class _EventUpdatesState extends State<EventUpdates>
   Widget _buildMobileLayout(Map<String, double> specs) {
     return Column(
       children: [
-        _buildHeader(),
-        const SizedBox(height: 20),
+        _buildImageSection(specs),
+        SizedBox(width: specs['spacing']),
         Expanded(child: _buildContent()),
       ],
     );
@@ -219,86 +222,10 @@ class _EventUpdatesState extends State<EventUpdates>
     );
   }
 
-  Widget _buildHeader() {
-    return SlideTransition(
-      position: _slideAnimation,
-      child: FadeTransition(
-        opacity: _contentAnimation,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 30,
-                  height: 2,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Colors.transparent, Color(0xFFC79200)],
-                    ),
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Icon(
-                  Icons.campaign_outlined,
-                  color: const Color(0xFFC79200),
-                  size: widget.isMobile ? 20 : 24,
-                ),
-                const SizedBox(width: 8),
-                LinearGradientText(
-                  child: Text(
-                    'Event Updates',
-                    style: TextStyle(
-                      fontSize: widget.isMobile
-                          ? 20
-                          : widget.isTablet
-                              ? 24
-                              : 28,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Icon(
-                  Icons.campaign_outlined,
-                  color: const Color(0xFFC79200),
-                  size: widget.isMobile ? 20 : 24,
-                ),
-                const SizedBox(width: 12),
-                Container(
-                  width: 30,
-                  height: 2,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFC79200), Colors.transparent],
-                    ),
-                    borderRadius: BorderRadius.circular(1),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Stay informed with the latest announcements',
-              style: TextStyle(
-                fontSize: widget.isMobile ? 12 : 14,
-                color: Colors.grey[400],
-                letterSpacing: 0.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildImageSection(Map<String, double> specs) {
     return SlideTransition(
       position: Tween<Offset>(
-        begin: const Offset(-0.3, 0),
+        begin: const Offset(0.1, 0),
         end: Offset.zero,
       ).animate(_contentAnimation),
       child: FadeTransition(
@@ -308,13 +235,6 @@ class _EventUpdatesState extends State<EventUpdates>
           height: specs['imageHeight'],
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 8),
-              ),
-            ],
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
@@ -328,14 +248,7 @@ class _EventUpdatesState extends State<EventUpdates>
                   errorBuilder: (context, error, stackTrace) => Container(
                     width: specs['imageWidth'],
                     height: specs['imageHeight'],
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.grey[800]!,
-                          Colors.grey[700]!,
-                        ],
-                      ),
-                    ),
+                    color: backgroundColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -352,18 +265,6 @@ class _EventUpdatesState extends State<EventUpdates>
                             fontSize: 12,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.3),
                       ],
                     ),
                   ),
@@ -401,11 +302,11 @@ class _EventUpdatesState extends State<EventUpdates>
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFFC79200).withOpacity(0.1),
+              color: secondaryColor.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFC79200)),
+              valueColor: AlwaysStoppedAnimation<Color>(secondaryColor),
               strokeWidth: 3,
             ),
           ),
@@ -475,23 +376,22 @@ class _EventUpdatesState extends State<EventUpdates>
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFC79200).withOpacity(0.1),
+                  color: secondaryColor.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.notifications_none_outlined,
-                  color: const Color(0xFFC79200),
+                  color: secondaryColor,
                   size: widget.isMobile ? 40 : 50,
                 ),
               ),
               const SizedBox(height: 20),
-              const LinearGradientText(
-                child: Text(
-                  "No Updates",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+              const Text(
+                "No Updates",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: secondaryColor,
                 ),
               ),
               const SizedBox(height: 12),
@@ -516,26 +416,104 @@ class _EventUpdatesState extends State<EventUpdates>
       position: _slideAnimation,
       child: FadeTransition(
         opacity: _contentAnimation,
-        child: ListView.separated(
-          padding: const EdgeInsets.only(top: 8),
-          itemCount: updates.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 20),
-          itemBuilder: (context, index) {
-            final update = updates[index];
-            return TweenAnimationBuilder<double>(
-              duration: Duration(milliseconds: 300 + (index * 100)),
-              tween: Tween(begin: 0.0, end: 1.0),
-              builder: (context, value, child) {
-                return Transform.translate(
-                  offset: Offset(30 * (1 - value), 0),
-                  child: Opacity(
-                    opacity: value,
-                    child: _buildUpdateCard(update, index),
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentPage = index;
+                  });
+                },
+                itemCount: updates.length,
+                itemBuilder: (context, index) {
+                  final update = updates[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 300),
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      builder: (context, value, child) {
+                        return Transform.translate(
+                          offset: Offset(30 * (1 - value), 0),
+                          child: Opacity(
+                            opacity: value,
+                            child: _buildUpdateCard(update, index),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            if (updates.length > 1) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: widget.isMobile ? 32 : 35,
+                    height: widget.isMobile ? 32 : 35,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: secondaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: secondaryColor.withOpacity(0.3),
+                        ),
+                      ),
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: _goToPreviousPage,
+                        icon: Icon(
+                          Icons.chevron_left,
+                          color: secondaryColor,
+                          size: widget.isMobile ? 16 : 20,
+                        ),
+                      ),
+                    ),
                   ),
-                );
-              },
-            );
-          },
+                  const SizedBox(width: 16),
+                  SmoothPageIndicator(
+                    controller: _pageController,
+                    count: updates.length,
+                    effect: WormEffect(
+                      activeDotColor: secondaryColor,
+                      dotColor: Colors.grey.withOpacity(0.5),
+                      dotHeight: widget.isMobile ? 8 : 10,
+                      dotWidth: widget.isMobile ? 8 : 10,
+                      // expansionFactor: 3,
+                      spacing: 6,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  SizedBox(
+                    width: widget.isMobile ? 32 : 35,
+                    height: widget.isMobile ? 32 : 35,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: secondaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: secondaryColor.withOpacity(0.3),
+                        ),
+                      ),
+                      child: IconButton(
+                        onPressed: () => _goToNextPage(updates.length),
+                        icon: Icon(
+                          Icons.chevron_right,
+                          color: secondaryColor,
+                          size: widget.isMobile ? 16 : 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
         ),
       ),
     );
@@ -545,31 +523,13 @@ class _EventUpdatesState extends State<EventUpdates>
     final formattedTime = _formatTime(update.updateLiveStartTime);
 
     return Container(
-      padding: EdgeInsets.all(widget.isMobile ? 16 : 20),
+      padding: EdgeInsets.all(widget.isMobile ? 8 : 16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF303030).withOpacity(0.8),
-            const Color(0xFF252525).withOpacity(0.8),
-          ],
-        ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFC79200).withOpacity(0.2),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with time and title
           Row(
             children: [
               if (formattedTime.isNotEmpty) ...[
@@ -577,27 +537,27 @@ class _EventUpdatesState extends State<EventUpdates>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFC79200).withOpacity(0.1),
+                    color: secondaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: const Color(0xFFC79200).withOpacity(0.3),
+                      color: secondaryColor.withOpacity(0.3),
                       width: 1,
                     ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.access_time_rounded,
-                        color: const Color(0xFFC79200),
+                        color: secondaryColor,
                         size: 14,
                       ),
                       const SizedBox(width: 6),
                       Text(
                         formattedTime,
                         style: TextStyle(
-                          color: const Color(0xFFC79200),
-                          fontSize: widget.isMobile ? 11 : 12,
+                          color: secondaryColor,
+                          fontSize: widget.isMobile ? 10 : 12,
                           fontWeight: FontWeight.w600,
                           fontFeatures: const [FontFeature.tabularFigures()],
                         ),
@@ -607,49 +567,48 @@ class _EventUpdatesState extends State<EventUpdates>
                 ),
                 const SizedBox(width: 12),
                 Container(
-                  width: 20,
+                  width: widget.isMobile ? 10 : 20,
                   height: 2,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFC79200).withOpacity(0.5),
+                    color: secondaryColor.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(1),
                   ),
                 ),
                 const SizedBox(width: 12),
               ],
               Expanded(
-                child: LinearGradientText(
-                  child: Text(
-                    update.title,
-                    style: TextStyle(
-                      fontSize: widget.isMobile ? 16 : 18,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.5,
-                    ),
+                child: Text(
+                  update.title,
+                  style: TextStyle(
+                    fontSize: widget.isMobile ? 16 : 18,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                    color: secondaryColor,
                   ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          // Message content
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(widget.isMobile ? 14 : 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF202020).withOpacity(0.6),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: const Color(0xFFC79200).withOpacity(0.1),
-                width: 1,
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(widget.isMobile ? 14 : 16),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(12),
               ),
-            ),
-            child: SelectableText(
-              update.message,
-              style: TextStyle(
-                color: const Color(0xFFFFFFFF),
-                fontSize: widget.isMobile ? 14 : 15,
-                height: 1.4,
-                letterSpacing: 0.3,
+              child: SingleChildScrollView(
+                child: SelectableText(
+                  update.message,
+                  maxLines: widget.isMobile ? 7 : 4,
+                  style: TextStyle(
+                      color: const Color(0xFFFFFFFF),
+                      fontSize: widget.isMobile ? 12 : 13,
+                      height: 1.4,
+                      letterSpacing: 0.3,
+                      overflow: TextOverflow.ellipsis),
+                ),
               ),
             ),
           ),
@@ -661,18 +620,18 @@ class _EventUpdatesState extends State<EventUpdates>
   Map<String, double> _getContainerSpecs() {
     if (widget.isMobile) {
       return {
-        'width': widget.screenWidth * 0.95,
-        'height': 380.0,
+        'width': widget.screenWidth * 0.8,
+        'height': 350.0,
         'borderRadius': 20.0,
-        'padding': 20.0,
-        'imageWidth': 0.0,
-        'imageHeight': 0.0,
+        'padding': 8.0,
+        'imageWidth': 100.0,
+        'imageHeight': 100.0,
         'spacing': 0.0,
       };
     } else if (widget.isTablet) {
       return {
         'width': widget.screenWidth * 0.85,
-        'height': 450.0,
+        'height': 520.0,
         'borderRadius': 24.0,
         'padding': 28.0,
         'imageWidth': 160.0,
@@ -682,12 +641,12 @@ class _EventUpdatesState extends State<EventUpdates>
     } else {
       return {
         'width': widget.screenWidth * 0.9,
-        'height': 300.0,
-        'borderRadius': 28.0,
-        'padding': 36.0,
+        'height': 250.0,
+        'borderRadius': 20.0,
+        'padding': 16.0,
         'imageWidth': 200.0,
         'imageHeight': 200.0,
-        'spacing': 32.0,
+        'spacing': 0.0,
       };
     }
   }

@@ -1,4 +1,5 @@
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/loading_indicator.dart';
@@ -192,16 +193,9 @@ class _EventScheduleSectionState extends State<EventScheduleSection>
         LinearGradientText(
           child: Text(
             'Event Schedule',
-            style: TextStyle(
-              fontSize: widget.isMobile
-                  ? 32
-                  : widget.isTablet
-                      ? 40
-                      : 48,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.5,
-              height: 1.2,
-            ),
+            style: widget.isMobile
+                ? Theme.of(context).textTheme.headlineSmall
+                : Theme.of(context).textTheme.headlineMedium,
           ),
         ),
         const SizedBox(height: 12),
@@ -245,7 +239,7 @@ class _EventScheduleSectionState extends State<EventScheduleSection>
         Text(
           'Stay updated with our latest events and timings',
           style: TextStyle(
-            fontSize: widget.isMobile ? 14 : 16,
+            fontSize: widget.isMobile ? 8 : 12,
             color: Colors.grey[400],
             letterSpacing: 0.5,
           ),
@@ -276,7 +270,14 @@ class _EventScheduleSectionState extends State<EventScheduleSection>
               offset: Offset(0, 30 * (1 - value)),
               child: Opacity(
                 opacity: value,
-                child: _buildEventCard(schedule, index),
+                child: Column(
+                  children: [
+                    _buildEventCard(schedule, index),
+                    const SizedBox(
+                      height: 15,
+                    )
+                  ],
+                ),
               ),
             );
           },
@@ -314,202 +315,200 @@ class _EventScheduleSectionState extends State<EventScheduleSection>
         ? DateFormat('hh:mm a').format(schedule.expectedEndTime!.toDate())
         : null;
 
-    return Container(
-      margin: EdgeInsets.only(bottom: widget.isMobile ? 20 : 0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFF2A2A2A),
-            const Color(0xFF1F1F1F),
-            const Color(0xFF252525),
-          ],
-          stops: const [0.0, 0.7, 1.0],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: secondaryColor.withOpacity(0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+    return GradientBox(
+      radius: 20,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: eventBoxLinearGradient,
           ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+          border: Border.all(
+            color: secondaryColor.withOpacity(0.7),
+            width: 1,
           ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Stack(
-          children: [
-            // Background pattern
-            Positioned(
-              top: -50,
-              right: -50,
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      secondaryColor.withOpacity(0.1),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-              ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            // Content
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Event Number Badge
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [secondaryColor, Color(0xFFFFD700)],
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      schedule.title,
-                      style: const TextStyle(
-                        color: backgroundColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Event Description
-                  Text(
-                    schedule.description,
-                    style: TextStyle(
-                      fontSize: widget.isMobile ? 14 : 15,
-                      color: Colors.grey[300],
-                      height: 1.4,
-                    ),
-                    maxLines: widget.isMobile ? 3 : 4,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Time Section
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: backgroundColor.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: secondaryColor.withOpacity(0.2),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        // Start Time
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.play_circle_outline,
-                                    color: secondaryColor,
-                                    size: 16,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    'Start',
-                                    style: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                startTime,
-                                style: const TextStyle(
-                                  color: primaryColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  fontFeatures: [FontFeature.tabularFigures()],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Divider
-                        Container(
-                          width: 1,
-                          height: 40,
-                          color: secondaryColor.withOpacity(0.3),
-                        ),
-
-                        // End Time
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    'End',
-                                    style: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Icon(
-                                    Icons.stop_circle_outlined,
-                                    color: endTime != null
-                                        ? secondaryColor
-                                        : Colors.grey[600],
-                                    size: 16,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                endTime ?? 'TBD',
-                                style: TextStyle(
-                                  color: endTime != null
-                                      ? primaryColor
-                                      : Colors.grey[500],
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  fontFeatures: const [
-                                    FontFeature.tabularFigures()
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Stack(
+            children: [
+              // Background pattern
+              Positioned(
+                top: -50,
+                right: -50,
+                child: Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        secondaryColor.withOpacity(0.1),
+                        Colors.transparent,
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Event Number Badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [secondaryColor, Color(0xFFFFD700)],
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        schedule.title,
+                        style: const TextStyle(
+                          color: backgroundColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Event Description
+                    Text(
+                      schedule.description,
+                      style: TextStyle(
+                        fontSize: widget.isMobile ? 14 : 15,
+                        color: Colors.grey[300],
+                        height: 1.4,
+                      ),
+                      maxLines: widget.isMobile ? 3 : 4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Time Section
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: backgroundColor.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: secondaryColor.withOpacity(0.2),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          // Start Time
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.play_circle_outline,
+                                      color: secondaryColor,
+                                      size: 16,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Start',
+                                      style: TextStyle(
+                                        color: Colors.grey[400],
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  startTime,
+                                  style: const TextStyle(
+                                    color: primaryColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    fontFeatures: [
+                                      FontFeature.tabularFigures()
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // Divider
+                          Container(
+                            width: 1,
+                            height: 40,
+                            color: secondaryColor.withOpacity(0.3),
+                          ),
+
+                          // End Time
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'End',
+                                      style: TextStyle(
+                                        color: Colors.grey[400],
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Icon(
+                                      Icons.stop_circle_outlined,
+                                      color: endTime != null
+                                          ? secondaryColor
+                                          : Colors.grey[600],
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  endTime ?? 'TBD',
+                                  style: TextStyle(
+                                    color: endTime != null
+                                        ? primaryColor
+                                        : Colors.grey[500],
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    fontFeatures: const [
+                                      FontFeature.tabularFigures()
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -42,7 +42,7 @@ class DetailsSection extends StatelessWidget {
                 ? Theme.of(context).textTheme.bodySmall
                 : Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
-            // maxLines: isMobile ? 4 : 6,
+            maxLines: isMobile ? 4 : 6,
           ),
         ),
         const SizedBox(height: 16),
@@ -100,32 +100,8 @@ class DetailsSection extends StatelessWidget {
               icon: Icons.calendar_month_outlined,
               text: DateFormat('dd-MM-yyyy').format(event.eventDate),
             ),
-            _buildDetailTile(
-              context,
-              icon: Icons.location_on_outlined,
-              text: event.place,
-            ),
-            _buildDetailTile(
-              context,
-              icon: Icons.group_outlined,
-              text: event.isTeamEvent
-                  ? 'Team Event (${event.minTeamSize} - ${event.maxTeamSize})'
-                  : 'Individual',
-            ),
-            if (event.prizePool != 0)
-              _buildDetailTile(
-                context,
-                icon: Icons.emoji_events_outlined,
-                text: event.prizePool.toString(),
-              ),
-            _buildDetailTile(
-              context,
-              icon: Icons.access_time_outlined,
-              text: event.status,
-            ),
           ],
         ),
-        const SizedBox(height: 24),
         //
       ],
     );

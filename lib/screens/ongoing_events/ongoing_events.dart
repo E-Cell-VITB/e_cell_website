@@ -157,27 +157,6 @@ class OngoingEventsPage extends StatelessWidget {
                 style: TextStyle(color: Color(0xFFFFFFFF)),
               ),
             ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     // Implement notification subscription logic here
-            //     Navigator.of(context).pop();
-            //     ScaffoldMessenger.of(context).showSnackBar(
-            //       const SnackBar(
-            //         content: Text(
-            //             'Notifications enabled! You\'ll be updated on new events.'),
-            //         backgroundColor: Color(0xFFC79200),
-            //       ),
-            //     );
-            //   },
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: const Color(0xFFC79200),
-            //     foregroundColor: const Color(0xFF202020),
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(8),
-            //     ),
-            //   ),
-            //   child: const Text('Enable Notifications'),
-            // ),
           ],
         );
       },
