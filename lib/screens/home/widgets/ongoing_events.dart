@@ -20,24 +20,16 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
   @override
   void initState() {
     super.initState();
-    // Start live streaming if provider is available
+    // Initialize the future only once
     if (widget.provider != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          widget.provider!.startEventsStream();
           setState(() {
             _liveEventNamesFuture = _getLiveEventNames(widget.provider!);
           });
         }
       });
     }
-  }
-
-  @override
-  void dispose() {
-    // Stop events stream when disposing this widget
-    widget.provider?.stopEventsStream();
-    super.dispose();
   }
 
   Future<List<Map<String, String>>> _getLiveEventNames(
@@ -56,20 +48,20 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
     for (var event in provider.events) {
       try {
         await provider.fetchUpdates(event.id!);
-        // final updates = provider.updates;
-
-        // if (updates.isNotEmpty) {
-        //   bool hasLiveUpdate = updates.any((update) {
-        //     final startTime = update.updateLiveStartTime.toDate();
-        //     final endTime = update.updateLiveEndTime.toDate();
-        //     final isLive = now.isAfter(startTime) && now.isBefore(endTime);
-        //     return isLive;
-        //   });
-        //   if (hasLiveUpdate) {
-        //     liveEventNames.add({'name': event.name, 'id': event.id!});
-        //   }
-        // }
-        liveEventNames.add({'name': event.name, 'id': event.id!});
+        final updates = provider.updates;
+        final now = DateTime.now();
+        if (updates.isNotEmpty) {
+          bool hasLiveUpdate = updates.any((update) {
+            final startTime = update.updateLiveStartTime.toDate();
+            final endTime = update.updateLiveEndTime.toDate();
+            final isLive = now.isAfter(startTime) && now.isBefore(endTime);
+            return isLive;
+          });
+          if (hasLiveUpdate) {
+            liveEventNames.add({'name': event.name, 'id': event.id!});
+          }
+        }
+        // liveEventNames.add({'name': event.name, 'id': event.id!});
       } catch (e) {
         AppLogger.log('Error fetching updates for ${event.name}: $e');
       }

@@ -154,6 +154,7 @@ final GoRouter appRouter = GoRouter(
               ),
               GoRoute(
                 path: '/register/:eventId',
+                name: 'ongoingEventRegister',
                 builder: (context, state) {
                   final eventId = state.pathParameters['eventId']!;
                   return OngoingEventRegister(
