@@ -20,16 +20,24 @@ class _OngoingEventsWidgetState extends State<OngoingEventsWidget> {
   @override
   void initState() {
     super.initState();
-    // Initialize the future only once
+    // Start live streaming if provider is available
     if (widget.provider != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
+          widget.provider!.startEventsStream();
           setState(() {
             _liveEventNamesFuture = _getLiveEventNames(widget.provider!);
           });
         }
       });
     }
+  }
+
+  @override
+  void dispose() {
+    // Stop events stream when disposing this widget
+    widget.provider?.stopEventsStream();
+    super.dispose();
   }
 
   Future<List<Map<String, String>>> _getLiveEventNames(

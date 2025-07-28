@@ -25,6 +25,22 @@ class OngoingEventService {
     }
   }
 
+  /// Stream of all live events - rebuilds when Firestore data changes
+  Stream<List<OngoingEvent>> getAllEventsStream() {
+    try {
+      return _firestore
+          .collection(_eventsCollection)
+          .where("isEventLive", isEqualTo: true)
+          .snapshots()
+          .map((snapshot) => snapshot.docs
+              .map((doc) => OngoingEvent.fromMap(doc.data(), doc.id))
+              .toList());
+    } catch (e) {
+      AppLogger.error('Error streaming events: $e');
+      return Stream.value([]);
+    }
+  }
+
   Future<OngoingEvent?> getEventById(String eventId) async {
     try {
       final doc =
@@ -36,6 +52,25 @@ class OngoingEventService {
     } catch (e) {
       AppLogger.error('Error fetching event by ID: $e');
       return null;
+    }
+  }
+
+  /// Stream of a specific event by ID - rebuilds when Firestore data changes
+  Stream<OngoingEvent?> getEventByIdStream(String eventId) {
+    try {
+      return _firestore
+          .collection(_eventsCollection)
+          .doc(eventId)
+          .snapshots()
+          .map((doc) {
+        if (doc.exists) {
+          return OngoingEvent.fromMap(doc.data()!, doc.id);
+        }
+        return null;
+      });
+    } catch (e) {
+      AppLogger.error('Error streaming event by ID: $e');
+      return Stream.value(null);
     }
   }
 
@@ -57,6 +92,24 @@ class OngoingEventService {
     }
   }
 
+  /// Stream of event schedule - rebuilds when schedule changes
+  Stream<List<Schedule>> getEventScheduleStream(String eventId) {
+    try {
+      return _firestore
+          .collection(_eventsCollection)
+          .doc(eventId)
+          .collection('schedule')
+          .orderBy('scheduledTime')
+          .snapshots()
+          .map((snapshot) => snapshot.docs
+              .map((doc) => Schedule.fromMap(doc.data(), doc.id))
+              .toList());
+    } catch (e) {
+      AppLogger.error('Error streaming schedule: $e');
+      return Stream.value([]);
+    }
+  }
+
   Future<List<EventUpdate>> getEventUpdates(String eventId) async {
     try {
       final snapshot = await _firestore
@@ -72,6 +125,24 @@ class OngoingEventService {
     } catch (e) {
       AppLogger.error('Error fetching updates: $e');
       return [];
+    }
+  }
+
+  /// Stream of event updates - rebuilds when new updates are added
+  Stream<List<EventUpdate>> getEventUpdatesStream(String eventId) {
+    try {
+      return _firestore
+          .collection(_eventsCollection)
+          .doc(eventId)
+          .collection('updates')
+          .orderBy('updateLiveStartTime', descending: true)
+          .snapshots()
+          .map((snapshot) => snapshot.docs
+              .map((doc) => EventUpdate.fromMap(doc.data(), doc.id))
+              .toList());
+    } catch (e) {
+      AppLogger.error('Error streaming updates: $e');
+      return Stream.value([]);
     }
   }
 
@@ -146,6 +217,70 @@ class OngoingEventService {
     } catch (e) {
       AppLogger.error('Error checking registration: $e');
       return false;
+    }
+  }
+
+  /// Stream to check user registration status - rebuilds when registration changes
+  Stream<bool> checkUserRegistrationStream(String eventId) {
+    try {
+      if (_auth.currentUser == null) {
+        return Stream.value(false);
+      }
+
+      return _firestore
+          .collection(_eventsCollection)
+          .doc(eventId)
+          .collection('registered_users')
+          .where('userId', isEqualTo: _auth.currentUser!.uid)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.isNotEmpty);
+    } catch (e) {
+      AppLogger.error('Error streaming registration status: $e');
+      return Stream.value(false);
+    }
+  }
+
+  /// Stream of registered users for an event - rebuilds when new registrations occur
+  Stream<List<Map<String, dynamic>>> getRegisteredUsersStream(String eventId) {
+    try {
+      return _firestore
+          .collection(_eventsCollection)
+          .doc(eventId)
+          .collection('registered_users')
+          .orderBy('registeredAt', descending: true)
+          .snapshots()
+          .map((snapshot) => snapshot.docs
+              .map((doc) => {
+                    'id': doc.id,
+                    ...doc.data(),
+                  })
+              .toList());
+    } catch (e) {
+      AppLogger.error('Error streaming registered users: $e');
+      return Stream.value([]);
+    }
+  }
+
+  /// Stream of real-time participant count for an event
+  Stream<Map<String, int>> getParticipantCountStream(String eventId) {
+    try {
+      return _firestore
+          .collection(_eventsCollection)
+          .doc(eventId)
+          .snapshots()
+          .map((doc) {
+        if (doc.exists) {
+          final data = doc.data()!;
+          return {
+            'numParticipants': data['numParticipants'] as int? ?? 0,
+            'numTeams': data['numTeams'] as int? ?? 0,
+          };
+        }
+        return {'numParticipants': 0, 'numTeams': 0};
+      });
+    } catch (e) {
+      AppLogger.error('Error streaming participant count: $e');
+      return Stream.value({'numParticipants': 0, 'numTeams': 0});
     }
   }
 }
