@@ -361,7 +361,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                               padding: EdgeInsets.all(isMobile ? 16 : 24),
                               child: LinearGradientText(
                                 child: Text(
-                                  'Event Registration',
+                                  '${event.name} Registration',
                                   style: isMobile
                                       ? Theme.of(context)
                                           .textTheme
