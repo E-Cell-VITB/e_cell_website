@@ -12,9 +12,12 @@ class EventService {
         .orderBy('eventDate', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) {
+      return snapshot.docs.where((doc) {
         Map<String, dynamic> data = doc.data();
-        data['id'] = doc.id; // Add document ID to the map
+        return data.containsKey('isEventLive') && data['isEventLive'] == true;
+      }).map((doc) {
+        Map<String, dynamic> data = doc.data();
+        data['id'] = doc.id;
         return Event.fromMap(data);
       }).toList();
     });
