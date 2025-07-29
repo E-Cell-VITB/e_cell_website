@@ -26,6 +26,7 @@ class OngoingEvent {
   final List<EvaluationCriteria> evaluationTemplate;
   final List<RegistrationField> registrationTemplate;
   bool isEventLive;
+  bool isResultLive;
   final int position;
 
   OngoingEvent({
@@ -55,6 +56,7 @@ class OngoingEvent {
     this.isEventLive = false,
     this.minTeamSize,
     this.position = 0,
+    this.isResultLive = false,
   });
 
   Map<String, dynamic> toMap() {
