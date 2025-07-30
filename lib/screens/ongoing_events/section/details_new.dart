@@ -98,6 +98,7 @@ class DetailsSection extends StatelessWidget {
             _buildDetailTile(
               context,
               icon: Icons.calendar_month_outlined,
+              title: "Event Date ::",
               text: DateFormat('dd-MM-yyyy').format(event.eventDate),
             ),
           ],
@@ -111,6 +112,7 @@ class DetailsSection extends StatelessWidget {
     BuildContext context, {
     required IconData icon,
     required String text,
+    String? title,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(
@@ -141,6 +143,22 @@ class DetailsSection extends StatelessWidget {
                     ? 20
                     : 24,
           ),
+          if (title != null) ...[
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                title,
+                style: TextStyle(
+                    fontSize: isMobile
+                        ? 12
+                        : isTablet
+                            ? 14
+                            : 16),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
           const SizedBox(width: 8),
           Flexible(
             child: Text(

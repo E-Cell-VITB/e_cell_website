@@ -15,6 +15,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../results/results_dialog.dart';
+
 class EventDetails extends StatefulWidget {
   final Event event;
   const EventDetails({super.key, required this.event});
@@ -390,6 +392,19 @@ class _EventDetailsState extends State<EventDetails> {
               right: 20,
               child: _floatingActionLinks(),
             ),
+          Positioned(
+            bottom: 20,
+            left: 20,
+            child: IconButton(
+              onPressed: () {
+                FlipDialog.show(context);
+              },
+              icon: Icon(
+                Icons.markunread_sharp,
+                size: 30,
+              ),
+            ),
+          )
         ],
       ),
     );
