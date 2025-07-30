@@ -10,7 +10,7 @@ class OngoingEvent {
   final Timestamp createdAt;
   final String status;
   final DateTime? estimatedEndTime;
-  final List<String> winnerPhotos;
+  final List<WinnerPhotos> winnerPhotos;
   final List<String> allPhotos;
   final List<Map<String, String>> socialLink;
   final int numParticipants;
@@ -26,6 +26,8 @@ class OngoingEvent {
   final List<EvaluationCriteria> evaluationTemplate;
   final List<RegistrationField> registrationTemplate;
   bool isEventLive;
+  bool isResultLive;
+  final int position;
 
   OngoingEvent({
     this.id,
@@ -53,6 +55,8 @@ class OngoingEvent {
     required this.registrationEnds,
     this.isEventLive = false,
     this.minTeamSize,
+    this.position = 0,
+    this.isResultLive = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -88,6 +92,7 @@ class OngoingEvent {
           : null,
       'isEventLive': isEventLive,
       'minTeamSize': minTeamSize ?? 1,
+      'position': position,
     };
   }
 
@@ -102,7 +107,10 @@ class OngoingEvent {
         estimatedEndTime: map['estimatedEndTime'] != null
             ? (map['estimatedEndTime'] as Timestamp).toDate()
             : null,
-        winnerPhotos: List<String>.from(map['winnerPhotos'] ?? []),
+        winnerPhotos: (map['winnerPhotos'] as List<dynamic>?)
+                ?.map((e) => WinnerPhotos.fromMap(e as Map<String, dynamic>))
+                .toList() ??
+            [],
         allPhotos: List<String>.from(map['allPhotos'] ?? []),
         socialLink: (map['socialLink'] as List<dynamic>)
             .map((e) => Map<String, String>.from(e as Map))
@@ -132,6 +140,7 @@ class OngoingEvent {
         registrationStarts: (map['registrationStarts'] as Timestamp?)?.toDate(),
         registrationEnds: (map['registrationEnds'] as Timestamp?)?.toDate(),
         minTeamSize: (map['minTeamSize'] as int?) ?? 1,
+        position: (map['position'] as int?) ?? 0,
         isEventLive: map['isEventLive'] as bool? ?? false);
   }
 }
@@ -205,26 +214,23 @@ class Schedule {
 
 class EventUpdate {
   final String? id;
+  final String title;
   final String message;
-  final String? imageUrl;
-  final String updateType;
   final Timestamp updateLiveStartTime;
   final Timestamp updateLiveEndTime;
 
   EventUpdate({
     this.id,
+    required this.title,
     required this.message,
-    this.imageUrl,
-    required this.updateType,
     required this.updateLiveStartTime,
     required this.updateLiveEndTime,
   });
 
   Map<String, dynamic> toMap() {
     return {
+      'title': title,
       'message': message,
-      'imageUrl': imageUrl,
-      'updateType': updateType,
       'updateLiveStartTime': updateLiveStartTime,
       'updateLiveEndTime': updateLiveEndTime,
     };
@@ -232,10 +238,9 @@ class EventUpdate {
 
   factory EventUpdate.fromMap(Map<String, dynamic> map, String id) {
     return EventUpdate(
+        title: map['title'] as String? ?? '',
         id: id,
         message: map['message'] as String? ?? '',
-        imageUrl: map['imageUrl'] as String?,
-        updateType: map['updateType'] as String? ?? '',
         updateLiveStartTime: map['updateLiveStartTime'],
         updateLiveEndTime: map['updateLiveEndTime']);
   }
@@ -309,6 +314,34 @@ class JuryMember {
       about: json['about'] ?? 'No description available',
       role: json['role'],
       isVerified: json['isVerified'],
+    );
+  }
+}
+
+class WinnerPhotos {
+  final String photoUrl;
+  final String? teamName;
+  final int rank;
+
+  WinnerPhotos({
+    required this.photoUrl,
+    this.teamName,
+    required this.rank,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'photoUrl': photoUrl,
+      'teamName': teamName,
+      'rank': rank,
+    };
+  }
+
+  factory WinnerPhotos.fromMap(Map<String, dynamic> map) {
+    return WinnerPhotos(
+      photoUrl: map['photoUrl'] as String? ?? '',
+      teamName: map['teamName'] as String?,
+      rank: map['rank'] as int? ?? 0,
     );
   }
 }

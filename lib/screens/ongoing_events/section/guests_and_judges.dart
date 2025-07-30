@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_cell_website/backend/models/ongoing_events.dart';
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
 
@@ -129,108 +130,112 @@ Widget _buildPersonCard({
   final roleFontSize = isMobile ? 8.0 : 10.0;
   final borderRadius = isMobile ? 12.0 : 16.0;
 
-  return Container(
-    width: clampedCardWidth,
-    margin: const EdgeInsets.only(bottom: 8.0),
-    child: Card(
-      elevation: 4,
-      shadowColor: Colors.black26,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: Container(
-              margin: EdgeInsets.only(
-                top: isMobile ? 6.0 : 8.0,
-                right: isMobile ? 6.0 : 8.0,
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 6.0 : 8.0,
-                vertical: isMobile ? 3.0 : 4.0,
-              ),
-              decoration: BoxDecoration(
-                color: person.role == 'Judge'
-                    ? Colors.purple.withOpacity(0.2)
-                    : Colors.blue.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(isMobile ? 10.0 : 12.0),
-                border: Border.all(
-                  color: person.role == 'Judge' ? Colors.purple : Colors.blue,
+  return GradientBox(
+    radius: 20,
+    child: Container(
+      width: clampedCardWidth,
+      margin: const EdgeInsets.only(bottom: 8.0),
+      child: Card(
+        elevation: 4,
+        shadowColor: Colors.black26,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                margin: EdgeInsets.only(
+                  top: isMobile ? 6.0 : 8.0,
+                  right: isMobile ? 6.0 : 8.0,
                 ),
-              ),
-              child: Text(
-                person.role,
-                style: TextStyle(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 6.0 : 8.0,
+                  vertical: isMobile ? 3.0 : 4.0,
+                ),
+                decoration: BoxDecoration(
                   color: person.role == 'Judge'
-                      ? Colors.purple.shade200
-                      : Colors.blue.shade200,
-                  fontSize: roleFontSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          Container(
-            width: imageSize,
-            height: imageSize,
-            margin: EdgeInsets.only(top: isMobile ? 6.0 : 8.0),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: primaryColor, width: 2),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(imageSize / 2),
-              child: CachedNetworkImage(
-                imageUrl: person.photoUrl,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Center(
-                  child: SizedBox(
-                    width: imageSize * 0.5,
-                    height: imageSize * 0.5,
-                    child: const CircularProgressIndicator(color: primaryColor),
+                      ? Colors.purple.withOpacity(0.2)
+                      : Colors.blue.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(isMobile ? 10.0 : 12.0),
+                  border: Border.all(
+                    color: person.role == 'Judge' ? Colors.purple : Colors.blue,
                   ),
                 ),
-                errorWidget: (context, url, error) => Icon(
-                  Icons.person,
-                  color: primaryColor,
-                  size: imageSize * 0.6,
+                child: Text(
+                  person.role,
+                  style: TextStyle(
+                    color: person.role == 'Judge'
+                        ? Colors.purple.shade200
+                        : Colors.blue.shade200,
+                    fontSize: roleFontSize,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: isMobile ? 8.0 : 12.0),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: isMobile ? 8.0 : 12.0),
-            child: Text(
-              person.name,
-              style: TextStyle(
-                fontSize: nameFontSize,
-                fontWeight: FontWeight.bold,
+            Container(
+              width: imageSize,
+              height: imageSize,
+              margin: EdgeInsets.only(top: isMobile ? 6.0 : 8.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: primaryColor, width: 2),
               ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          SizedBox(height: isMobile ? 4.0 : 6.0),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: isMobile ? 8.0 : 12.0),
-            child: Text(
-              person.about,
-              style: TextStyle(
-                fontSize: aboutFontSize,
-                color: Colors.grey.shade600,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(imageSize / 2),
+                child: CachedNetworkImage(
+                  imageUrl: person.photoUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Center(
+                    child: SizedBox(
+                      width: imageSize * 0.5,
+                      height: imageSize * 0.5,
+                      child:
+                          const CircularProgressIndicator(color: primaryColor),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.person,
+                    color: primaryColor,
+                    size: imageSize * 0.6,
+                  ),
+                ),
               ),
-              textAlign: TextAlign.center,
-              maxLines: isMobile ? 2 : 3,
-              overflow: TextOverflow.ellipsis,
             ),
-          ),
-          SizedBox(height: isMobile ? 8.0 : 12.0),
-        ],
+            SizedBox(height: isMobile ? 8.0 : 12.0),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 8.0 : 12.0),
+              child: Text(
+                person.name,
+                style: TextStyle(
+                  fontSize: nameFontSize,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            SizedBox(height: isMobile ? 4.0 : 6.0),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 8.0 : 12.0),
+              child: Text(
+                person.about,
+                style: TextStyle(
+                  fontSize: aboutFontSize,
+                  color: Colors.grey.shade600,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: isMobile ? 2 : 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            SizedBox(height: isMobile ? 8.0 : 12.0),
+          ],
+        ),
       ),
     ),
   );

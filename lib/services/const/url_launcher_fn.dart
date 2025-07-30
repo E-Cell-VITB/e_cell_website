@@ -23,3 +23,4 @@ Future<void> launchEmail(String email, String subject, String body) async {
     throw 'Could not launch $emailUri';
   }
 }
+

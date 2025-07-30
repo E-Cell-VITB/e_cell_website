@@ -19,6 +19,7 @@ class Event {
   final String place;
   final String bannerPhotoUrl;
   final String certificatesScript;
+  final int position;
 
   Event({
     required this.name,
@@ -37,6 +38,7 @@ class Event {
     required this.bannerPhotoUrl,
     required this.certificatesScript,
     this.id,
+    this.position = 0,
   });
 
   Map<String, dynamic> toMap() {
@@ -56,7 +58,8 @@ class Event {
       'prizePool': prizePool,
       'place': place,
       'bannerPhotoUrl': bannerPhotoUrl,
-      'certificatesScript': certificatesScript
+      'certificatesScript': certificatesScript,
+      'position': position,
     };
   }
 
@@ -84,6 +87,7 @@ class Event {
       place: map['place'] as String? ?? "VITB, Bhimavarm",
       bannerPhotoUrl: map['bannerPhotoUrl'] as String? ?? "",
       certificatesScript: map['certificatesScript'] as String? ?? "",
+      position: map['position'] as int? ?? 0,
     );
   }
 }

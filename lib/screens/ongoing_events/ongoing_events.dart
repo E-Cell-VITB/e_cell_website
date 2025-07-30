@@ -7,8 +7,22 @@ import 'package:e_cell_website/widgets/subscription_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class OngoingEventsPage extends StatelessWidget {
+class OngoingEventsPage extends StatefulWidget {
   const OngoingEventsPage({super.key});
+
+  @override
+  State<OngoingEventsPage> createState() => _OngoingEventsPageState();
+}
+
+class _OngoingEventsPageState extends State<OngoingEventsPage> {
+  OngoingEventProvider? _provider;
+
+  @override
+  void dispose() {
+    // Stop the stream when the widget is disposed
+    _provider?.stopEventsStream();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,97 +31,131 @@ class OngoingEventsPage extends StatelessWidget {
     final isMobile = screenWidth < 600;
 
     return ChangeNotifierProvider(
-      create: (context) => OngoingEventProvider()..fetchEvents(),
-      child: Scaffold(
-        body: ParticleBackground(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(isMobile ? 12.0 : 18.0),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(maxWidth: isMobile ? screenWidth : 800),
-                  child: Consumer<OngoingEventProvider>(
-                    builder: (context, provider, child) {
-                      if (provider.isLoadingEvents) {
-                        return SizedBox(
-                            height: size.height * 0.6,
-                            child: const Center(
-                              child: LoadingIndicator(),
-                            ));
-                      }
-                      if (provider.errorEvents != null) {
-                        return Center(
-                          child: Text(
-                            'Error: ${provider.errorEvents}',
-                            style: TextStyle(fontSize: isMobile ? 14 : 18),
-                            textAlign: TextAlign.center,
-                          ),
-                        );
-                      }
+      create: (context) {
+        _provider = OngoingEventProvider();
+        return _provider!;
+      },
+      child: Builder(
+        builder: (context) {
+          // Start live streaming when the widget is built
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.read<OngoingEventProvider>().startEventsStream();
+          });
 
-                      // Filter live events
-                      final liveEvents = provider.events
-                          .where((event) => event.isEventLive)
-                          .toList();
-                      liveEvents
-                          .sort((a, b) => a.eventDate.compareTo(b.eventDate));
-
-                      if (liveEvents.isEmpty) {
-                        return SizedBox(
-                          height: size.height * 0.6,
-                          child: NoEventsWidget(
-                            isMobile: isMobile,
-                            onRefresh: () {
-                              // Refresh events
-                              provider.fetchEvents();
-                            },
-                            onNotifyMe: () {
-                              // Handle notification subscription
-                              _showNotificationDialog(context);
-                            },
-                          ),
-                        );
-                      }
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: liveEvents.asMap().entries.map((entry) {
-                          final event = entry.value;
-                          return Column(
-                            children: [
-                              InkWell(
-                                // onTap: () {
-                                //   context.go('/onGoingEvents/${event.id}');
-                                // },
-                                child: EventCard(
-                                  eventId: event.id,
-                                  eventEnds: event.estimatedEndTime,
-                                  registrationStarts: event.registrationStarts,
-                                  registrationEnds: event.registrationEnds,
-                                  eventdate: event.eventDate,
-                                  eventname: event.name,
-                                  description: event.description,
-                                  eventtype: event.isTeamEvent
-                                      ? 'Team Event'
-                                      : 'Individual',
-                                  reward: event.prizePool!,
-                                ),
+          return Scaffold(
+            body: ParticleBackground(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(isMobile ? 12.0 : 18.0),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          maxWidth: isMobile ? screenWidth : 800),
+                      child: Consumer<OngoingEventProvider>(
+                        builder: (context, provider, child) {
+                          if (provider.isLoadingEvents) {
+                            return SizedBox(
+                                height: size.height * 0.6,
+                                child: const Center(
+                                  child: LoadingIndicator(),
+                                ));
+                          }
+                          if (provider.errorEvents != null) {
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Error: ${provider.errorEvents}',
+                                    style:
+                                        TextStyle(fontSize: isMobile ? 14 : 18),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // Restart the stream
+                                      provider.stopEventsStream();
+                                      provider.startEventsStream();
+                                    },
+                                    child: const Text('Retry'),
+                                  ),
+                                ],
                               ),
-                              if (entry.key < liveEvents.length - 1)
-                                SizedBox(height: isMobile ? 20 : 30),
-                            ],
+                            );
+                          }
+
+                          // Filter live events
+                          final liveEvents = provider.events
+                              .where((event) => event.isEventLive)
+                              .toList();
+                          liveEvents.sort((a, b) {
+                            // First, compare by position (lower value = higher priority)
+                            final posCompare = a.position.compareTo(b.position);
+                            if (posCompare != 0) return posCompare;
+                            // If position is the same, compare by eventDate
+                            return a.eventDate.compareTo(b.eventDate);
+                          });
+
+                          if (liveEvents.isEmpty) {
+                            return SizedBox(
+                              height: size.height * 0.6,
+                              child: NoEventsWidget(
+                                isMobile: isMobile,
+                                onRefresh: () {
+                                  // Restart stream for refresh
+                                  provider.stopEventsStream();
+                                  provider.startEventsStream();
+                                },
+                                onNotifyMe: () {
+                                  // Handle notification subscription
+                                  _showNotificationDialog(context);
+                                },
+                              ),
+                            );
+                          }
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: liveEvents.asMap().entries.map((entry) {
+                              final event = entry.value;
+                              return Column(
+                                children: [
+                                  InkWell(
+                                    // onTap: () {
+                                    //   context.go('/onGoingEvents/${event.id}');
+                                    // },
+                                    child: EventCard(
+                                      eventId: event.id,
+                                      eventEnds: event.estimatedEndTime,
+                                      registrationStarts:
+                                          event.registrationStarts,
+                                      registrationEnds: event.registrationEnds,
+                                      eventdate: event.eventDate,
+                                      eventname: event.name,
+                                      description: event.description,
+                                      eventtype: event.isTeamEvent
+                                          ? 'Team Event'
+                                          : 'Individual',
+                                      reward: event.prizePool!,
+                                    ),
+                                  ),
+                                  if (entry.key < liveEvents.length - 1)
+                                    SizedBox(height: isMobile ? 20 : 30),
+                                ],
+                              );
+                            }).toList(),
                           );
-                        }).toList(),
-                      );
-                    },
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -152,27 +200,6 @@ class OngoingEventsPage extends StatelessWidget {
                 style: TextStyle(color: Color(0xFFFFFFFF)),
               ),
             ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     // Implement notification subscription logic here
-            //     Navigator.of(context).pop();
-            //     ScaffoldMessenger.of(context).showSnackBar(
-            //       const SnackBar(
-            //         content: Text(
-            //             'Notifications enabled! You\'ll be updated on new events.'),
-            //         backgroundColor: Color(0xFFC79200),
-            //       ),
-            //     );
-            //   },
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: const Color(0xFFC79200),
-            //     foregroundColor: const Color(0xFF202020),
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(8),
-            //     ),
-            //   ),
-            //   child: const Text('Enable Notifications'),
-            // ),
           ],
         );
       },
