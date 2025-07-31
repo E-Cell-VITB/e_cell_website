@@ -150,13 +150,12 @@ class RegistrationSubmission {
       final eventDate =
           event.eventDate.toUtc().toIso8601String().split('T').first;
       await emailService.sendThankYouEmails(
-        eventName: event.name,
-        eventDate: eventDate,
-        teamName: event.isTeamEvent ? teamName : null,
-        isTeamEvent: event.isTeamEvent,
-        participantEmails: participantEmails,
-        ctaLink: 'https://ecell-vitb.web.app/#/onGoingEvents',
-      );
+          eventName: event.name,
+          eventDate: eventDate,
+          teamName: event.isTeamEvent ? teamName : null,
+          isTeamEvent: event.isTeamEvent,
+          participantEmails: participantEmails,
+          thankYouEmailAppScriptUrl: event.thankYouEmailAppScriptUrl);
 
       if (context.mounted) {
         onSubmitComplete();

@@ -28,6 +28,7 @@ class OngoingEvent {
   bool isEventLive;
   bool isResultLive;
   final int position;
+  String? thankYouEmailAppScriptUrl;
 
   OngoingEvent({
     this.id,
@@ -57,6 +58,7 @@ class OngoingEvent {
     this.minTeamSize,
     this.position = 0,
     this.isResultLive = false,
+    this.thankYouEmailAppScriptUrl = '',
   });
 
   Map<String, dynamic> toMap() {
@@ -93,6 +95,7 @@ class OngoingEvent {
       'isEventLive': isEventLive,
       'minTeamSize': minTeamSize ?? 1,
       'position': position,
+      'thankYouEmailAppScriptUrl': thankYouEmailAppScriptUrl
     };
   }
 
@@ -133,15 +136,15 @@ class OngoingEvent {
                 .toList() ??
             [],
         registrationTemplate: (map['registrationTemplate'] as List<dynamic>?)
-                ?.map(
-                    (e) => RegistrationField.fromMap(e as Map<String, dynamic>))
+                ?.map((e) => RegistrationField.fromMap(e as Map<String, dynamic>))
                 .toList() ??
             [],
         registrationStarts: (map['registrationStarts'] as Timestamp?)?.toDate(),
         registrationEnds: (map['registrationEnds'] as Timestamp?)?.toDate(),
         minTeamSize: (map['minTeamSize'] as int?) ?? 1,
         position: (map['position'] as int?) ?? 0,
-        isEventLive: map['isEventLive'] as bool? ?? false);
+        isEventLive: map['isEventLive'] as bool? ?? false,
+        thankYouEmailAppScriptUrl: map['thankYouEmailAppScriptUrl'] as String? ?? '');
   }
 }
 

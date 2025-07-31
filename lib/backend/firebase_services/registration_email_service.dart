@@ -1,18 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:e_cell_website/const/app_logs.dart';
 import 'package:http/http.dart' as http;
 
 class RegistrationEmailService {
-  final String _appsScriptUrl =
-      "https://script.google.com/macros/s/AKfycbxXFj7VeZJWN_mQM7KIcWkpzljephcjpuDLMKYr5SFggenUKvqds_AV4024FX_4O-j7/exec";
-
   Future<Map<String, dynamic>> sendThankYouEmails({
     required String eventName,
     required String eventDate,
     String? teamName,
     required bool isTeamEvent,
     required List<String> participantEmails,
-    required String ctaLink,
+    required String? thankYouEmailAppScriptUrl,
   }) async {
     final payload = {
       'eventName': eventName,
@@ -20,15 +18,26 @@ class RegistrationEmailService {
       'teamName': teamName,
       'isTeamEvent': isTeamEvent,
       'participantEmails': participantEmails,
-      'ctaLink': ctaLink,
     };
 
     // AppLogger.log("Pariticipants emails: $participantEmails");
 
+    if (thankYouEmailAppScriptUrl?.isEmpty ?? true) {
+      AppLogger.log('Thank you email script URL is not set');
+      return {
+        'success': false,
+        'data': null,
+        'message': 'Thank you email script URL is not set',
+      };
+    }
+
+    final appsScriptUrl = thankYouEmailAppScriptUrl ??
+        'https://script.google.com/macros/s/AKfycbzYASQZTX6DA4DiX76LvtV0FZ6awa8F7o4LJvCoJwRkrl7OCALonSSjF_GW_Q7MmuTWQQ/exec';
+
     try {
       final response = await http
           .post(
-            Uri.parse(_appsScriptUrl),
+            Uri.parse(appsScriptUrl),
             body: jsonEncode(payload),
           )
           .timeout(const Duration(seconds: 30));
