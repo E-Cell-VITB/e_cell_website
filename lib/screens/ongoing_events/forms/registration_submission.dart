@@ -149,16 +149,24 @@ class RegistrationSubmission {
 
       final eventDate =
           event.eventDate.toUtc().toIso8601String().split('T').first;
-      await emailService.sendThankYouEmails(
+      String result = await emailService.sendThankYouEmails(
           eventName: event.name,
           eventDate: eventDate,
           teamName: event.isTeamEvent ? teamName : null,
           isTeamEvent: event.isTeamEvent,
           participantEmails: participantEmails,
-          thankYouEmailAppScriptUrl: event.thankYouEmailAppScriptUrl);
+          thankYouEmailAppScriptUrl: event.thankYouEmailAppScriptUrl ?? '');
 
       if (context.mounted) {
         onSubmitComplete();
+        if (result == 'success') {
+          showCustomToast(
+            title: 'Emails Sent',
+            description:
+                'Registration Confirmation Email sent to the mentioned Emails check them for further details.',
+            type: ToastificationType.success,
+          );
+        }
         GoRouter.of(context).pushReplacement('/onGoingEvents');
       }
     } catch (e) {
