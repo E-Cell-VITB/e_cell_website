@@ -798,16 +798,85 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                   .map((field) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
-                  child: _buildFormField(
-                    field,
-                    0,
-                    isMobile,
-                    isTablet,
-                    screenWidth,
-                    event,
-                  ),
+                  child: field.inputType.toLowerCase() == 'department'
+                      ? DropdownButtonFormField<String>(
+                          isExpanded: true,
+                          decoration: _inputDecoration(
+                            labelText:
+                                '${field.fieldName[0].toUpperCase()}${field.fieldName.substring(1)}',
+                            isMobile: isMobile,
+                          ),
+                          dropdownColor: Colors.grey[900],
+                          style: const TextStyle(color: Colors.white),
+                          value: participants[0][field.fieldName]?.toString(),
+                          items: (event.department.isEmpty)
+                              ? Department.values.map((Department dept) {
+                                  return DropdownMenuItem<String>(
+                                    value: dept.toString(),
+                                    child: Directionality(
+                                      textDirection: TextDirection.ltr,
+                                      child: Text(
+                                        dept.toString().split('.').last,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontSize: isMobile
+                                              ? 12
+                                              : isTablet
+                                                  ? 14
+                                                  : 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList()
+                              : [
+                                  DropdownMenuItem<String>(
+                                    value: event.department,
+                                    child: Directionality(
+                                      textDirection: TextDirection.ltr,
+                                      child: Text(
+                                        event.department,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontSize: isMobile
+                                              ? 12
+                                              : isTablet
+                                                  ? 14
+                                                  : 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                          onChanged: (String? value) {
+                            if (value != null) {
+                              setState(() {
+                                participants[0][field.fieldName] = value;
+                              });
+                            }
+                          },
+                          validator: (value) {
+                            if (field.isRequired &&
+                                (value == null || value.isEmpty)) {
+                              return '${field.fieldName[0].toUpperCase()}${field.fieldName.substring(1)} is required';
+                            }
+                            return null;
+                          },
+                        )
+                      : _buildFormField(
+                          field,
+                          0,
+                          isMobile,
+                          isTablet,
+                          screenWidth,
+                          event,
+                        ),
                 );
-              }),
+              })
             ],
           ),
         );

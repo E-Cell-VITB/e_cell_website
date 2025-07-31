@@ -29,6 +29,7 @@ class OngoingEvent {
   bool isResultLive;
   final int position;
   String? thankYouEmailAppScriptUrl;
+  final String department;
 
   OngoingEvent({
     this.id,
@@ -59,6 +60,7 @@ class OngoingEvent {
     this.position = 0,
     this.isResultLive = false,
     this.thankYouEmailAppScriptUrl = '',
+    required this.department,
   });
 
   Map<String, dynamic> toMap() {
@@ -95,56 +97,60 @@ class OngoingEvent {
       'isEventLive': isEventLive,
       'minTeamSize': minTeamSize ?? 1,
       'position': position,
-      'thankYouEmailAppScriptUrl': thankYouEmailAppScriptUrl
+      'thankYouEmailAppScriptUrl': thankYouEmailAppScriptUrl,
+      'department': department,
     };
   }
 
   factory OngoingEvent.fromMap(Map<String, dynamic> map, String id) {
     return OngoingEvent(
-        id: id,
-        name: map['name'] as String? ?? '',
-        description: map['description'] as String? ?? '',
-        eventDate: (map['eventDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        createdAt: map['createdAt'] as Timestamp? ?? Timestamp.now(),
-        status: map['status'] as String? ?? 'Upcoming',
-        estimatedEndTime: map['estimatedEndTime'] != null
-            ? (map['estimatedEndTime'] as Timestamp).toDate()
-            : null,
-        winnerPhotos: (map['winnerPhotos'] as List<dynamic>?)
-                ?.map((e) => WinnerPhotos.fromMap(e as Map<String, dynamic>))
-                .toList() ??
-            [],
-        allPhotos: List<String>.from(map['allPhotos'] ?? []),
-        socialLink: (map['socialLink'] as List<dynamic>)
-            .map((e) => Map<String, String>.from(e as Map))
-            .toList(),
-        numParticipants: (map['numParticipants'] as int?) ?? 0,
-        numTeams: (map['numTeams'] as int?) ?? 0,
-        jury: (map['jury'] as List<dynamic>?)
-                ?.map((e) => JuryMember.fromMap(e as Map<String, dynamic>))
-                .toList() ??
-            [],
-        prizePool: (map['prizePool'] as num?)?.toDouble() ?? 0.0,
-        place: map['place'] as String? ?? 'VITB, Bhimavaram',
-        bannerPhotoUrl: map['bannerPhotoUrl'] as String? ?? '',
-        certificatesScript: map['certificatesScript'] as String? ?? '',
-        isTeamEvent: map['isTeamEvent'] as bool? ?? false,
-        maxTeamSize: map['maxTeamSize'] as int? ?? 1,
-        evaluationTemplate: (map['evaluationTemplate'] as List<dynamic>?)
-                ?.map((e) =>
-                    EvaluationCriteria.fromMap(e as Map<String, dynamic>))
-                .toList() ??
-            [],
-        registrationTemplate: (map['registrationTemplate'] as List<dynamic>?)
-                ?.map((e) => RegistrationField.fromMap(e as Map<String, dynamic>))
-                .toList() ??
-            [],
-        registrationStarts: (map['registrationStarts'] as Timestamp?)?.toDate(),
-        registrationEnds: (map['registrationEnds'] as Timestamp?)?.toDate(),
-        minTeamSize: (map['minTeamSize'] as int?) ?? 1,
-        position: (map['position'] as int?) ?? 0,
-        isEventLive: map['isEventLive'] as bool? ?? false,
-        thankYouEmailAppScriptUrl: map['thankYouEmailAppScriptUrl'] as String? ?? '');
+      id: id,
+      name: map['name'] as String? ?? '',
+      description: map['description'] as String? ?? '',
+      eventDate: (map['eventDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      createdAt: map['createdAt'] as Timestamp? ?? Timestamp.now(),
+      status: map['status'] as String? ?? 'Upcoming',
+      estimatedEndTime: map['estimatedEndTime'] != null
+          ? (map['estimatedEndTime'] as Timestamp).toDate()
+          : null,
+      winnerPhotos: (map['winnerPhotos'] as List<dynamic>?)
+              ?.map((e) => WinnerPhotos.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      allPhotos: List<String>.from(map['allPhotos'] ?? []),
+      socialLink: (map['socialLink'] as List<dynamic>)
+          .map((e) => Map<String, String>.from(e as Map))
+          .toList(),
+      numParticipants: (map['numParticipants'] as int?) ?? 0,
+      numTeams: (map['numTeams'] as int?) ?? 0,
+      jury: (map['jury'] as List<dynamic>?)
+              ?.map((e) => JuryMember.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      prizePool: (map['prizePool'] as num?)?.toDouble() ?? 0.0,
+      place: map['place'] as String? ?? 'VITB, Bhimavaram',
+      bannerPhotoUrl: map['bannerPhotoUrl'] as String? ?? '',
+      certificatesScript: map['certificatesScript'] as String? ?? '',
+      isTeamEvent: map['isTeamEvent'] as bool? ?? false,
+      maxTeamSize: map['maxTeamSize'] as int? ?? 1,
+      evaluationTemplate: (map['evaluationTemplate'] as List<dynamic>?)
+              ?.map(
+                  (e) => EvaluationCriteria.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      registrationTemplate: (map['registrationTemplate'] as List<dynamic>?)
+              ?.map((e) => RegistrationField.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      registrationStarts: (map['registrationStarts'] as Timestamp?)?.toDate(),
+      registrationEnds: (map['registrationEnds'] as Timestamp?)?.toDate(),
+      minTeamSize: (map['minTeamSize'] as int?) ?? 1,
+      position: (map['position'] as int?) ?? 0,
+      isEventLive: map['isEventLive'] as bool? ?? false,
+      thankYouEmailAppScriptUrl:
+          map['thankYouEmailAppScriptUrl'] as String? ?? '',
+      department: map['department'] as String? ?? '',
+    );
   }
 }
 
