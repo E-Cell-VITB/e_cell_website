@@ -296,7 +296,9 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
         backgroundColor: Colors.black87,
         body: Consumer<OngoingEventProvider>(
           builder: (context, provider, child) {
-            if (provider.isLoadingEvents || _isCheckingRegistration) {
+            if (provider.isLoadingEvents ||
+                _isCheckingRegistration ||
+                _isSubmitting) {
               return SizedBox(
                 height: screenHeight * 0.6,
                 child: const Center(child: LoadingIndicator()),
@@ -482,8 +484,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                                       );
                                     }),
                                     const SizedBox(height: 16),
-                                    if (_isSubmitting ||
-                                        _isCheckingRegistration)
+                                    if (_isCheckingRegistration)
                                       SizedBox(
                                         height: screenHeight * 0.6,
                                         child: const Center(
@@ -493,8 +494,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                                     else
                                       GradientButton(
                                         text: 'Submit Registration',
-                                        onPressed: _isSubmitting ||
-                                                _isCheckingRegistration
+                                        onPressed: _isCheckingRegistration
                                             ? null
                                             : () async {
                                                 if (_formKey.currentState!
