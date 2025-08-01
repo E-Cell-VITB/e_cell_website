@@ -125,11 +125,6 @@ class RegistrationSubmission {
         participants,
       );
 
-      if (context.mounted) {
-        GoRouter.of(context).pushReplacement(
-            '/onGoingEvents/register/${event.id}/thankYou/${event.id}');
-      }
-
       final participantEmails = participants
           .where((p) => p['Email'] != null && p['Email'].toString().isNotEmpty)
           .map((p) => p['Email'].toString())
@@ -159,12 +154,17 @@ class RegistrationSubmission {
         if (result == 'success') {
           showCustomToast(
             title: 'Emails Sent',
+            duration: const Duration(seconds: 6),
             description:
                 'Registration Confirmation Email sent to the mentioned Emails check them for further details.',
             type: ToastificationType.success,
           );
         }
         // GoRouter.of(context).pushReplacement('/onGoingEvents');
+      }
+      if (context.mounted) {
+        GoRouter.of(context).pushReplacement(
+            '/onGoingEvents/register/${event.id}/thankYou/${event.id}');
       }
     } catch (e) {
       if (context.mounted) {

@@ -97,7 +97,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
   }
 
   void _validateTeamName() {
-    final teamName = _teamNameController.text;
+    final teamName = _teamNameController.text.trim();
     if (teamName.isEmpty) {
       setState(() {
         _teamNameValidationStatus = null;
@@ -735,7 +735,8 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                   if (value == null || value.isEmpty) {
                     return 'Team name is required';
                   }
-                  if (_registeredTeamNames.contains(value.toLowerCase())) {
+                  if (_registeredTeamNames
+                      .contains(value.trim().toLowerCase())) {
                     return 'This team name is already taken';
                   }
                   return null;
@@ -1274,7 +1275,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
               }
             });
             if (field.inputType.toLowerCase() == 'email') {
-              _validateEmail(value, controllerKey);
+              _validateEmail(value.trim(), controllerKey);
             }
           },
         );
