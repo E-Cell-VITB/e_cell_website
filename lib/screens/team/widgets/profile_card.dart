@@ -128,7 +128,7 @@ class ProfileCard extends StatelessWidget {
                                         launchEmail(
                                             teamMember.email,
                                             "Contact Request",
-                                            "Hello, I would like to contact you for the following reason: ...");
+                                            "Hello, I would like to contact you for the following reason: ");
                                       },
                                       splashColor: primaryColor,
                                       child: SizedBox(

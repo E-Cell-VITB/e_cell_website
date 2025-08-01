@@ -80,10 +80,41 @@ class BlogsScreen extends StatelessWidget {
                       }
 
                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(
-                          child: Text(
-                            'No blogs available',
-                            style: TextStyle(color: Colors.white70),
+                        return SizedBox(
+                          height: size.height * 0.4,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.article_outlined,
+                                  size: size.width > 600 ? 80 : 60,
+                                  color: Colors.white38,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No blogs available',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall
+                                      ?.copyWith(
+                                        color: Colors.white70,
+                                        fontSize: size.width > 600 ? 24 : 20,
+                                      ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Check back later for new content!',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Colors.white54,
+                                        fontSize: size.width > 600 ? 16 : 14,
+                                      ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       }

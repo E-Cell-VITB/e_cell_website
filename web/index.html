@@ -168,6 +168,43 @@
     });
   </script>
 
+
+  <!-- Script to prevent two-finger swipe gestures -->
+  <script>
+    // Prevent multi-touch gestures that could trigger browser navigation
+    document.addEventListener('touchstart', function(e) {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    document.addEventListener('touchmove', function(e) {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    // Prevent mouse wheel horizontal scrolling that might trigger navigation
+    document.addEventListener('wheel', function(e) {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    // Prevent default behavior for trackpad gestures
+    document.addEventListener('gesturestart', function(e) {
+      e.preventDefault();
+    });
+
+    document.addEventListener('gesturechange', function(e) {
+      e.preventDefault();
+    });
+
+    document.addEventListener('gestureend', function(e) {
+      e.preventDefault();
+    });
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

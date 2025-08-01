@@ -191,32 +191,43 @@ class ResponsiveProfileCards extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isMobile = constraints.maxWidth < 600;
-
-        return isMobile
-            ? SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(
-                      teamMembers.length,
-                      (index) => ProfileCard(
-                            teamMember: teamMembers[index],
-                          )),
-                ),
-              )
-            : SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(
-                      teamMembers.length,
-                      (index) => ProfileCard(
-                            teamMember: teamMembers[index],
-                          )),
-                ),
-              );
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+                teamMembers.length,
+                (index) => ProfileCard(
+                      teamMember: teamMembers[index],
+                    )),
+          ),
+        );
+        // return isMobile
+        //     ? SingleChildScrollView(
+        //         scrollDirection: Axis.horizontal,
+        //         child: Row(
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           mainAxisSize: MainAxisSize.min,
+        //           children: List.generate(
+        //               teamMembers.length,
+        //               (index) => ProfileCard(
+        //                     teamMember: teamMembers[index],
+        //                   )),
+        //         ),
+        //       )
+        //     : SingleChildScrollView(
+        //         scrollDirection: Axis.horizontal,
+        //         child: Row(
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           mainAxisSize: MainAxisSize.min,
+        //           children: List.generate(
+        //               teamMembers.length,
+        //               (index) => ProfileCard(
+        //                     teamMember: teamMembers[index],
+        //                   )),
+        //         ),
+        //       );
       },
     );
   }

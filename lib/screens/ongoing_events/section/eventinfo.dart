@@ -1,9 +1,7 @@
 import 'package:e_cell_website/backend/models/ongoing_events.dart';
-import 'package:e_cell_website/const/theme.dart';
 import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class Eventinfo extends StatelessWidget {
   final OngoingEvent event;
@@ -28,7 +26,7 @@ class Eventinfo extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   height: isMobile ? 80 : 180,
                   width: isMobile ? 80 : 180,
                   child: ClipRRect(
@@ -75,7 +73,7 @@ class Eventinfo extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
+                      SizedBox(
                         height: isMobile ? 40 : 150,
                         width: isMobile ? 40 : 150,
                         child: ClipRRect(
@@ -121,7 +119,7 @@ class Eventinfo extends StatelessWidget {
                         ? MainAxisAlignment.start
                         : MainAxisAlignment.center,
                     children: [
-                      Container(
+                      SizedBox(
                         height: isMobile ? 40 : 100,
                         width: isMobile ? 38 : 100,
                         child: ClipRRect(
@@ -137,7 +135,7 @@ class Eventinfo extends StatelessWidget {
                             ? screenWidth * 0.01
                             : isTablet
                                 ? screenWidth * 0.05
-                                : screenWidth * 0.05,
+                                : screenWidth * 0.025,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -151,9 +149,11 @@ class Eventinfo extends StatelessWidget {
                                 )),
                           ),
                           SizedBox(
+
                             width: isMobile ? 100 : 280,
                             child: SelectableText("${event.place}",
                                 maxLines: 2,
+
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: isMobile ? 8 : 18,
