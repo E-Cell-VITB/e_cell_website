@@ -30,6 +30,8 @@ class OngoingEvent {
   final int position;
   String? thankYouEmailAppScriptUrl;
   final String department;
+  final String? thankYouMessage;
+  final List<Map<String, String>> thankYouCommunicationLinks;
 
   OngoingEvent({
     this.id,
@@ -61,6 +63,8 @@ class OngoingEvent {
     this.isResultLive = false,
     this.thankYouEmailAppScriptUrl = '',
     required this.department,
+    this.thankYouMessage = '',
+    this.thankYouCommunicationLinks = const [],
   });
 
   Map<String, dynamic> toMap() {
@@ -99,6 +103,8 @@ class OngoingEvent {
       'position': position,
       'thankYouEmailAppScriptUrl': thankYouEmailAppScriptUrl,
       'department': department,
+      'thankYouMessage': thankYouMessage,
+      'thankYouCommunicationLinks': thankYouCommunicationLinks,
     };
   }
 
@@ -150,6 +156,12 @@ class OngoingEvent {
       thankYouEmailAppScriptUrl:
           map['thankYouEmailAppScriptUrl'] as String? ?? '',
       department: map['department'] as String? ?? '',
+      thankYouMessage: map['thankYouMessage'] as String? ?? '',
+      thankYouCommunicationLinks:
+          (map['thankYouCommunicationLinks'] as List<dynamic>?)
+                  ?.map((e) => Map<String, String>.from(e as Map))
+                  .toList() ??
+              [],
     );
   }
 }

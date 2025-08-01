@@ -147,16 +147,16 @@ class Eventinfo extends StatelessWidget {
                             child: Text("VENUE",
                                 style: TextStyle(
                                   fontSize: isMobile ? 12 : 18,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.bold,
                                 )),
                           ),
                           SizedBox(
-                            width: isMobile ? 100 : 250,
+                            width: isMobile ? 100 : 280,
                             child: SelectableText("${event.place}",
-                                maxLines: 4,
+                                maxLines: 2,
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: isMobile ? 8 : 13,
+                                    fontSize: isMobile ? 8 : 18,
                                     fontWeight: FontWeight.w500)),
                           ),
                         ],
