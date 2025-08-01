@@ -41,6 +41,8 @@ class _ThankYouCardState extends State<ThankYouCard>
 
   String thankYouMessage = "";
   List<Map<String, String>> thankYouCommunicationLink = [];
+  String eventName = '';
+  bool isDataLoaded = false;
 
   @override
   void initState() {
@@ -60,12 +62,17 @@ class _ThankYouCardState extends State<ThankYouCard>
       if (currentEvent != null) {
         setState(() {
           thankYouMessage = currentEvent.thankYouMessage ?? "";
+          eventName = currentEvent.name;
           thankYouCommunicationLink = currentEvent.thankYouCommunicationLinks;
+          isDataLoaded = true;
         });
       }
     } catch (e) {
       // Handle error if needed
       debugPrint('Error fetching event data: $e');
+      setState(() {
+        isDataLoaded = true;
+      });
     }
   }
 
@@ -182,14 +189,38 @@ class _ThankYouCardState extends State<ThankYouCard>
     final bool isTablet = screenWidth >= 600 && screenWidth < 1200;
     final bool isDesktop = screenWidth >= 1200;
 
+    // Calculate dynamic heights based on content
+    double baseCardHeight = isMobile ? 300.0 : (isTablet ? 350.0 : 400.0);
+
+    // Add height for message if exists
+    if (thankYouMessage.isNotEmpty) {
+      baseCardHeight += isMobile ? 80.0 : (isTablet ? 90.0 : 100.0);
+    }
+
+    // Add height for communication links if exist
+    if (thankYouCommunicationLink.isNotEmpty) {
+      double linkHeight = isMobile ? 60.0 : (isTablet ? 65.0 : 70.0);
+      baseCardHeight += (thankYouCommunicationLink.length * linkHeight);
+      // Add extra padding for links container
+      baseCardHeight += isMobile ? 30.0 : (isTablet ? 40.0 : 50.0);
+    }
+
+    // Ensure minimum and maximum bounds
+    double minHeight = isMobile ? 280.0 : (isTablet ? 320.0 : 360.0);
+    double maxHeight = screenHeight * 0.9;
+
+    baseCardHeight = math.max(minHeight, math.min(baseCardHeight, maxHeight));
+
     return {
       'isMobile': isMobile,
       'isTablet': isTablet,
       'isDesktop': isDesktop,
 
-      // Card dimensions
+      // Card dimensions - dynamic height
       'maxCardWidth': isMobile ? screenWidth * 0.9 : (isTablet ? 500.0 : 600.0),
-      'maxCardHeight': screenHeight * 0.9,
+      'calculatedCardHeight': baseCardHeight,
+      'maxCardHeight': maxHeight,
+      'minCardHeight': minHeight,
       'cardPadding': isMobile ? 16.0 : (isTablet ? 24.0 : 12.0),
       'contentPaddingHorizontal': isMobile ? 20.0 : (isTablet ? 28.0 : 40.0),
       'contentPaddingVertical': isMobile ? 16.0 : (isTablet ? 14.0 : 24.0),
@@ -204,17 +235,23 @@ class _ThankYouCardState extends State<ThankYouCard>
       'messageFontSize': isMobile ? 13.0 : (isTablet ? 13.0 : 14.0),
       'linkFontSize': isMobile ? 14.0 : (isTablet ? 16.0 : 16.0),
 
-      // Spacing
+      // Spacing - adjusted for dynamic content
       'titleSpacing': isMobile ? 12.0 : (isTablet ? 13.0 : 16.0),
-      'messageSpacing': isMobile ? 20.0 : (isTablet ? 22.0 : 28.0),
-      'linkSpacing': isMobile ? 12.0 : (isTablet ? 12.0 : 16.0),
+      'messageSpacing': thankYouMessage.isNotEmpty
+          ? (isMobile ? 20.0 : (isTablet ? 22.0 : 28.0))
+          : 0.0,
+      'linkSpacing': thankYouCommunicationLink.isNotEmpty
+          ? (isMobile ? 12.0 : (isTablet ? 12.0 : 16.0))
+          : 0.0,
       'buttonSpacing': isMobile ? 20.0 : (isTablet ? 18.0 : 24.0),
 
       // Communication links
       'linkPadding': isMobile ? 10.0 : (isTablet ? 6.0 : 8.0),
       'linkIconPadding': isMobile ? 8.0 : (isTablet ? 12.0 : 14.0),
       'linkIconSize': isMobile ? 16.0 : (isTablet ? 20.0 : 22.0),
-      'maxLinksHeight': isMobile ? 120.0 : (isTablet ? 100.0 : 150.0),
+      'maxLinksHeight': thankYouCommunicationLink.isNotEmpty
+          ? (isMobile ? 120.0 : (isTablet ? 100.0 : 150.0))
+          : 0.0,
 
       // Button
       'buttonHeight': isMobile ? 48.0 : (isTablet ? 45.0 : 55.0),
@@ -223,13 +260,14 @@ class _ThankYouCardState extends State<ThankYouCard>
 
       // Additional height controls for containers
       'floatingParticleSize': isMobile ? 3.0 : (isTablet ? 4.0 : 5.0),
-      'messageContainerMinHeight': isMobile ? 60.0 : (isTablet ? 60.0 : 80.0),
+      'messageContainerMinHeight': thankYouMessage.isNotEmpty
+          ? (isMobile ? 60.0 : (isTablet ? 60.0 : 80.0))
+          : 0.0,
       'linkContainerMinHeight': isMobile ? 48.0 : (isTablet ? 48.0 : 50.0),
       'linkMarginBottom': isMobile ? 12.0 : (isTablet ? 8.0 : 10.0),
-      'linkMarginTop': isMobile ? 16.0 : (isTablet ? 24.0 : 32.0),
-      'scrollViewMinHeight': isMobile
-          ? screenHeight * 0.7
-          : (isTablet ? screenHeight * 0.6 : screenHeight * 0.8),
+      'linkMarginTop': thankYouCommunicationLink.isNotEmpty
+          ? (isMobile ? 16.0 : (isTablet ? 24.0 : 32.0))
+          : 0.0,
       'arrowIconContainerSize': isMobile ? 32.0 : (isTablet ? 36.0 : 40.0),
       'arrowIconContainerHeight': isMobile ? 28.0 : (isTablet ? 32.0 : 36.0),
     };
@@ -401,6 +439,20 @@ class _ThankYouCardState extends State<ThankYouCard>
 
   @override
   Widget build(BuildContext context) {
+    // Don't render until data is loaded to avoid layout shifts
+    if (!isDataLoaded) {
+      return Scaffold(
+        backgroundColor: backgroundColor,
+        body: ParticleBackground(
+          child: Center(
+            child: CircularProgressIndicator(
+              color: secondaryColor,
+            ),
+          ),
+        ),
+      );
+    }
+
     final dimensions = _getResponsiveDimensions(context);
 
     return Scaffold(
@@ -412,224 +464,238 @@ class _ThankYouCardState extends State<ThankYouCard>
 
             // Main content with responsive scrolling
             SafeArea(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: dimensions['maxCardHeight'],
-                  ),
-                  child: IntrinsicHeight(
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(dimensions['cardPadding']),
-                        child: AnimatedBuilder(
-                          animation: _cardController,
-                          builder: (context, child) {
-                            return Transform.scale(
-                              scale: _cardAnimation.value,
-                              child: Transform.rotate(
-                                angle: _cardRotation.value,
+              child: Center(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: EdgeInsets.all(dimensions['cardPadding']),
+                    child: AnimatedBuilder(
+                      animation: _cardController,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: _cardAnimation.value,
+                          child: Transform.rotate(
+                            angle: _cardRotation.value,
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: dimensions['maxCardWidth'],
+                                minHeight: dimensions['minCardHeight'],
+                                maxHeight: dimensions['maxCardHeight'],
+                              ),
+                              child: IntrinsicHeight(
                                 child: Container(
-                                  constraints: BoxConstraints(
-                                    maxWidth: dimensions['maxCardWidth'],
-                                    minHeight:
-                                        dimensions['scrollViewMinHeight'],
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        dimensions['contentPaddingHorizontal'],
+                                    vertical:
+                                        dimensions['contentPaddingVertical'],
                                   ),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: dimensions[
-                                          'contentPaddingHorizontal'],
-                                      vertical:
-                                          dimensions['contentPaddingVertical'],
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: eventBoxLinearGradient,
+                                      stops: [0.0, 0.5, 1.0],
                                     ),
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: eventBoxLinearGradient,
-                                        stops: [0.0, 0.5, 1.0],
-                                      ),
-                                      borderRadius: BorderRadius.circular(32),
-                                      border: Border.all(
-                                        color: secondaryColor.withOpacity(0.3),
-                                        width: 2,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color:
-                                              secondaryColor.withOpacity(0.2),
-                                          blurRadius: 40,
-                                          offset: const Offset(0, 20),
-                                        ),
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.3),
-                                          blurRadius: 30,
-                                          offset: const Offset(0, 10),
-                                        ),
-                                      ],
+                                    borderRadius: BorderRadius.circular(32),
+                                    border: Border.all(
+                                      color: secondaryColor.withOpacity(0.3),
+                                      width: 2,
                                     ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        // Animated success icon with responsive sizing
-                                        AnimatedBuilder(
-                                          animation: Listenable.merge([
-                                            _iconController,
-                                            _pulseController
-                                          ]),
-                                          builder: (context, child) {
-                                            return Transform.scale(
-                                              scale: _iconAnimation.value *
-                                                  _pulseAnimation.value,
-                                              child: Transform.rotate(
-                                                angle: _iconRotation.value,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: secondaryColor.withOpacity(0.2),
+                                        blurRadius: 40,
+                                        offset: const Offset(0, 20),
+                                      ),
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.3),
+                                        blurRadius: 30,
+                                        offset: const Offset(0, 10),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      // Animated success icon with responsive sizing
+                                      AnimatedBuilder(
+                                        animation: Listenable.merge([
+                                          _iconController,
+                                          _pulseController
+                                        ]),
+                                        builder: (context, child) {
+                                          return Transform.scale(
+                                            scale: _iconAnimation.value *
+                                                _pulseAnimation.value,
+                                            child: Transform.rotate(
+                                              angle: _iconRotation.value,
+                                              child: Container(
+                                                width: dimensions[
+                                                    'iconContainerSize'],
+                                                height: dimensions[
+                                                    'iconContainerSize'],
+                                                decoration: BoxDecoration(
+                                                  gradient: RadialGradient(
+                                                    colors: [
+                                                      secondaryColor
+                                                          .withOpacity(0.2),
+                                                      secondaryColor
+                                                          .withOpacity(0.05),
+                                                      Colors.transparent,
+                                                    ],
+                                                  ),
+                                                  shape: BoxShape.circle,
+                                                ),
                                                 child: Container(
-                                                  width: dimensions[
-                                                      'iconContainerSize'],
-                                                  height: dimensions[
-                                                      'iconContainerSize'],
+                                                  margin: EdgeInsets.all(
+                                                      dimensions['iconMargin']),
                                                   decoration: BoxDecoration(
-                                                    gradient: RadialGradient(
+                                                    gradient: LinearGradient(
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
                                                       colors: [
+                                                        secondaryColor,
                                                         secondaryColor
-                                                            .withOpacity(0.2),
-                                                        secondaryColor
-                                                            .withOpacity(0.05),
-                                                        Colors.transparent,
+                                                            .withOpacity(0.8),
                                                       ],
                                                     ),
                                                     shape: BoxShape.circle,
-                                                  ),
-                                                  child: Container(
-                                                    margin: EdgeInsets.all(
-                                                        dimensions[
-                                                            'iconMargin']),
-                                                    decoration: BoxDecoration(
-                                                      gradient: LinearGradient(
-                                                        begin:
-                                                            Alignment.topLeft,
-                                                        end: Alignment
-                                                            .bottomRight,
-                                                        colors: [
-                                                          secondaryColor,
-                                                          secondaryColor
-                                                              .withOpacity(0.8),
-                                                        ],
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: secondaryColor
+                                                            .withOpacity(0.4),
+                                                        blurRadius: 20,
+                                                        offset:
+                                                            const Offset(0, 8),
                                                       ),
-                                                      shape: BoxShape.circle,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: secondaryColor
-                                                              .withOpacity(0.4),
-                                                          blurRadius: 20,
-                                                          offset: const Offset(
-                                                              0, 8),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: Icon(
-                                                      Icons.check_rounded,
-                                                      color: backgroundColor,
-                                                      size: dimensions[
-                                                          'iconSize'],
-                                                    ),
+                                                    ],
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check_rounded,
+                                                    color: backgroundColor,
+                                                    size:
+                                                        dimensions['iconSize'],
                                                   ),
                                                 ),
                                               ),
-                                            );
-                                          },
+                                            ),
+                                          );
+                                        },
+                                      ),
+
+                                      SizedBox(
+                                          height: dimensions['titleSpacing']),
+
+                                      // Responsive title
+                                      SlideTransition(
+                                        position: _slideAnimation,
+                                        child: FadeTransition(
+                                          opacity: _contentAnimation,
+                                          child: ShaderMask(
+                                            shaderCallback: (bounds) =>
+                                                LinearGradient(
+                                              colors: [
+                                                primaryColor,
+                                                secondaryColor.withOpacity(0.8)
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ).createShader(bounds),
+                                            child: thankYouCommunicationLink
+                                                        .isEmpty &&
+                                                    thankYouMessage.isEmpty
+                                                ? Text(
+                                                    "Thank You For Registering in the $eventName Event",
+                                                    style: TextStyle(
+                                                      fontSize: dimensions[
+                                                          'titleFontSize'],
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: primaryColor,
+                                                      height: 1.2,
+                                                      letterSpacing: 0.5,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                                : Text(
+                                                    'Thank You for Registering',
+                                                    style: TextStyle(
+                                                      fontSize: dimensions[
+                                                          'titleFontSize'],
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: primaryColor,
+                                                      height: 1.2,
+                                                      letterSpacing: 0.5,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                          ),
                                         ),
+                                      ),
 
+                                      // Responsive message - only show if not empty
+                                      if (thankYouMessage.isNotEmpty) ...[
                                         SizedBox(
-                                            height: dimensions['titleSpacing']),
-
-                                        // Responsive title
+                                            height:
+                                                dimensions['messageSpacing']),
                                         SlideTransition(
                                           position: _slideAnimation,
                                           child: FadeTransition(
                                             opacity: _contentAnimation,
-                                            child: ShaderMask(
-                                              shaderCallback: (bounds) =>
-                                                  LinearGradient(
-                                                colors: [
-                                                  primaryColor,
-                                                  secondaryColor
-                                                      .withOpacity(0.8)
-                                                ],
-                                                begin: Alignment.topLeft,
-                                                end: Alignment.bottomRight,
-                                              ).createShader(bounds),
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                minHeight: dimensions[
+                                                    'messageContainerMinHeight'],
+                                              ),
+                                              padding: EdgeInsets.all(
+                                                  dimensions['isMobile']
+                                                      ? 16.0
+                                                      : 20.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[800]!
+                                                    .withOpacity(0.3),
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                border: Border.all(
+                                                  color: secondaryColor
+                                                      .withOpacity(0.1),
+                                                  width: 1,
+                                                ),
+                                              ),
                                               child: Text(
-                                                'Thank You for Registering',
+                                                thankYouMessage,
+                                                maxLines: MediaQuery.of(context)
+                                                            .size
+                                                            .width >
+                                                        600
+                                                    ? 3
+                                                    : 4,
                                                 style: TextStyle(
                                                   fontSize: dimensions[
-                                                      'titleFontSize'],
-                                                  fontWeight: FontWeight.bold,
-                                                  color: primaryColor,
-                                                  height: 1.2,
-                                                  letterSpacing: 0.5,
+                                                      'messageFontSize'],
+                                                  color: primaryColor
+                                                      .withOpacity(0.9),
+                                                  height: 1.6,
+                                                  letterSpacing: 0.3,
                                                 ),
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),
                                           ),
                                         ),
+                                      ],
 
-                                        // Responsive message
-                                        if (thankYouMessage.isNotEmpty) ...[
-                                          SizedBox(
-                                              height:
-                                                  dimensions['messageSpacing']),
-                                          SlideTransition(
-                                            position: _slideAnimation,
-                                            child: FadeTransition(
-                                              opacity: _contentAnimation,
-                                              child: Container(
-                                                constraints: BoxConstraints(
-                                                  minHeight: dimensions[
-                                                      'messageContainerMinHeight'],
-                                                ),
-                                                padding: EdgeInsets.all(
-                                                    dimensions['isMobile']
-                                                        ? 16.0
-                                                        : 20.0),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey[800]!
-                                                      .withOpacity(0.3),
-                                                  borderRadius:
-                                                      BorderRadius.circular(16),
-                                                  border: Border.all(
-                                                    color: secondaryColor
-                                                        .withOpacity(0.1),
-                                                    width: 1,
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  thankYouMessage,
-                                                  maxLines: 4,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: dimensions[
-                                                        'messageFontSize'],
-                                                    color: primaryColor
-                                                        .withOpacity(0.9),
-                                                    height: 1.6,
-                                                    letterSpacing: 0.3,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-
+                                      // Add spacing only if links exist
+                                      if (thankYouCommunicationLink.isNotEmpty)
                                         const SizedBox(height: 5),
 
-                                        // Responsive communication links
-                                        if (thankYouCommunicationLink
-                                            .isNotEmpty)
-                                          Container(
+                                      // Responsive communication links - only show if not empty
+                                      if (thankYouCommunicationLink.isNotEmpty)
+                                        Flexible(
+                                          child: Container(
                                             constraints: BoxConstraints(
                                               maxHeight:
                                                   dimensions['maxLinksHeight'],
@@ -654,74 +720,68 @@ class _ThankYouCardState extends State<ThankYouCard>
                                               ),
                                             ),
                                           ),
+                                        ),
 
-                                        SizedBox(
-                                            height:
-                                                dimensions['buttonSpacing']),
+                                      SizedBox(
+                                          height: dimensions['buttonSpacing']),
 
-                                        // Responsive continue button
-                                        SlideTransition(
-                                          position: _slideAnimation,
-                                          child: FadeTransition(
-                                            opacity: _contentAnimation,
-                                            child: SizedBox(
-                                              width: dimensions['buttonWidth'],
-                                              height:
-                                                  dimensions['buttonHeight'],
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  GoRouter.of(context)
-                                                      .pushReplacement(
-                                                          '/onGoingEvents');
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  shadowColor:
-                                                      Colors.transparent,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            16),
-                                                  ),
+                                      // Responsive continue button
+                                      SlideTransition(
+                                        position: _slideAnimation,
+                                        child: FadeTransition(
+                                          opacity: _contentAnimation,
+                                          child: SizedBox(
+                                            width: dimensions['buttonWidth'],
+                                            height: dimensions['buttonHeight'],
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                GoRouter.of(context)
+                                                    .pushReplacement(
+                                                        '/onGoingEvents');
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                shadowColor: Colors.transparent,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
                                                 ),
-                                                child: Ink(
-                                                  decoration: BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                      begin: Alignment.topLeft,
-                                                      end:
-                                                          Alignment.bottomRight,
-                                                      colors: [
-                                                        secondaryColor,
-                                                        secondaryColor
-                                                            .withOpacity(0.8),
-                                                      ],
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            16),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: secondaryColor
-                                                            .withOpacity(0.3),
-                                                        blurRadius: 15,
-                                                        offset:
-                                                            const Offset(0, 8),
-                                                      ),
+                                              ),
+                                              child: Ink(
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                    colors: [
+                                                      secondaryColor,
+                                                      secondaryColor
+                                                          .withOpacity(0.8),
                                                     ],
                                                   ),
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                      'Continue',
-                                                      style: TextStyle(
-                                                        fontSize: dimensions[
-                                                            'buttonFontSize'],
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: backgroundColor,
-                                                        letterSpacing: 1,
-                                                      ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: secondaryColor
+                                                          .withOpacity(0.3),
+                                                      blurRadius: 15,
+                                                      offset:
+                                                          const Offset(0, 8),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Container(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    'Continue',
+                                                    style: TextStyle(
+                                                      fontSize: dimensions[
+                                                          'buttonFontSize'],
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: backgroundColor,
+                                                      letterSpacing: 1,
                                                     ),
                                                   ),
                                                 ),
@@ -729,15 +789,15 @@ class _ThankYouCardState extends State<ThankYouCard>
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                      ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
