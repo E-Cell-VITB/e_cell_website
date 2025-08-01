@@ -126,11 +126,8 @@ class RegistrationSubmission {
       );
 
       if (context.mounted) {
-        showCustomToast(
-          title: 'Registration Successful',
-          description: 'Thank you for registering for ${event.name}!',
-          type: ToastificationType.success,
-        );
+        GoRouter.of(context).pushReplacement(
+            '/onGoingEvents/register/${event.id}/thankYou/${event.id}');
       }
 
       final participantEmails = participants
@@ -167,7 +164,7 @@ class RegistrationSubmission {
             type: ToastificationType.success,
           );
         }
-        GoRouter.of(context).pushReplacement('/onGoingEvents');
+        // GoRouter.of(context).pushReplacement('/onGoingEvents');
       }
     } catch (e) {
       if (context.mounted) {

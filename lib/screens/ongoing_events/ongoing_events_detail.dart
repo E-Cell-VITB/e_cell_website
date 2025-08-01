@@ -6,13 +6,11 @@ import 'package:e_cell_website/screens/ongoing_events/section/registration_ticke
 import 'package:e_cell_website/screens/ongoing_events/section/schedule_table.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/social_links.dart';
 import 'package:e_cell_website/screens/ongoing_events/section/updates.dart';
-import 'package:e_cell_website/screens/ongoing_events/thankYou_card.dart';
 import 'package:e_cell_website/services/providers/ongoing_event_provider.dart';
 import 'package:e_cell_website/widgets/linear_grad_text.dart';
 import 'package:e_cell_website/widgets/loading_indicator.dart';
 import 'package:e_cell_website/widgets/particle_bg.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class OngoingEventDetails extends StatefulWidget {
@@ -135,18 +133,18 @@ class _OngoingEventDetailsState extends State<OngoingEventDetails> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                ElevatedButton(
-                                    onPressed: () => Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ThankYouScreen(
-                                                  thankYouMessage:
-                                                      event.thankYouMessage ??
-                                                          '',
-                                                  thankYouCommunicationLink: event
-                                                      .thankYouCommunicationLinks,
-                                                ))),
-                                    child: Text('click')),
+                                // ElevatedButton(
+                                //     onPressed: () => Navigator.of(context).push(
+                                //         MaterialPageRoute(
+                                //             builder: (context) =>
+                                //                 ThankYouScreen(
+                                //                   thankYouMessage:
+                                //                       event.thankYouMessage ??
+                                //                           '',
+                                //                   thankYouCommunicationLink: event
+                                //                       .thankYouCommunicationLinks,
+                                //                 ))),
+                                //     child: Text('click')),
                                 DetailsSection(
                                     event: event,
                                     isMobile: isMobile,
