@@ -8,6 +8,7 @@ enum CommunicationUrlType {
   github,
   kaggle,
   telegram,
+  googleClassRoom,
   whatsapp;
 
   @override
@@ -20,6 +21,7 @@ enum CommunicationUrlType {
       CommunicationUrlType.github => "GitHub",
       CommunicationUrlType.telegram => "Telegram",
       CommunicationUrlType.whatsapp => "WhatsApp",
+      CommunicationUrlType.googleClassRoom => "Google Classroom",
     };
   }
 
@@ -32,6 +34,7 @@ enum CommunicationUrlType {
       CommunicationUrlType.github => FontAwesomeIcons.github,
       CommunicationUrlType.telegram => FontAwesomeIcons.telegram,
       CommunicationUrlType.whatsapp => FontAwesomeIcons.whatsapp,
+      CommunicationUrlType.googleClassRoom => FontAwesomeIcons.school,
     };
   }
 
@@ -44,6 +47,7 @@ enum CommunicationUrlType {
       'github' => CommunicationUrlType.github,
       'telegram' => CommunicationUrlType.telegram,
       'whatsapp' => CommunicationUrlType.whatsapp,
+      'googleclassroom' => CommunicationUrlType.googleClassRoom,
       _ => throw ArgumentError('Invalid URL type: $value'),
     };
   }

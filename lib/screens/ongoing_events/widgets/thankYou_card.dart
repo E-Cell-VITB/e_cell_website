@@ -49,7 +49,9 @@ class _ThankYouCardState extends State<ThankYouCard>
     super.initState();
     _initializeAnimations();
     _startAnimationSequence();
-    _initializeData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeData();
+    });
   }
 
   Future<void> _initializeData() async {
