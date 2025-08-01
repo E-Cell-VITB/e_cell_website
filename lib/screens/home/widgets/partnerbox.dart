@@ -86,11 +86,11 @@ class _PartnerboxState extends State<Partnerbox> {
               SelectableText(
                 widget.info,
                 style: TextStyle(
-                  fontSize: (size.width > 450)
-                      ? size.width * 0.01
-                      : size.width * 0.03,
-                  color: Colors.grey,
-                ),
+                    fontSize: (size.width > 450)
+                        ? size.width * 0.01
+                        : size.width * 0.03,
+                    color: Colors.grey,
+                    overflow: TextOverflow.ellipsis),
               ),
               if ((size.width > 450)) const SizedBox(height: 16),
             ],

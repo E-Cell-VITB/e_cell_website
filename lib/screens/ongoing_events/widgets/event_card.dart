@@ -103,16 +103,16 @@ class EventCard extends StatelessWidget {
                     LinearGradientText(
                         child: Text(
                       eventname,
-                      style: TextStyle(fontSize: isMobile ? 18 : 30),
+                      style: TextStyle(fontSize: isMobile ? 17 : 30),
                     )),
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.access_time_outlined,
                           color: Colors.amber,
-                          size: 18,
+                          size: isMobile ? 14 : 18,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: isMobile ? 4 : 8),
                         LinearGradientText(
                             child: Text(
                           getEventStatus(),

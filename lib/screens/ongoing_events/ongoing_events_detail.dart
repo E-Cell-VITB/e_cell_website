@@ -133,6 +133,18 @@ class _OngoingEventDetailsState extends State<OngoingEventDetails> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                // ElevatedButton(
+                                //     onPressed: () => Navigator.of(context).push(
+                                //         MaterialPageRoute(
+                                //             builder: (context) =>
+                                //                 ThankYouScreen(
+                                //                   thankYouMessage:
+                                //                       event.thankYouMessage ??
+                                //                           '',
+                                //                   thankYouCommunicationLink: event
+                                //                       .thankYouCommunicationLinks,
+                                //                 ))),
+                                //     child: Text('click')),
                                 DetailsSection(
                                     event: event,
                                     isMobile: isMobile,

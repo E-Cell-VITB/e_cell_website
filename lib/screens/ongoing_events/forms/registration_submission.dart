@@ -126,11 +126,8 @@ class RegistrationSubmission {
       );
 
       if (context.mounted) {
-        showCustomToast(
-          title: 'Registration Successful',
-          description: 'Thank you for registering for ${event.name}!',
-          type: ToastificationType.success,
-        );
+        GoRouter.of(context).pushReplacement(
+            '/onGoingEvents/register/${event.id}/thankYou/${event.id}');
       }
 
       final participantEmails = participants
@@ -149,18 +146,25 @@ class RegistrationSubmission {
 
       final eventDate =
           event.eventDate.toUtc().toIso8601String().split('T').first;
-      await emailService.sendThankYouEmails(
-        eventName: event.name,
-        eventDate: eventDate,
-        teamName: event.isTeamEvent ? teamName : null,
-        isTeamEvent: event.isTeamEvent,
-        participantEmails: participantEmails,
-        ctaLink: 'https://ecell-vitb.web.app/#/onGoingEvents',
-      );
+      String result = await emailService.sendThankYouEmails(
+          eventName: event.name,
+          eventDate: eventDate,
+          teamName: event.isTeamEvent ? teamName : null,
+          isTeamEvent: event.isTeamEvent,
+          participantEmails: participantEmails,
+          thankYouEmailAppScriptUrl: event.thankYouEmailAppScriptUrl ?? '');
 
       if (context.mounted) {
         onSubmitComplete();
-        GoRouter.of(context).pushReplacement('/onGoingEvents');
+        if (result == 'success') {
+          showCustomToast(
+            title: 'Emails Sent',
+            description:
+                'Registration Confirmation Email sent to the mentioned Emails check them for further details.',
+            type: ToastificationType.success,
+          );
+        }
+        // GoRouter.of(context).pushReplacement('/onGoingEvents');
       }
     } catch (e) {
       if (context.mounted) {
