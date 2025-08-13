@@ -863,14 +863,63 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                             return null;
                           },
                         )
-                      : _buildFormField(
-                          field,
-                          0,
-                          isMobile,
-                          isTablet,
-                          screenWidth,
-                          event,
-                        ),
+                      : field.inputType.toLowerCase() == 'year'
+                          ? DropdownButtonFormField<int>(
+                              decoration: _inputDecoration(
+                                labelText: 'Year',
+                                isMobile: isMobile,
+                              ),
+                              dropdownColor: Colors.grey[900],
+                              style: const TextStyle(color: Colors.white),
+                              value: participants[0]['year'] is int
+                                  ? participants[0]['year']
+                                  : null,
+                              items: List.generate(
+                                4,
+                                (i) => DropdownMenuItem<int>(
+                                  value: i + 1,
+                                  child: Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: Text(
+                                      '${i + 1}',
+                                      style: TextStyle(
+                                        fontSize: isMobile
+                                            ? 12
+                                            : isTablet
+                                                ? 14
+                                                : 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onChanged: (int? value) {
+                                if (value != null) {
+                                  setState(() {
+                                    participants[0]['year'] = value;
+                                  });
+                                }
+                              },
+                              validator: (value) {
+                                if (event.registrationTemplate.any((f) =>
+                                    f.inputType.toLowerCase() == 'year' &&
+                                    f.isRequired)) {
+                                  if (value == null) {
+                                    return 'Year is required';
+                                  }
+                                }
+                                return null;
+                              },
+                            )
+                          : _buildFormField(
+                              field,
+                              0,
+                              isMobile,
+                              isTablet,
+                              screenWidth,
+                              event,
+                            ),
                 );
               })
             ],
@@ -1016,9 +1065,9 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
             break;
           case 'email':
             final emailRegex =
-                RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                RegExp(r'^[a-zA-Z0-9._%+-]+@(gmail\.com|vishnu\.edu\.in)$');
             if (!emailRegex.hasMatch(value)) {
-              return '$capitalizedFieldName must be a valid email';
+              return '$capitalizedFieldName must be a valid email of containing @gmail.com or @vishnu.edu.in';
             }
             if (_registeredEmails.contains(value.toLowerCase())) {
               return 'This email is already registered';
