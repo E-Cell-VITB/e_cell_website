@@ -791,11 +791,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                 ),
               ),
               const SizedBox(height: 16),
-              ...event.registrationTemplate
-                  .where((field) => !(field.inputType.toLowerCase() == 'year' &&
-                      event.registrationTemplate.any(
-                          (f) => f.inputType.toLowerCase() == 'department')))
-                  .map((field) {
+              ...event.registrationTemplate.map((field) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: field.inputType.toLowerCase() == 'department'
