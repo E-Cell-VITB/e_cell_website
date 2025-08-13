@@ -6,6 +6,7 @@ class GradientButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isMobile;
   final bool isTablet;
+  
 
   const GradientButton({
     required this.text,

@@ -91,6 +91,7 @@ class OngoingEvent {
           ? Timestamp.fromDate(registrationEnds!)
           : null,
       'isEventLive': isEventLive,
+      'isResultLive': isResultLive,
       'minTeamSize': minTeamSize ?? 1,
       'position': position,
     };
@@ -141,7 +142,8 @@ class OngoingEvent {
         registrationEnds: (map['registrationEnds'] as Timestamp?)?.toDate(),
         minTeamSize: (map['minTeamSize'] as int?) ?? 1,
         position: (map['position'] as int?) ?? 0,
-        isEventLive: map['isEventLive'] as bool? ?? false);
+        isEventLive: map['isEventLive'] as bool? ?? false,
+        isResultLive: map['isResultLive'] as bool? ?? false);
   }
 }
 
