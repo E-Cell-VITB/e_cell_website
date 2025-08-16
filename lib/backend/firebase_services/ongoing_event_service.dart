@@ -282,4 +282,20 @@ class OngoingEventService {
       return Stream.value({'numParticipants': 0, 'numTeams': 0});
     }
   }
+
+  Future<List<String>> getRestrictedRegistrationNumbers(String eventId) async {
+    try {
+      final doc =
+          await _firestore.collection(_eventsCollection).doc(eventId).get();
+
+      if (doc.exists) {
+        final data = doc.data()!;
+        return List<String>.from(data['restrictedRegistrationNumbers'] ?? []);
+      }
+      return [];
+    } catch (e) {
+      AppLogger.error('Error fetching restricted registration numbers: $e');
+      return [];
+    }
+  }
 }
