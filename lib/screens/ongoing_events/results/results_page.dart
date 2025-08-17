@@ -97,235 +97,236 @@ class _ResultsScreenState extends State<ResultsScreen> {
           columnSpacing: 26,
           dataRowMinHeight: 40, // Reduce the minimum height of the data rows
           dataRowMaxHeight: 60,
-          columns:widget.isMobile?
-           [           
-            DataColumn(
-              label: SizedBox(
-                width: 60,
-                child: Center(
-                    child: Text("Rank",
-                        style: TextStyle(fontWeight: FontWeight.bold))),
-              ),
-            ),
-            DataColumn(
-              label: SizedBox(
-                width: 150,
-                child: Center(
-                    child: Text("Team Name",
-                        style: TextStyle(fontWeight: FontWeight.bold))),
-              ),
-            ),
-            DataColumn(
-              label: SizedBox(
-                width: 130,
-                child: Center(
-                  child: LinearGradientText(
-                    child: Text("Total Score",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            )),
-                  ),
-                ),
-              ),
-            ),
-          ]
-            :
-          [
-            DataColumn(
-              label: SizedBox(
-                width: 60,
-                child: Center(
-                    child: Text("Rank",
-                        style: TextStyle(fontWeight: FontWeight.bold))),
-              ),
-            ),
-            DataColumn(
-              label: SizedBox(
-                width: 150,
-                child: Center(
-                    child: Text("Team Name",
-                        style: TextStyle(fontWeight: FontWeight.bold))),
-              ),
-            ),
-            ...criteriaColumns.map(
-              (key) => DataColumn(
-                label: SizedBox(
-                  width: 140,
-                  child: Center(
-                    child: Text(
-                      key,                      
-                      style: TextStyle(                        
-                        fontWeight: FontWeight.bold,fontSize: 12),
-                      softWrap: true,
-                      textAlign: TextAlign.center,
+          columns: widget.isMobile
+              ? [
+                  const DataColumn(
+                    label: SizedBox(
+                      width: 60,
+                      child: Center(
+                          child: Text("Rank",
+                              style: TextStyle(fontWeight: FontWeight.bold))),
                     ),
                   ),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: SizedBox(
-                width: 130,
-                child: Center(
-                  child: LinearGradientText(
-                    child: Text("Total Score",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            )),
+                  const DataColumn(
+                    label: SizedBox(
+                      width: 150,
+                      child: Center(
+                          child: Text("Team Name",
+                              style: TextStyle(fontWeight: FontWeight.bold))),
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ],
+                  const DataColumn(
+                    label: SizedBox(
+                      width: 130,
+                      child: Center(
+                        child: LinearGradientText(
+                          child: Text("Total Score",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
+                      ),
+                    ),
+                  ),
+                ]
+              : [
+                  const DataColumn(
+                    label: SizedBox(
+                      width: 60,
+                      child: Center(
+                          child: Text("Rank",
+                              style: TextStyle(fontWeight: FontWeight.bold))),
+                    ),
+                  ),
+                  const DataColumn(
+                    label: SizedBox(
+                      width: 150,
+                      child: Center(
+                          child: Text("Team Name",
+                              style: TextStyle(fontWeight: FontWeight.bold))),
+                    ),
+                  ),
+                  ...criteriaColumns.map(
+                    (key) => DataColumn(
+                      label: SizedBox(
+                        width: 140,
+                        child: Center(
+                          child: Text(
+                            key,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 12),
+                            softWrap: true,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const DataColumn(
+                    label: SizedBox(
+                      width: 130,
+                      child: Center(
+                        child: LinearGradientText(
+                          child: Text("Total Score",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
           rows: _filteredResults.asMap().entries.map((entry) {
             final int rank = entry.key + 1;
             final result = entry.value;
-            return widget.isMobile?
-            DataRow(
-              cells: [
-                DataCell(
-                  Container(
-                    height: 30,
-                    width: 50,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: _getRankWidget(rank),
-                  ),
-                ),
-                DataCell(
-                  Center(
-                    child: Container(
-                      height: 30,
-                      width: 150,
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: LinearGradientText(
-                        child: Text(
-                          result.teamName,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                DataCell(
-                  Center(
-                    child: Container(
-                      height: 30,
-                      width: 130,
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      decoration: BoxDecoration(
-                        color: Colors.amber[300],
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(result.totalScore.toString(),
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ),
-              ],
-            )
-            :
-             DataRow(
-              cells: [
-                DataCell(
-                  Container(
-                    height: 30,
-                    width: 50,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: _getRankWidget(rank),
-                  ),
-                ),
-                DataCell(
-                  Center(
-                    child: Container(
-                      height: 30,
-                      width: 150,
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: LinearGradientText(
-                        child: Text(
-                          result.teamName,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
- 
-                ...criteriaColumns.map(
-                  (key) {
-                    int scoreForCriterion = 0;
-                    for (final scoreModel in result.scores) {
-                      for (final mark in scoreModel.assignedMarks) {
-                        if (mark.containsKey(key)) {
-                          scoreForCriterion += mark[key]!;
-                        }
-                      }
-                    }
-                    return 
-                     DataCell(
-                      Center(
-                        child: Container(
+            return widget.isMobile
+                ? DataRow(
+                    cells: [
+                      DataCell(
+                        Container(
                           height: 30,
-                          width: 130,
+                          width: 50,
                           alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: Text(scoreForCriterion.toString(),
-                              style: TextStyle(fontSize: 14)),
+                          child: _getRankWidget(rank),
                         ),
                       ),
-                    );
-                  },
-                ),
-                DataCell(
-                  Center(
-                    child: Container(
-                      height: 30,
-                      width: 130,
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      decoration: BoxDecoration(
-                        color: Colors.amber[300],
-                        borderRadius: BorderRadius.circular(6),
+                      DataCell(
+                        Center(
+                          child: Container(
+                            height: 30,
+                            width: 150,
+                            alignment: Alignment.center,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: LinearGradientText(
+                              child: Text(
+                                result.teamName,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      child: Text(result.totalScore.toString(),
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ),
-              ],
-            );
+                      DataCell(
+                        Center(
+                          child: Container(
+                            height: 30,
+                            width: 130,
+                            alignment: Alignment.center,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            decoration: BoxDecoration(
+                              color: Colors.amber[300],
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(result.totalScore.toString(),
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : DataRow(
+                    cells: [
+                      DataCell(
+                        Container(
+                          height: 30,
+                          width: 50,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: _getRankWidget(rank),
+                        ),
+                      ),
+                      DataCell(
+                        Center(
+                          child: Container(
+                            height: 30,
+                            width: 150,
+                            alignment: Alignment.center,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: LinearGradientText(
+                              child: Text(
+                                result.teamName,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ...criteriaColumns.map(
+                        (key) {
+                          int scoreForCriterion = 0;
+                          for (final scoreModel in result.scores) {
+                            for (final mark in scoreModel.assignedMarks) {
+                              if (mark.containsKey(key)) {
+                                scoreForCriterion += mark[key]!;
+                              }
+                            }
+                          }
+                          return DataCell(
+                            Center(
+                              child: Container(
+                                height: 30,
+                                width: 130,
+                                alignment: Alignment.center,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(scoreForCriterion.toString(),
+                                    style: const TextStyle(fontSize: 14)),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      DataCell(
+                        Center(
+                          child: Container(
+                            height: 30,
+                            width: 130,
+                            alignment: Alignment.center,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            decoration: BoxDecoration(
+                              color: Colors.amber[300],
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(result.totalScore.toString(),
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
           }).toList(),
         ),
       ),
@@ -339,8 +340,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.emoji_events, color: Colors.amber[600], size: 16),
-            SizedBox(width: 4),
-            Text('1', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            const SizedBox(width: 4),
+            const Text('1',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
           ],
         );
       case 2:
@@ -348,8 +350,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.emoji_events, color: Colors.grey[600], size: 16),
-            SizedBox(width: 4),
-            Text('2', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            const SizedBox(width: 4),
+            const Text('2',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
           ],
         );
       case 3:
@@ -357,12 +360,13 @@ class _ResultsScreenState extends State<ResultsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.emoji_events, color: Colors.brown[600], size: 16),
-            SizedBox(width: 4),
-            Text('3', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            const SizedBox(width: 4),
+            const Text('3',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
           ],
         );
       default:
-        return Text('$rank', style: TextStyle(fontSize: 12));
+        return Text('$rank', style: const TextStyle(fontSize: 12));
     }
   }
 
@@ -382,7 +386,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       controller: _searchController,
                       decoration: InputDecoration(
                         hintText: 'Search by team name...',
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),
@@ -395,7 +399,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 _isLoading
                     ? 'Loading teams...'
                     : 'Total Teams: ${_filteredResults.length}',
-                style: TextStyle(fontWeight: FontWeight.w500),
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
             ],
           ),
@@ -407,8 +411,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(),
-                      SizedBox(height: 16),
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 16),
                       Text('Loading results...',
                           style:
                               TextStyle(fontSize: 16, color: Colors.grey[600])),
@@ -416,7 +420,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   ),
                 )
               : _filteredResults.isEmpty
-                  ? Center(child: Text('No results found'))
+                  ? const Center(child: Text('No results found'))
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: _buildDataTable(),
