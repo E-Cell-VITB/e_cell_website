@@ -39,6 +39,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
   List<String> _registeredEmails = [];
   List<String> _registeredTeamNames = [];
   bool? _teamNameValidationStatus;
+  List<String> restrictedRegistrationNumbers = [];
 
   @override
   void initState() {
@@ -320,6 +321,9 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
               );
             }
             final event = provider.currentEvent;
+            restrictedRegistrationNumbers =
+                event?.restrictedRegistrationNumbers ?? [];
+
             if (event == null) {
               return Center(
                 child: Text(
@@ -358,13 +362,15 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                           ? Center(
                               child: Padding(
                                 padding: EdgeInsets.all(isMobile ? 16 : 24),
-                                child: Text(
-                                  'Registration for this event is currently closed\n Contact Ecell Team for more details.',
-                                  style: TextStyle(
-                                    fontSize: isMobile ? 16 : 18,
-                                    color: Colors.white,
+                                child: LinearGradientText(
+                                  child: Text(
+                                    'Registration for this event is currently closed\n Contact Ecell Team for more details.',
+                                    style: TextStyle(
+                                      fontSize: isMobile ? 16 : 18,
+                                      color: Colors.white,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             )
@@ -1095,6 +1101,10 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                 RegExp(r'^[a-zA-Z0-9._%+-]+@(gmail\.com|vishnu\.edu\.in)$');
             if (!emailRegex.hasMatch(value)) {
               return '$capitalizedFieldName must be a valid email of containing @gmail.com or @vishnu.edu.in';
+            }
+            String emailPrefix = value.split('@')[0];
+            if (restrictedRegistrationNumbers.contains(emailPrefix)) {
+              return 'This email is blocked for registrations, Please contact E-cell for more details';
             }
             if (_registeredEmails.contains(value.toLowerCase())) {
               return 'This email is already registered';
