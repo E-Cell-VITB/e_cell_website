@@ -95,7 +95,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         child: DataTable(
           headingRowHeight: 60,
           columnSpacing: 26,
-          dataRowMinHeight: 40, // Reduce the minimum height of the data rows
+          dataRowMinHeight: 40,
           dataRowMaxHeight: 60,
           columns: widget.isMobile
               ? [

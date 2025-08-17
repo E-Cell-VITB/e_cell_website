@@ -27,6 +27,7 @@ class OngoingEvent {
   final List<RegistrationField> registrationTemplate;
   bool isEventLive;
   bool isResultLive;
+  bool isRegistrationLive;
   final int position;
   String? thankYouEmailAppScriptUrl;
   final String department;
@@ -67,6 +68,7 @@ class OngoingEvent {
     this.thankYouMessage = '',
     this.thankYouCommunicationLinks = const [],
     this.restrictedRegistrationNumbers = const [],
+    this.isRegistrationLive = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -109,6 +111,7 @@ class OngoingEvent {
       'thankYouMessage': thankYouMessage,
       'thankYouCommunicationLinks': thankYouCommunicationLinks,
       'restrictedRegistrationNumbers': restrictedRegistrationNumbers,
+      'isRegistrationLive': isRegistrationLive,
     };
   }
 
@@ -162,7 +165,8 @@ class OngoingEvent {
         thankYouMessage: map['thankYouMessage'] as String? ?? '',
         thankYouCommunicationLinks: (map['thankYouCommunicationLinks'] as List<dynamic>?)?.map((e) => Map<String, String>.from(e as Map)).toList() ?? [],
         restrictedRegistrationNumbers: (map['restrictedRegistrationNumbers'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
-        isResultLive: map['isResultLive'] as bool? ?? false);
+        isResultLive: map['isResultLive'] as bool? ?? false,
+        isRegistrationLive: map['isRegistrationLive'] as bool? ?? false);
   }
 }
 
