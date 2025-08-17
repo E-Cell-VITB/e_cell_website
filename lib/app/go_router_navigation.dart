@@ -8,6 +8,7 @@ import 'package:e_cell_website/screens/home/home_page.dart';
 import 'package:e_cell_website/screens/ongoing_events/ongoing_events_detail.dart';
 import 'package:e_cell_website/screens/ongoing_events/ongoing_events.dart';
 import 'package:e_cell_website/screens/ongoing_events/registration_form.dart';
+import 'package:e_cell_website/screens/ongoing_events/results/results_page.dart';
 import 'package:e_cell_website/screens/ongoing_events/widgets/thankYou_card.dart';
 import 'package:e_cell_website/screens/recruitment/applications/recruitment_form_screen.dart';
 import 'package:e_cell_website/screens/recruitment/recruitment_list/user_open_recruitment.dart';
