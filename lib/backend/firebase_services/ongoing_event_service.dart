@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_cell_website/backend/models/ongoing_events.dart';
 import 'package:e_cell_website/const/app_logs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:e_cell_website/backend/models/evalution_result.dart' as result_model;
 
 class OngoingEventService {
@@ -329,7 +328,7 @@ class OngoingEventService {
       return _firestore
           .collection(_eventsCollection)
           .doc(eventId)
-          .collection('results')
+          .collection('results') 
           .where('teamId', isEqualTo: teamId)
           .snapshots()
           .map((snapshot) {
@@ -341,6 +340,41 @@ class OngoingEventService {
     } catch (e) {
       AppLogger.error('Error streaming results by team ID: $e');
       return Stream.value([]);
+    }
+  }
+
+  /// Get evaluation template to understand round structure
+  Future<Map<int, int>> getRoundStructure(String eventId) async {
+    try {
+      DocumentSnapshot documentSnapshot = await _firestore
+          .collection(_eventsCollection)
+          .doc(eventId)
+          .get();
+
+      if (!documentSnapshot.exists) {
+        throw Exception('Event document not found.');
+      }
+
+      Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
+      if (data == null || !data.containsKey('evaluationTemplate')) {
+        throw Exception('Event is missing evaluation template.');
+      }
+
+      List<dynamic> evaluationTemplate = data['evaluationTemplate'];
+
+      // Determine the number of criteria per round
+      final Map<int, int> roundCriteriaCounts = {};
+      for (var item in evaluationTemplate) {
+        if (item is Map<String, dynamic> && item.containsKey('roundNumber')) {
+          int roundNum = item['roundNumber'];
+          roundCriteriaCounts[roundNum] = (roundCriteriaCounts[roundNum] ?? 0) + 1;
+        }
+      }
+
+      return roundCriteriaCounts;
+    } catch (e) {
+      AppLogger.error('Error getting round structure: $e');
+      throw Exception('Failed to get round structure.');
     }
   }
 
