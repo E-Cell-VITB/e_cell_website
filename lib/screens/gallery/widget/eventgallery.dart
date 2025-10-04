@@ -21,7 +21,8 @@ class Eventgallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final List<String> images = gallery.allPhotos + gallery.winnerPhotos;
+    final List<String> images = gallery.allPhotos +
+        gallery.winnerPhotosWithOrder.map((e) => e.photoUrl).toList();
     int ind;
     int noofphotos = images.length;
     bool isMobile = size.width < 600;
