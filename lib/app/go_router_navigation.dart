@@ -5,6 +5,8 @@ import 'package:e_cell_website/screens/events/events_screen.dart';
 import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
 import 'package:e_cell_website/screens/gallery/gallery_screen.dart';
 import 'package:e_cell_website/screens/home/home_page.dart';
+import 'package:e_cell_website/screens/home/widgets/developers_screen.dart';
+import 'package:e_cell_website/screens/home/widgets/developers.dart';
 import 'package:e_cell_website/screens/ongoing_events/ongoing_events_detail.dart';
 import 'package:e_cell_website/screens/ongoing_events/ongoing_events.dart';
 import 'package:e_cell_website/screens/ongoing_events/registration_form.dart';
@@ -177,6 +179,10 @@ final GoRouter appRouter = GoRouter(
                 ],
               ),
             ]),
+        GoRoute(
+          path: '/developers',
+          builder: (context, state) => const DevelopersScreen(),
+        ),
         GoRoute(
           path: '/joinus',
           builder: (context, state) => const HomeScreen(section: 'footer'),

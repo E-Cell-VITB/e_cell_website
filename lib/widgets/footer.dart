@@ -244,6 +244,7 @@ mentorship, networking, and industry collaborations.""",
       {'name': 'Events', 'route': '/events'},
       {'name': 'Blogs', 'route': '/blogs'},
       {'name': 'Team', 'route': '/team'},
+      {'name': 'Developed By', 'route': '/developers'},
       {'name': 'Join E-Cell', 'route': '/team/recruitment'}
     ];
 
