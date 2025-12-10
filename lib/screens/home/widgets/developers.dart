@@ -11,15 +11,15 @@ class DevelopersScreen extends StatelessWidget {
   static List<TeamMemberModel> developerMembers = [
     TeamMemberModel(
       id: '1',
-      name: 'Lokesh Surya Prakash',
-      designation: 'Co-Lead',
+      name: 'Narasimha Naidu',
+      designation: 'Lead',
       department: 'Technical',
-      email: 'lokeshsuryaprakashk@gmail.com',
-      phoneNumber: '+91 6303642297',
+      email: 'narasimhanaidu1909@gmail.com',
+      phoneNumber: '+91 8125150264',
       linkedInProfileURL:
-          'https://www.linkedin.com/in/lokesh-surya-prakash-konduboyena-2b556726b/',
+          'https://www.linkedin.com/in/narasimhanaidukorrapati/',
       profileURL:
-          'https://res.cloudinary.com/dhh9hnl5f/image/upload/v1742747208/E-cell_Admin/s0gynsbqbz7vgrvqnszb.png',
+          'https://res.cloudinary.com/dhh9hnl5f/image/upload/v1742719993/E-cell_Admin/qiri8khcif2zd9hxwxk2.png',
     ),
     TeamMemberModel(
       id: '2',
@@ -223,10 +223,14 @@ class DevelopersScreen extends StatelessWidget {
     }
 
     final childAspectRatio = isDesktop
-        ? 1.4
+        ? 1.2
         : isTablet
-            ? 0.7
-            : 0.88;
+            ? 0.9
+            : size.width < 330
+                ? 1.15
+                : size.width < 380
+                    ? 1.33
+                    : 1.55;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -235,12 +239,12 @@ class DevelopersScreen extends StatelessWidget {
         crossAxisCount: crossAxisCount,
         childAspectRatio: childAspectRatio,
         crossAxisSpacing: isMobile
-            ? 24
+            ? 16
             : isTablet
                 ? 32
                 : 40,
         mainAxisSpacing: isMobile
-            ? 32
+            ? 16
             : isTablet
                 ? 40
                 : 48,
@@ -381,7 +385,15 @@ class _DeveloperCardState extends State<_DeveloperCard>
           },
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(28),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1C1C1C),
+                  Color(0xFF0D0D0D),
+                ],
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.4),
@@ -397,23 +409,9 @@ class _DeveloperCardState extends State<_DeveloperCard>
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(28),
               child: Stack(
                 children: [
-                  // Background gradient
-                  Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFF1A1A1A),
-                          Color(0xFF0F0F0F),
-                        ],
-                      ),
-                    ),
-                  ),
-
                   // Mesh gradient background
                   Positioned.fill(
                     child: CustomPaint(
@@ -424,212 +422,48 @@ class _DeveloperCardState extends State<_DeveloperCard>
                     ),
                   ),
 
-                  // Border effect
+                  // Glass morphism overlay
                   Positioned.fill(
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: _isHovered
-                              ? secondaryColor.withOpacity(0.5)
-                              : Colors.white.withOpacity(0.1),
-                          width: 1.5,
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.white.withOpacity(_isHovered ? 0.08 : 0.03),
+                            Colors.transparent,
+                          ],
                         ),
                       ),
                     ),
                   ),
 
-                  // Main content - Horizontal layout
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Profile image and info row
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Profile image
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                if (_isHovered)
-                                  TweenAnimationBuilder(
-                                    tween: Tween<double>(begin: 0, end: 1),
-                                    duration: const Duration(milliseconds: 500),
-                                    builder: (context, double value, child) {
-                                      return Transform.rotate(
-                                        angle: value * 2 * math.pi,
-                                        child: Container(
-                                          width: widget.isMobile ? 100 : 110,
-                                          height: widget.isMobile ? 100 : 110,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            gradient: SweepGradient(
-                                              colors: [
-                                                Color(0xffC79200),
-                                                Color(0xffFFE8A9),
-                                                Color(0xffC79200),
-                                                Color(0xffFFE8A9),
-                                              ],
-                                              stops: [0.0, 0.4, 0.7, 1.0],
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                Container(
-                                  width: widget.isMobile ? 90 : 100,
-                                  height: widget.isMobile ? 90 : 100,
-                                  padding: const EdgeInsets.all(3),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: const Color(0xFF0F0F0F),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: _isHovered
-                                            ? secondaryColor.withOpacity(0.4)
-                                            : Colors.black.withOpacity(0.5),
-                                        blurRadius: 15,
-                                        spreadRadius: 1,
-                                      ),
-                                    ],
-                                  ),
-                                  child: ClipOval(
-                                    child: Image.network(
-                                      widget.member.profileURL,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Container(
-                                          decoration: const BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                Color(0xFF2A2A2A),
-                                                Color(0xFF1A1A1A),
-                                              ],
-                                            ),
-                                          ),
-                                          child: Icon(
-                                            Icons.person_rounded,
-                                            color: Colors.grey.withOpacity(0.4),
-                                            size: 40,
-                                          ),
-                                        );
-                                      },
-                                      loadingBuilder:
-                                          (context, child, loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                            color: secondaryColor,
-                                            strokeWidth: 1.5,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(width: 16),
-                            // Name and details
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    widget.member.name,
-                                    style: TextStyle(
-                                      fontSize: widget.isMobile ? 16 : 18,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.white,
-                                      letterSpacing: -0.3,
-                                      height: 1.2,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Designation badge
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: secondaryColor.withOpacity(0.15),
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                        color: secondaryColor.withOpacity(0.3),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      widget.member.designation.toUpperCase(),
-                                      style: TextStyle(
-                                        fontSize: widget.isMobile ? 10 : 11,
-                                        fontWeight: FontWeight.w700,
-                                        color: secondaryColor,
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  // Department chip
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: secondaryColor.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(6),
-                                      border: Border.all(
-                                        color: secondaryColor.withOpacity(0.4),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          width: 6,
-                                          height: 6,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: secondaryColor,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          widget.member.department,
-                                          style: const TextStyle(
-                                            fontSize: 11,
-                                            color: secondaryColor,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                  // Border effect
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(
+                          color: _isHovered
+                              ? secondaryColor.withOpacity(0.6)
+                              : Colors.white.withOpacity(0.1),
+                          width: 2,
                         ),
-                        const SizedBox(height: 16),
-                        // Action buttons
+                      ),
+                    ),
+                  ),
+
+                  // Main content
+                  Padding(
+                    padding: EdgeInsets.all(widget.isMobile ? 22 : 32),
+                    child: Column(
+                      children: [
+                        _buildProfileSection(),
+                        SizedBox(
+                          height: widget.isMobile ? 10 : 15,
+                        ),
+                        _buildInfoSection(),
+                        SizedBox(height: widget.isMobile ? 10 : 15),
                         _buildActionButtons(),
                       ],
                     ),
@@ -640,6 +474,154 @@ class _DeveloperCardState extends State<_DeveloperCard>
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildProfileSection() {
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            // Rotating gradient ring
+            if (_isHovered)
+              TweenAnimationBuilder(
+                tween: Tween<double>(begin: 0, end: 1),
+                duration: const Duration(seconds: 3),
+                builder: (context, double value, child) {
+                  return Transform.rotate(
+                    angle: value * 2 * math.pi,
+                    child: Container(
+                      width: widget.isMobile ? 12 : 152,
+                      height: widget.isMobile ? 12 : 152,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: SweepGradient(
+                          colors: [
+                            secondaryColor,
+                            secondaryColor.withOpacity(0.1),
+                            secondaryColor,
+                          ],
+                          stops: const [0.0, 0.5, 1.0],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+            // Profile image container
+            Container(
+              width: widget.isMobile ? 100 : 180,
+              height: widget.isMobile ? 100 : 180,
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFF0a0a15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.6),
+                    blurRadius: 30,
+                    spreadRadius: 5,
+                  ),
+                ],
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: _isHovered
+                        ? secondaryColor.withOpacity(0.5)
+                        : Colors.white.withOpacity(0.1),
+                    width: 4,
+                  ),
+                ),
+                child: ClipOval(
+                  child: Image.network(
+                    widget.member.profileURL,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF2A2A3E),
+                              Color(0xFF1A1A2E),
+                            ],
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.person_rounded,
+                          color: secondaryColor.withOpacity(0.3),
+                          size: 50,
+                        ),
+                      );
+                    },
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                          color: secondaryColor,
+                          strokeWidth: 2,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+
+            // Sparkle effect on hover
+            if (_isHovered)
+              Positioned(
+                top: 10,
+                right: 15,
+                child: TweenAnimationBuilder(
+                  tween: Tween<double>(begin: 0, end: 1),
+                  duration: const Duration(milliseconds: 600),
+                  builder: (context, double value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Transform.scale(
+                        scale: value,
+                        child: const Icon(
+                          Icons.auto_awesome,
+                          color: secondaryColor,
+                          size: 20,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildInfoSection() {
+    return Column(
+      children: [
+        Text(
+          widget.member.name,
+          style: TextStyle(
+            fontSize: widget.isMobile ? 20 : 24,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+            letterSpacing: -0.5,
+            height: 1.2,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
     );
   }
 
@@ -654,7 +636,7 @@ class _DeveloperCardState extends State<_DeveloperCard>
               onTap: () {},
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 30),
           Expanded(
             child: _buildIconButton(
               icon: Icons.link_rounded,
@@ -665,38 +647,32 @@ class _DeveloperCardState extends State<_DeveloperCard>
         ],
       );
     }
+
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: secondaryColor.withOpacity(0.3),
+          color: Colors.white.withOpacity(0.1),
           width: 1.5,
-        ),
-        gradient: LinearGradient(
-          colors: [
-            secondaryColor.withOpacity(0.1),
-            secondaryColor.withOpacity(0.05),
-          ],
         ),
       ),
       child: const Row(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.arrow_forward_rounded,
-            size: 14,
-            color: secondaryColor,
+            size: 16,
+            color: Colors.grey,
           ),
-          SizedBox(width: 6),
+          SizedBox(width: 8),
           Text(
             'View Profile',
             style: TextStyle(
-              fontSize: 11,
-              color: secondaryColor,
+              fontSize: 12,
+              color: Colors.grey,
               fontWeight: FontWeight.w600,
-              letterSpacing: 0.3,
+              letterSpacing: 0.5,
             ),
           ),
         ],
@@ -713,7 +689,7 @@ class _DeveloperCardState extends State<_DeveloperCard>
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -809,13 +785,16 @@ class _DeveloperDetailsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+      insetPadding: EdgeInsets.symmetric(
+          horizontal: isMobile ? 10 : 24, vertical: isMobile ? 10 : 40),
       child: Container(
         constraints: const BoxConstraints(maxWidth: 540),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
+          borderRadius: BorderRadius.circular(isMobile ? 16 : 32),
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -847,19 +826,19 @@ class _DeveloperDetailsDialog extends StatelessWidget {
 
             SingleChildScrollView(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 16 : 25,
+                    vertical: isMobile ? 10 : 15),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _buildHeader(context),
-                    _buildProfileSection(),
-                    // const SizedBox(height: 20),
+                    _buildProfileSection(context),
                     _buildDivider(),
-                    const SizedBox(height: 15),
-                    _buildContactSection(),
-                    const SizedBox(height: 15),
-                    _buildLinkedInButton(),
+                    SizedBox(height: isMobile ? 10 : 15),
+                    _buildContactSection(context),
+                    SizedBox(height: isMobile ? 10 : 15),
+                    _buildLinkedInButton(isMobile: isMobile),
                   ],
                 ),
               ),
@@ -871,11 +850,14 @@ class _DeveloperDetailsDialog extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 16 : 25, vertical: isMobile ? 10 : 15),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -888,19 +870,19 @@ class _DeveloperDetailsDialog extends StatelessWidget {
               color: secondaryColor.withOpacity(0.4),
             ),
           ),
-          child: const Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 Icons.person_rounded,
                 size: 16,
                 color: secondaryColor,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 'PROFILE',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: isMobile ? 8 : 11,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
                   letterSpacing: 1.5,
@@ -931,12 +913,14 @@ class _DeveloperDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileSection() {
+  Widget _buildProfileSection(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
     return Column(
       children: [
         Container(
-          width: 180,
-          height: 180,
+          width: isMobile ? 140 : 180,
+          height: isMobile ? 140 : 180,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: const SweepGradient(
@@ -989,8 +973,8 @@ class _DeveloperDetailsDialog extends StatelessWidget {
         const SizedBox(height: 28),
         Text(
           member.name,
-          style: const TextStyle(
-            fontSize: 32,
+          style: TextStyle(
+            fontSize: isMobile ? 22 : 32,
             fontWeight: FontWeight.w900,
             color: Colors.white,
             letterSpacing: -0.5,
@@ -1007,8 +991,8 @@ class _DeveloperDetailsDialog extends StatelessWidget {
           ).createShader(bounds),
           child: Text(
             member.designation.toUpperCase(),
-            style: const TextStyle(
-              fontSize: 16,
+            style: TextStyle(
+              fontSize: isMobile ? 12 : 16,
               fontWeight: FontWeight.w700,
               color: Colors.white,
               letterSpacing: 2.5,
@@ -1017,7 +1001,8 @@ class _DeveloperDetailsDialog extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 16 : 20, vertical: isMobile ? 8 : 10),
           decoration: BoxDecoration(
             color: secondaryColor.withOpacity(0.15),
             borderRadius: BorderRadius.circular(25),
@@ -1047,8 +1032,8 @@ class _DeveloperDetailsDialog extends StatelessWidget {
               const SizedBox(width: 12),
               Text(
                 member.department,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: isMobile ? 12 : 14,
                   color: secondaryColor,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 1.0,
@@ -1076,7 +1061,9 @@ class _DeveloperDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildContactSection() {
+  Widget _buildContactSection(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
     return Column(
       children: [
         if (member.email.isNotEmpty)
@@ -1084,6 +1071,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
             label: 'Email',
             value: member.email,
             icon: Icons.email_rounded,
+            isMobile: isMobile,
           ),
         if (member.email.isNotEmpty &&
             member.phoneNumber != null &&
@@ -1094,6 +1082,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
             label: 'Phone',
             value: member.phoneNumber ?? '',
             icon: Icons.phone_rounded,
+            isMobile: isMobile,
           ),
       ],
     );
@@ -1103,6 +1092,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
     required String label,
     required String value,
     required IconData icon,
+    required bool isMobile,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1119,7 +1109,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
           child: Icon(
             icon,
             color: secondaryColor,
-            size: 20,
+            size: isMobile ? 16 : 20,
           ),
         ),
         const SizedBox(width: 16),
@@ -1130,7 +1120,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: isMobile ? 10 : 12,
                   color: Colors.grey.withOpacity(0.6),
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.5,
@@ -1139,8 +1129,8 @@ class _DeveloperDetailsDialog extends StatelessWidget {
               const SizedBox(height: 6),
               SelectableText(
                 value,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: isMobile ? 10 : 16,
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
@@ -1152,7 +1142,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildLinkedInButton() {
+  Widget _buildLinkedInButton({required bool isMobile}) {
     if (member.linkedInProfileURL.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -1165,13 +1155,12 @@ class _DeveloperDetailsDialog extends StatelessWidget {
         }
       },
       child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: isMobile ? 8 : 16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
               secondaryColor.withOpacity(0.2),
-              const Color(0xFF6366f1).withOpacity(0.2),
+              const Color.fromARGB(255, 199, 199, 0).withOpacity(0.2),
             ],
           ),
           borderRadius: BorderRadius.circular(16),
@@ -1180,19 +1169,19 @@ class _DeveloperDetailsDialog extends StatelessWidget {
             width: 2,
           ),
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.link_rounded,
               color: secondaryColor,
-              size: 22,
+              size: isMobile ? 16 : 22,
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
               'View LinkedIn Profile',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: isMobile ? 10 : 16,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
                 letterSpacing: 0.5,
