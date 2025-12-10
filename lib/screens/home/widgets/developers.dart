@@ -381,15 +381,7 @@ class _DeveloperCardState extends State<_DeveloperCard>
           },
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(28),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF1C1C1C),
-                  Color(0xFF0D0D0D),
-                ],
-              ),
+              borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.4),
@@ -405,9 +397,23 @@ class _DeveloperCardState extends State<_DeveloperCard>
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(20),
               child: Stack(
                 children: [
+                  // Background gradient
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF1A1A1A),
+                          Color(0xFF0F0F0F),
+                        ],
+                      ),
+                    ),
+                  ),
+
                   // Mesh gradient background
                   Positioned.fill(
                     child: CustomPaint(
@@ -418,45 +424,212 @@ class _DeveloperCardState extends State<_DeveloperCard>
                     ),
                   ),
 
-                  // Glass morphism overlay
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Colors.white.withOpacity(_isHovered ? 0.08 : 0.03),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
                   // Border effect
                   Positioned.fill(
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(28),
+                        borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: _isHovered
-                              ? secondaryColor.withOpacity(0.6)
+                              ? secondaryColor.withOpacity(0.5)
                               : Colors.white.withOpacity(0.1),
-                          width: 2,
+                          width: 1.5,
                         ),
                       ),
                     ),
                   ),
 
-                  // Main content
+                  // Main content - Horizontal layout
                   Padding(
-                    padding: EdgeInsets.all(widget.isMobile ? 28 : 32),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildProfileSection(),
-                        _buildInfoSection(),
-                        const Spacer(),
+                        // Profile image and info row
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Profile image
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                if (_isHovered)
+                                  TweenAnimationBuilder(
+                                    tween: Tween<double>(begin: 0, end: 1),
+                                    duration: const Duration(milliseconds: 500),
+                                    builder: (context, double value, child) {
+                                      return Transform.rotate(
+                                        angle: value * 2 * math.pi,
+                                        child: Container(
+                                          width: widget.isMobile ? 100 : 110,
+                                          height: widget.isMobile ? 100 : 110,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            gradient: SweepGradient(
+                                              colors: [
+                                                Color(0xffC79200),
+                                                Color(0xffFFE8A9),
+                                                Color(0xffC79200),
+                                                Color(0xffFFE8A9),
+                                              ],
+                                              stops: [0.0, 0.4, 0.7, 1.0],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                Container(
+                                  width: widget.isMobile ? 90 : 100,
+                                  height: widget.isMobile ? 90 : 100,
+                                  padding: const EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: const Color(0xFF0F0F0F),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: _isHovered
+                                            ? secondaryColor.withOpacity(0.4)
+                                            : Colors.black.withOpacity(0.5),
+                                        blurRadius: 15,
+                                        spreadRadius: 1,
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipOval(
+                                    child: Image.network(
+                                      widget.member.profileURL,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Container(
+                                          decoration: const BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Color(0xFF2A2A2A),
+                                                Color(0xFF1A1A1A),
+                                              ],
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            Icons.person_rounded,
+                                            color: Colors.grey.withOpacity(0.4),
+                                            size: 40,
+                                          ),
+                                        );
+                                      },
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                            color: secondaryColor,
+                                            strokeWidth: 1.5,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(width: 16),
+                            // Name and details
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.member.name,
+                                    style: TextStyle(
+                                      fontSize: widget.isMobile ? 16 : 18,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.white,
+                                      letterSpacing: -0.3,
+                                      height: 1.2,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  // Designation badge
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: secondaryColor.withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: secondaryColor.withOpacity(0.3),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      widget.member.designation.toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: widget.isMobile ? 10 : 11,
+                                        fontWeight: FontWeight.w700,
+                                        color: secondaryColor,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  // Department chip
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 6,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: secondaryColor.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(
+                                        color: secondaryColor.withOpacity(0.4),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 6,
+                                          height: 6,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: secondaryColor,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          widget.member.department,
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            color: secondaryColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        // Action buttons
                         _buildActionButtons(),
                       ],
                     ),
@@ -470,185 +643,6 @@ class _DeveloperCardState extends State<_DeveloperCard>
     );
   }
 
-  Widget _buildProfileSection() {
-    return Column(
-      children: [
-        // Profile image with hexagonal border
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            // Animated ring
-            if (_isHovered)
-              TweenAnimationBuilder(
-                tween: Tween<double>(begin: 0, end: 1),
-                duration: const Duration(milliseconds: 500),
-                builder: (context, double value, child) {
-                  return Transform.rotate(
-                    angle: value * 2 * math.pi,
-                    child: Container(
-                      width: widget.isMobile ? 130 : 150,
-                      height: widget.isMobile ? 130 : 150,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: SweepGradient(
-                          colors: [
-                            Color(0xffC79200),
-                            Color(0xffFFE8A9),
-                            Color(0xffC79200),
-                            Color(0xffFFE8A9),
-                          ],
-                          stops: [0.0, 0.4, 0.7, 1.0],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-
-            Container(
-              width: widget.isMobile ? 120 : 140,
-              height: widget.isMobile ? 120 : 140,
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFF0D0D0D),
-                boxShadow: [
-                  BoxShadow(
-                    color: _isHovered
-                        ? secondaryColor.withOpacity(0.5)
-                        : Colors.black.withOpacity(0.5),
-                    blurRadius: 20,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              child: ClipOval(
-                child: Image.network(
-                  widget.member.profileURL,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xFF2A2A2A),
-                            Color(0xFF1A1A1A),
-                          ],
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.person_rounded,
-                        color: Colors.grey.withOpacity(0.4),
-                        size: 50,
-                      ),
-                    );
-                  },
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
-                        color: secondaryColor,
-                        strokeWidth: 2,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInfoSection() {
-    return Column(
-      children: [
-        Text(
-          widget.member.name,
-          style: TextStyle(
-            fontSize: widget.isMobile ? 20 : 24,
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-            letterSpacing: -0.5,
-            height: 1.2,
-          ),
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-
-        // const SizedBox(height: 12),
-
-        // // Animated gradient text for designation
-        // ShaderMask(
-        //   shaderCallback: (bounds) => const LinearGradient(
-        //     colors: [secondaryColor, Color(0xFF6366f1)],
-        //   ).createShader(bounds),
-        //   child: Text(
-        //     widget.member.designation.toUpperCase(),
-        //     style: TextStyle(
-        //       fontSize: widget.isMobile ? 13 : 14,
-        //       fontWeight: FontWeight.w700,
-        //       color: Colors.white,
-        //       letterSpacing: 2.0,
-        //     ),
-        //     textAlign: TextAlign.center,
-        //   ),
-        // ),
-
-        // const SizedBox(height: 16),
-
-        // // Modern department chip
-        // Container(
-        //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        //   decoration: BoxDecoration(
-        //     color: secondaryColor.withOpacity(0.1),
-        //     borderRadius: BorderRadius.circular(20),
-        //     border: Border.all(
-        //       color: secondaryColor.withOpacity(0.3),
-        //       width: 1.5,
-        //     ),
-        //   ),
-        //   child: Row(
-        //     mainAxisSize: MainAxisSize.min,
-        //     children: [
-        //       Container(
-        //         width: 8,
-        //         height: 8,
-        //         decoration: BoxDecoration(
-        //           shape: BoxShape.circle,
-        //           color: secondaryColor,
-        //           boxShadow: [
-        //             BoxShadow(
-        //               color: secondaryColor.withOpacity(0.8),
-        //               blurRadius: 8,
-        //               spreadRadius: 2,
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //       const SizedBox(width: 10),
-        //       Text(
-        //         widget.member.department,
-        //         style: const TextStyle(
-        //           fontSize: 12,
-        //           color: secondaryColor,
-        //           fontWeight: FontWeight.w700,
-        //           letterSpacing: 1.0,
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-      ],
-    );
-  }
-
   Widget _buildActionButtons() {
     if (!_isHovered) {
       return Row(
@@ -656,13 +650,15 @@ class _DeveloperCardState extends State<_DeveloperCard>
           Expanded(
             child: _buildIconButton(
               icon: Icons.email_rounded,
+              label: 'Email',
               onTap: () {},
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           Expanded(
             child: _buildIconButton(
               icon: Icons.link_rounded,
+              label: 'LinkedIn',
               onTap: () {},
             ),
           ),
@@ -670,30 +666,37 @@ class _DeveloperCardState extends State<_DeveloperCard>
       );
     }
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: Colors.white.withOpacity(0.1),
+          color: secondaryColor.withOpacity(0.3),
           width: 1.5,
         ),
+        gradient: LinearGradient(
+          colors: [
+            secondaryColor.withOpacity(0.1),
+            secondaryColor.withOpacity(0.05),
+          ],
+        ),
       ),
-      child: Row(
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             Icons.arrow_forward_rounded,
-            size: 16,
-            color: Colors.grey.withOpacity(0.5),
+            size: 14,
+            color: secondaryColor,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 6),
           Text(
             'View Profile',
             style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.withOpacity(0.5),
+              fontSize: 11,
+              color: secondaryColor,
               fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
+              letterSpacing: 0.3,
             ),
           ),
         ],
@@ -703,30 +706,46 @@ class _DeveloperCardState extends State<_DeveloperCard>
 
   Widget _buildIconButton({
     required IconData icon,
+    required String label,
     required VoidCallback onTap,
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(10),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              secondaryColor.withOpacity(0.15),
-              const Color(0xFF6366f1).withOpacity(0.15),
+              secondaryColor.withOpacity(0.1),
+              secondaryColor.withOpacity(0.05),
             ],
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: secondaryColor.withOpacity(0.4),
+            color: secondaryColor.withOpacity(0.3),
             width: 1.5,
           ),
         ),
-        child: Icon(
-          icon,
-          color: secondaryColor,
-          size: 20,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: secondaryColor,
+              size: 16,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 9,
+                color: secondaryColor,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.3,
+              ),
+            ),
+          ],
         ),
       ),
     );
