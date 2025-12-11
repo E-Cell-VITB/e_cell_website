@@ -31,7 +31,7 @@ class GalleryProvider extends ChangeNotifier {
   List<String> getAllPhotos(Gallery gallery) {
     // Combine winner photos and all photos, removing duplicates
     final Set<String> allPhotosSet = {
-      ...gallery.winnerPhotos,
+      ...gallery.winnerPhotosWithOrder.map((e) => e.photoUrl),
       ...gallery.allPhotos
     };
     return allPhotosSet.toList();

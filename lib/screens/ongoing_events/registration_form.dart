@@ -39,6 +39,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
   List<String> _registeredEmails = [];
   List<String> _registeredTeamNames = [];
   bool? _teamNameValidationStatus;
+  List<String> restrictedRegistrationNumbers = [];
 
   @override
   void initState() {
@@ -320,6 +321,9 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
               );
             }
             final event = provider.currentEvent;
+            restrictedRegistrationNumbers =
+                event?.restrictedRegistrationNumbers ?? [];
+
             if (event == null) {
               return Center(
                 child: Text(
@@ -354,226 +358,255 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                         horizontal: isMobile ? 16 : 48,
                         vertical: isMobile ? 24 : 48,
                       ),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(isMobile ? 16 : 24),
-                              child: LinearGradientText(
-                                child: Text(
-                                  '${event.name} Registration',
-                                  style: isMobile
-                                      ? Theme.of(context)
-                                          .textTheme
-                                          .headlineSmall!
-                                          .copyWith(fontWeight: FontWeight.bold)
-                                      : Theme.of(context)
-                                          .textTheme
-                                          .displayMedium!
-                                          .copyWith(
-                                              fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                            if (provider.errorRegistration != null)
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  provider.errorRegistration!,
-                                  style: TextStyle(
-                                    fontSize: isMobile
-                                        ? 14
-                                        : isTablet
-                                            ? 16
-                                            : 18,
-                                    color: Colors.redAccent,
+                      child: !event.isRegistrationLive
+                          ? Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(isMobile ? 16 : 24),
+                                child: LinearGradientText(
+                                  child: Text(
+                                    'Registration for this event is currently closed\n Contact Ecell Team for more details.',
+                                    style: TextStyle(
+                                      fontSize: isMobile ? 16 : 18,
+                                      color: Colors.white,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ),
-                            if (event.isTeamEvent) ...[
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  children: [
-                                    _buildCustomStepper(isMobile, screenWidth),
-                                    Divider(
-                                      height: 1,
-                                      color: Colors.white.withOpacity(0.2),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.all(isMobile ? 8 : 24),
-                                      child: _buildCurrentStageContent(
-                                        event,
-                                        isMobile,
-                                        isTablet,
-                                        screenWidth,
+                            )
+                          : Form(
+                              key: _formKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(isMobile ? 16 : 24),
+                                    child: LinearGradientText(
+                                      child: Text(
+                                        '${event.name} Registration',
+                                        style: isMobile
+                                            ? Theme.of(context)
+                                                .textTheme
+                                                .headlineSmall!
+                                                .copyWith(
+                                                    fontWeight: FontWeight.bold)
+                                            : Theme.of(context)
+                                                .textTheme
+                                                .displayMedium!
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    Container(
-                                      padding: const EdgeInsets.all(16),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                  ),
+                                  if (provider.errorRegistration != null)
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        provider.errorRegistration!,
+                                        style: TextStyle(
+                                          fontSize: isMobile
+                                              ? 14
+                                              : isTablet
+                                                  ? 16
+                                                  : 18,
+                                          color: Colors.redAccent,
+                                        ),
+                                      ),
+                                    ),
+                                  if (event.isTeamEvent) ...[
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
                                         children: [
-                                          GradientButton(
-                                            text: _currentStage ==
-                                                    RegistrationStage
-                                                        .teamDetails
-                                                ? 'CANCEL'
-                                                : 'BACK',
-                                            onPressed: _isSubmitting ||
-                                                    _isCheckingRegistration ||
-                                                    _isCheckingTeamName
-                                                ? null
-                                                : _moveToPreviousStage,
-                                            isMobile: isMobile,
-                                            isTablet: isTablet,
+                                          _buildCustomStepper(
+                                              isMobile, screenWidth),
+                                          Divider(
+                                            height: 1,
+                                            color:
+                                                Colors.white.withOpacity(0.2),
                                           ),
-                                          GradientButton(
-                                            text: _currentStage ==
-                                                    RegistrationStage
-                                                        .memberDetails
-                                                ? 'SUBMIT'
-                                                : 'NEXT',
-                                            onPressed: (_isSubmitting ||
-                                                    _isCheckingRegistration ||
-                                                    _isCheckingTeamName ||
-                                                    provider.currentEvent ==
-                                                        null)
-                                                ? null
-                                                : () =>
-                                                    _moveToNextStage(context),
-                                            isMobile: isMobile,
-                                            isTablet: isTablet,
+                                          Padding(
+                                            padding: EdgeInsets.all(
+                                                isMobile ? 8 : 24),
+                                            child: _buildCurrentStageContent(
+                                              event,
+                                              isMobile,
+                                              isTablet,
+                                              screenWidth,
+                                            ),
                                           ),
+                                          Container(
+                                            padding: const EdgeInsets.all(16),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                GradientButton(
+                                                  text: _currentStage ==
+                                                          RegistrationStage
+                                                              .teamDetails
+                                                      ? 'CANCEL'
+                                                      : 'BACK',
+                                                  onPressed: _isSubmitting ||
+                                                          _isCheckingRegistration ||
+                                                          _isCheckingTeamName
+                                                      ? null
+                                                      : _moveToPreviousStage,
+                                                  isMobile: isMobile,
+                                                  isTablet: isTablet,
+                                                ),
+                                                GradientButton(
+                                                  text: _currentStage ==
+                                                          RegistrationStage
+                                                              .memberDetails
+                                                      ? 'SUBMIT'
+                                                      : 'NEXT',
+                                                  onPressed: (_isSubmitting ||
+                                                          _isCheckingRegistration ||
+                                                          _isCheckingTeamName ||
+                                                          provider.currentEvent ==
+                                                              null)
+                                                      ? null
+                                                      : () => _moveToNextStage(
+                                                          context),
+                                                  isMobile: isMobile,
+                                                  isTablet: isTablet,
+                                                ),
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ] else ...[
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  children: [
-                                    ...event.registrationTemplate
-                                        .where((field) => !(field.inputType
-                                                    .toLowerCase() ==
-                                                'year' &&
-                                            event.registrationTemplate.any(
-                                                (f) =>
-                                                    f.inputType.toLowerCase() ==
-                                                    'department')))
-                                        .map((field) {
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 16.0),
-                                        child: _buildFormField(
-                                          field,
-                                          0,
-                                          isMobile,
-                                          isTablet,
-                                          screenWidth,
-                                          event,
-                                        ),
-                                      );
-                                    }),
-                                    const SizedBox(height: 16),
-                                    if (_isCheckingRegistration)
-                                      SizedBox(
-                                        height: screenHeight * 0.6,
-                                        child: const Center(
-                                          child: LoadingIndicator(),
-                                        ),
-                                      )
-                                    else
-                                      GradientButton(
-                                        text: 'Submit Registration',
-                                        onPressed: _isCheckingRegistration
-                                            ? null
-                                            : () async {
-                                                if (_formKey.currentState!
-                                                    .validate()) {
-                                                  if (_emailValidationStatus[
-                                                              '0_email'] ==
-                                                          false ||
-                                                      _emailLoadingStatus[
-                                                              '0_email'] ==
-                                                          true) {
-                                                    showCustomToast(
-                                                      title: 'Invalid Email',
-                                                      description:
-                                                          'Please enter a valid and non-duplicate email',
-                                                      type: ToastificationType
-                                                          .error,
-                                                    );
-                                                    return;
-                                                  }
-                                                  setState(() {
-                                                    _isSubmitting = true;
-                                                    participants[0].addAll({
-                                                      'ischeckedIn': false,
-                                                      'checkedInBy': '',
-                                                      'checkedInAt': null,
-                                                    });
-                                                  });
-                                                  try {
-                                                    await RegistrationSubmission
-                                                        .handleRegistration(
-                                                      context,
-                                                      event,
-                                                      widget.eventId,
-                                                      participants,
-                                                      '${_teamName?[0].toUpperCase()}${_teamName?.substring(1)}',
-                                                      () {
-                                                        if (mounted) {
-                                                          setState(() =>
-                                                              _isCheckingRegistration =
-                                                                  false);
+                                    ),
+                                  ] else ...[
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        children: [
+                                          ...event.registrationTemplate
+                                              .where((field) => !(field
+                                                          .inputType
+                                                          .toLowerCase() ==
+                                                      'year' &&
+                                                  event.registrationTemplate
+                                                      .any((f) =>
+                                                          f.inputType
+                                                              .toLowerCase() ==
+                                                          'department')))
+                                              .map((field) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 16.0),
+                                              child: _buildFormField(
+                                                field,
+                                                0,
+                                                isMobile,
+                                                isTablet,
+                                                screenWidth,
+                                                event,
+                                              ),
+                                            );
+                                          }),
+                                          const SizedBox(height: 16),
+                                          if (_isCheckingRegistration)
+                                            SizedBox(
+                                              height: screenHeight * 0.6,
+                                              child: const Center(
+                                                child: LoadingIndicator(),
+                                              ),
+                                            )
+                                          else
+                                            GradientButton(
+                                              text: 'Submit Registration',
+                                              onPressed: _isCheckingRegistration
+                                                  ? null
+                                                  : () async {
+                                                      if (_formKey.currentState!
+                                                          .validate()) {
+                                                        if (_emailValidationStatus[
+                                                                    '0_email'] ==
+                                                                false ||
+                                                            _emailLoadingStatus[
+                                                                    '0_email'] ==
+                                                                true) {
+                                                          showCustomToast(
+                                                            title:
+                                                                'Invalid Email',
+                                                            description:
+                                                                'Please enter a valid and non-duplicate email',
+                                                            type:
+                                                                ToastificationType
+                                                                    .error,
+                                                          );
+                                                          return;
                                                         }
-                                                      },
-                                                      () {
-                                                        if (mounted) {
-                                                          setState(() =>
+                                                        setState(() {
+                                                          _isSubmitting = true;
+                                                          participants[0]
+                                                              .addAll({
+                                                            'ischeckedIn':
+                                                                false,
+                                                            'checkedInBy': '',
+                                                            'checkedInAt': null,
+                                                          });
+                                                        });
+                                                        try {
+                                                          await RegistrationSubmission
+                                                              .handleRegistration(
+                                                            context,
+                                                            event,
+                                                            widget.eventId,
+                                                            participants,
+                                                            '${_teamName?[0].toUpperCase()}${_teamName?.substring(1)}',
+                                                            () {
+                                                              if (mounted) {
+                                                                setState(() =>
+                                                                    _isCheckingRegistration =
+                                                                        false);
+                                                              }
+                                                            },
+                                                            () {
+                                                              if (mounted) {
+                                                                setState(() =>
+                                                                    _isSubmitting =
+                                                                        false);
+                                                              }
+                                                            },
+                                                          );
+                                                        } catch (e) {
+                                                          if (mounted) {
+                                                            setState(() {
                                                               _isSubmitting =
-                                                                  false);
+                                                                  false;
+                                                              _isCheckingRegistration =
+                                                                  false;
+                                                            });
+                                                            showCustomToast(
+                                                              title: 'Error',
+                                                              description:
+                                                                  'Registration failed: $e',
+                                                              type:
+                                                                  ToastificationType
+                                                                      .error,
+                                                            );
+                                                          }
                                                         }
-                                                      },
-                                                    );
-                                                  } catch (e) {
-                                                    if (mounted) {
-                                                      setState(() {
-                                                        _isSubmitting = false;
-                                                        _isCheckingRegistration =
-                                                            false;
-                                                      });
-                                                      showCustomToast(
-                                                        title: 'Error',
-                                                        description:
-                                                            'Registration failed: $e',
-                                                        type: ToastificationType
-                                                            .error,
-                                                      );
-                                                    }
-                                                  }
-                                                }
-                                              },
-                                        isMobile: isMobile,
-                                        isTablet: isTablet,
+                                                      }
+                                                    },
+                                              isMobile: isMobile,
+                                              isTablet: isTablet,
+                                            ),
+                                        ],
                                       ),
+                                    ),
                                   ],
-                                ),
+                                  const SizedBox(height: 24),
+                                ],
                               ),
-                            ],
-                            const SizedBox(height: 24),
-                          ],
-                        ),
-                      ),
+                            ),
                     ),
                   ),
                 ),
@@ -792,11 +825,7 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                 ),
               ),
               const SizedBox(height: 16),
-              ...event.registrationTemplate
-                  .where((field) => !(field.inputType.toLowerCase() == 'year' &&
-                      event.registrationTemplate.any(
-                          (f) => f.inputType.toLowerCase() == 'department')))
-                  .map((field) {
+              ...event.registrationTemplate.map((field) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: field.inputType.toLowerCase() == 'department'
@@ -868,14 +897,63 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
                             return null;
                           },
                         )
-                      : _buildFormField(
-                          field,
-                          0,
-                          isMobile,
-                          isTablet,
-                          screenWidth,
-                          event,
-                        ),
+                      : field.inputType.toLowerCase() == 'year'
+                          ? DropdownButtonFormField<int>(
+                              decoration: _inputDecoration(
+                                labelText: 'Year',
+                                isMobile: isMobile,
+                              ),
+                              dropdownColor: Colors.grey[900],
+                              style: const TextStyle(color: Colors.white),
+                              value: participants[0]['year'] is int
+                                  ? participants[0]['year']
+                                  : null,
+                              items: List.generate(
+                                4,
+                                (i) => DropdownMenuItem<int>(
+                                  value: i + 1,
+                                  child: Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: Text(
+                                      '${i + 1}',
+                                      style: TextStyle(
+                                        fontSize: isMobile
+                                            ? 12
+                                            : isTablet
+                                                ? 14
+                                                : 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onChanged: (int? value) {
+                                if (value != null) {
+                                  setState(() {
+                                    participants[0]['year'] = value;
+                                  });
+                                }
+                              },
+                              validator: (value) {
+                                if (event.registrationTemplate.any((f) =>
+                                    f.inputType.toLowerCase() == 'year' &&
+                                    f.isRequired)) {
+                                  if (value == null) {
+                                    return 'Year is required';
+                                  }
+                                }
+                                return null;
+                              },
+                            )
+                          : _buildFormField(
+                              field,
+                              0,
+                              isMobile,
+                              isTablet,
+                              screenWidth,
+                              event,
+                            ),
                 );
               })
             ],
@@ -1021,9 +1099,13 @@ class OngoingEventRegisterState extends State<OngoingEventRegister> {
             break;
           case 'email':
             final emailRegex =
-                RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                RegExp(r'^[a-zA-Z0-9._%+-]+@(gmail\.com|vishnu\.edu\.in)$');
             if (!emailRegex.hasMatch(value)) {
-              return '$capitalizedFieldName must be a valid email';
+              return '$capitalizedFieldName must be a valid email of containing @gmail.com or @vishnu.edu.in';
+            }
+            String emailPrefix = value.split('@')[0];
+            if (restrictedRegistrationNumbers.contains(emailPrefix)) {
+              return 'This email is blocked for registrations, Please contact E-cell for more details';
             }
             if (_registeredEmails.contains(value.toLowerCase())) {
               return 'This email is already registered';

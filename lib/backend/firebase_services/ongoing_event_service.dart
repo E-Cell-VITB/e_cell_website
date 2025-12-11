@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_cell_website/backend/models/ongoing_events.dart';
 import 'package:e_cell_website/const/app_logs.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:e_cell_website/backend/models/evalution_result.dart'
+    as result_model;
 
 class OngoingEventService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -280,6 +283,84 @@ class OngoingEventService {
     } catch (e) {
       AppLogger.error('Error streaming participant count: $e');
       return Stream.value({'numParticipants': 0, 'numTeams': 0});
+    }
+  }
+
+  //get team name by team id
+  Future<String?> getTeamNameById(String eventId, String teamId) async {
+    try {
+      final doc = await _firestore
+          .collection(_eventsCollection)
+          .doc(eventId)
+          .collection('registered_users')
+          .doc(teamId)
+          .get();
+      if (doc.exists) {
+        return doc.data()?['team_name'] as String?;
+      }
+      return null;
+    } catch (e) {
+      AppLogger.error('Error fetching team name by ID: $e');
+      return null;
+    }
+  }
+
+  //get teams by event id
+  /// Fetches list of team IDs (document IDs) from registered_users collection
+  /// Returns List<String> of document IDs
+  Future<List<String>> getTeamsByEventId(String eventId) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_eventsCollection)
+          .doc(eventId)
+          .collection('registered_users')
+          .get();
+
+      return snapshot.docs.map((doc) => doc.id).toList();
+    } catch (e) {
+      AppLogger.error('Error fetching teams by event ID: $e');
+      return [];
+    }
+  }
+
+  /// Stream that returns assigned marks array for a specific team
+  /// Extracts assignedMarks from scores[0] in the results collection
+
+//...
+  Stream<List<result_model.EvaluationResult>> getResultsByTeamId(
+      String eventId, String teamId) {
+    try {
+      return _firestore
+          .collection(_eventsCollection)
+          .doc(eventId)
+          .collection('results')
+          .where('teamId', isEqualTo: teamId)
+          .snapshots()
+          .map((snapshot) {
+        return snapshot.docs
+            .map((doc) =>
+                result_model.EvaluationResult.fromMap(doc.data(), doc.id))
+            .toList();
+      });
+    } catch (e) {
+      AppLogger.error('Error streaming results by team ID: $e');
+      return Stream.value([]);
+    }
+  }
+
+  Future<List<String>> getRestrictedRegistrationNumbers(String eventId) async {
+    try {
+      final doc =
+          await _firestore.collection(_eventsCollection).doc(eventId).get();
+
+      if (doc.exists) {
+        final data = doc.data()!;
+        return List<String>.from(data['restrictedRegistrationNumbers'] ?? []);
+      }
+      return [];
+    } catch (e) {
+      AppLogger.error('Error fetching restricted registration numbers: $e');
+      return [];
     }
   }
 }
