@@ -35,15 +35,38 @@ class DevelopersScreen extends StatelessWidget {
     ),
     TeamMemberModel(
       id: '3',
-      name: 'Lokesh Surya Prakash',
-      designation: 'Co-Lead',
-      department: 'Technical',
-      email: 'lokeshsuryaprakashk@gmail.com',
-      phoneNumber: '+91 6303642297',
-      linkedInProfileURL:
-          'https://www.linkedin.com/in/lokesh-surya-prakash-konduboyena-2b556726b/',
+      name: 'Sri Ram Ganesh',
+      designation: 'Lead',
+      department: 'Design',
+      email: 'sriramganesh28@gmail.com',
+      phoneNumber: '+91 9603204860',
+      linkedInProfileURL: 'https://www.linkedin.com/in/sriramganeshgovala/',
       profileURL:
-          'https://res.cloudinary.com/dhh9hnl5f/image/upload/v1742747208/E-cell_Admin/s0gynsbqbz7vgrvqnszb.png',
+          'https://res.cloudinary.com/dhh9hnl5f/image/upload/v1748785017/E-cell_Admin/tgubql9g8dxsldxy17hb.png',
+    ),
+    TeamMemberModel(
+      id: '4',
+      name: 'Gowthami Tirumalareddy',
+      designation: 'Associate',
+      department: 'Technical',
+      email: 'gowthamitirumalareddy@gmail.com',
+      phoneNumber: '+91 9381900860',
+      linkedInProfileURL:
+          'https://www.linkedin.com/in/gowthami-tirumalareddy-%E2%9C%B7-b228132bb/',
+      profileURL:
+          'https://res.cloudinary.com/dhh9hnl5f/image/upload/v1748863087/E-cell_Admin/zkpt00vntolb76b8drrp.png',
+    ),
+    TeamMemberModel(
+      id: '5',
+      name: 'Sandeep Kumar',
+      designation: 'Associate',
+      department: 'Technical',
+      email: 'gummalasandy191212@gmail.com',
+      phoneNumber: '+91 9491701393',
+      linkedInProfileURL:
+          'https://www.linkedin.com/in/gummala-sagar-sandeep-kumar-a23aa8304/',
+      profileURL:
+          'https://res.cloudinary.com/dhh9hnl5f/image/upload/v1748781952/E-cell_Admin/mtydzcpladcojmpa4evu.png',
     ),
   ];
 
@@ -611,7 +634,7 @@ class _DeveloperCardState extends State<_DeveloperCard>
         Text(
           widget.member.name,
           style: TextStyle(
-            fontSize: widget.isMobile ? 20 : 24,
+            fontSize: widget.isMobile ? 18 : 24,
             fontWeight: FontWeight.w800,
             color: Colors.white,
             letterSpacing: -0.5,
@@ -790,9 +813,11 @@ class _DeveloperDetailsDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.symmetric(
-          horizontal: isMobile ? 10 : 24, vertical: isMobile ? 10 : 40),
+          horizontal: isMobile ? 10 : 14, vertical: isMobile ? 10 : 20),
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 540),
+        constraints: BoxConstraints(
+            maxWidth: 540,
+            minHeight: isMobile ? size.height * 0.8 : size.height * 0.9),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(isMobile ? 16 : 32),
           gradient: const LinearGradient(
@@ -833,11 +858,13 @@ class _DeveloperDetailsDialog extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _buildHeader(context),
+                    SizedBox(height: isMobile ? 20 : 5),
                     _buildProfileSection(context),
+                    SizedBox(height: isMobile ? 10 : 15),
                     _buildDivider(),
                     SizedBox(height: isMobile ? 10 : 15),
                     _buildContactSection(context),
-                    SizedBox(height: isMobile ? 10 : 15),
+                    SizedBox(height: isMobile ? 25 : 30),
                     _buildLinkedInButton(isMobile: isMobile),
                   ],
                 ),
@@ -856,8 +883,8 @@ class _DeveloperDetailsDialog extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 16 : 25, vertical: isMobile ? 10 : 15),
+          padding:
+              EdgeInsets.symmetric(horizontal: isMobile ? 8 : 16, vertical: 8),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -873,9 +900,9 @@ class _DeveloperDetailsDialog extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
+              Icon(
                 Icons.person_rounded,
-                size: 16,
+                size: isMobile ? 8 : 16,
                 color: secondaryColor,
               ),
               const SizedBox(width: 8),
@@ -894,7 +921,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
         GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(isMobile ? 6 : 8),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.05),
               shape: BoxShape.circle,
@@ -920,9 +947,10 @@ class _DeveloperDetailsDialog extends StatelessWidget {
       children: [
         Container(
           width: isMobile ? 140 : 180,
-          height: isMobile ? 140 : 180,
+          height: isMobile ? 140 : 200,
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
             gradient: const SweepGradient(
               colors: [
                 secondaryColor,
@@ -933,22 +961,23 @@ class _DeveloperDetailsDialog extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 color: secondaryColor.withOpacity(0.5),
-                blurRadius: 40,
+                blurRadius: 20,
                 spreadRadius: 5,
               ),
             ],
           ),
-          padding: const EdgeInsets.all(5),
+          padding: const EdgeInsets.all(1),
           child: Container(
             decoration: const BoxDecoration(
-              shape: BoxShape.circle,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20)),
               color: Color(0xFF0A0A0A),
             ),
-            padding: const EdgeInsets.all(5),
-            child: ClipOval(
+            padding: const EdgeInsets.all(3),
+            child: ClipRect(
               child: Image.network(
                 member.profileURL,
-                fit: BoxFit.cover,
+                fit: BoxFit.fitWidth,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     decoration: const BoxDecoration(
@@ -970,7 +999,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 28),
+        SizedBox(height: isMobile ? 20 : 10),
         Text(
           member.name,
           style: TextStyle(
@@ -1001,8 +1030,8 @@ class _DeveloperDetailsDialog extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Container(
-          padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 16 : 20, vertical: isMobile ? 8 : 10),
+          padding:
+              EdgeInsets.symmetric(horizontal: isMobile ? 8 : 12, vertical: 8),
           decoration: BoxDecoration(
             color: secondaryColor.withOpacity(0.15),
             borderRadius: BorderRadius.circular(25),
@@ -1029,11 +1058,11 @@ class _DeveloperDetailsDialog extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: isMobile ? 6 : 10),
               Text(
                 member.department,
                 style: TextStyle(
-                  fontSize: isMobile ? 12 : 14,
+                  fontSize: isMobile ? 8 : 12,
                   color: secondaryColor,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 1.0,
@@ -1098,7 +1127,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: secondaryColor.withOpacity(0.1),
             shape: BoxShape.circle,
@@ -1109,7 +1138,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
           child: Icon(
             icon,
             color: secondaryColor,
-            size: isMobile ? 16 : 20,
+            size: isMobile ? 12 : 20,
           ),
         ),
         const SizedBox(width: 16),
@@ -1120,7 +1149,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: isMobile ? 10 : 12,
+                  fontSize: isMobile ? 12 : 12,
                   color: Colors.grey.withOpacity(0.6),
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.5,
@@ -1130,7 +1159,7 @@ class _DeveloperDetailsDialog extends StatelessWidget {
               SelectableText(
                 value,
                 style: TextStyle(
-                  fontSize: isMobile ? 10 : 16,
+                  fontSize: isMobile ? 12 : 16,
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
@@ -1154,40 +1183,44 @@ class _DeveloperDetailsDialog extends StatelessWidget {
           await launchUrl(url);
         }
       },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: isMobile ? 8 : 16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              secondaryColor.withOpacity(0.2),
-              const Color.fromARGB(255, 199, 199, 0).withOpacity(0.2),
+      child: SizedBox(
+        width: isMobile ? 150 : 200,
+        height: isMobile ? 30 : 45,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: isMobile ? 8 : 10),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                secondaryColor.withOpacity(0.2),
+                const Color.fromARGB(255, 199, 199, 0).withOpacity(0.2),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: secondaryColor.withOpacity(0.5),
+              width: 2,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.link_rounded,
+                color: secondaryColor,
+                size: isMobile ? 8 : 16,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'View LinkedIn Profile',
+                style: TextStyle(
+                  fontSize: isMobile ? 8 : 12,
+                  fontWeight: FontWeight.w700,
+                  color: secondaryColor,
+                  letterSpacing: 0.5,
+                ),
+              ),
             ],
           ),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: secondaryColor.withOpacity(0.5),
-            width: 2,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.link_rounded,
-              color: secondaryColor,
-              size: isMobile ? 16 : 22,
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'View LinkedIn Profile',
-              style: TextStyle(
-                fontSize: isMobile ? 10 : 16,
-                fontWeight: FontWeight.w700,
-                color: secondaryColor,
-                letterSpacing: 0.5,
-              ),
-            ),
-          ],
         ),
       ),
     );
