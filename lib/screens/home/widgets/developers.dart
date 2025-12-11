@@ -249,11 +249,7 @@ class DevelopersScreen extends StatelessWidget {
         ? 1.2
         : isTablet
             ? 0.9
-            : size.width < 330
-                ? 1.15
-                : size.width < 380
-                    ? 1.33
-                    : 1.55;
+            : 1.0;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -408,7 +404,7 @@ class _DeveloperCardState extends State<_DeveloperCard>
           },
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(widget.isMobile ? 20 : 28),
               gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -432,7 +428,7 @@ class _DeveloperCardState extends State<_DeveloperCard>
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(widget.isMobile ? 20 : 28),
               child: Stack(
                 children: [
                   // Mesh gradient background
@@ -465,12 +461,13 @@ class _DeveloperCardState extends State<_DeveloperCard>
                   Positioned.fill(
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(28),
+                        borderRadius:
+                            BorderRadius.circular(widget.isMobile ? 20 : 28),
                         border: Border.all(
                           color: _isHovered
                               ? secondaryColor.withOpacity(0.6)
                               : Colors.white.withOpacity(0.1),
-                          width: 2,
+                          width: widget.isMobile ? 1.5 : 2,
                         ),
                       ),
                     ),
@@ -478,17 +475,20 @@ class _DeveloperCardState extends State<_DeveloperCard>
 
                   // Main content
                   Padding(
-                    padding: EdgeInsets.all(widget.isMobile ? 22 : 32),
-                    child: Column(
-                      children: [
-                        _buildProfileSection(),
-                        SizedBox(
-                          height: widget.isMobile ? 10 : 15,
-                        ),
-                        _buildInfoSection(),
-                        SizedBox(height: widget.isMobile ? 10 : 15),
-                        _buildActionButtons(),
-                      ],
+                    padding: EdgeInsets.all(widget.isMobile ? 14 : 32),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildProfileSection(),
+                          SizedBox(
+                            height: widget.isMobile ? 8 : 15,
+                          ),
+                          _buildInfoSection(),
+                          SizedBox(height: widget.isMobile ? 8 : 15),
+                          _buildActionButtons(),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -536,17 +536,18 @@ class _DeveloperCardState extends State<_DeveloperCard>
 
             // Profile image container
             Container(
-              width: widget.isMobile ? 100 : 180,
-              height: widget.isMobile ? 100 : 180,
-              padding: const EdgeInsets.all(3),
+              width: widget.isMobile ? 100 : 140,
+              height: widget.isMobile ? 100 : 140,
+              padding: EdgeInsets.all(widget.isMobile ? 2 : 3),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: const Color(0xFF0a0a15),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.6),
-                    blurRadius: 30,
-                    spreadRadius: 5,
+                    color:
+                        Colors.black.withOpacity(widget.isMobile ? 0.5 : 0.6),
+                    blurRadius: widget.isMobile ? 20 : 30,
+                    spreadRadius: widget.isMobile ? 3 : 5,
                   ),
                 ],
               ),
@@ -557,7 +558,7 @@ class _DeveloperCardState extends State<_DeveloperCard>
                     color: _isHovered
                         ? secondaryColor.withOpacity(0.5)
                         : Colors.white.withOpacity(0.1),
-                    width: 4,
+                    width: widget.isMobile ? 2 : 4,
                   ),
                 ),
                 child: ClipOval(
@@ -577,7 +578,7 @@ class _DeveloperCardState extends State<_DeveloperCard>
                         child: Icon(
                           Icons.person_rounded,
                           color: secondaryColor.withOpacity(0.3),
-                          size: 50,
+                          size: widget.isMobile ? 30 : 50,
                         ),
                       );
                     },
@@ -630,14 +631,15 @@ class _DeveloperCardState extends State<_DeveloperCard>
 
   Widget _buildInfoSection() {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           widget.member.name,
           style: TextStyle(
-            fontSize: widget.isMobile ? 18 : 24,
+            fontSize: widget.isMobile ? 13 : 24,
             fontWeight: FontWeight.w800,
             color: Colors.white,
-            letterSpacing: -0.5,
+            letterSpacing: widget.isMobile ? -0.2 : -0.5,
             height: 1.2,
           ),
           textAlign: TextAlign.center,
@@ -659,7 +661,7 @@ class _DeveloperCardState extends State<_DeveloperCard>
               onTap: () {},
             ),
           ),
-          const SizedBox(width: 30),
+          SizedBox(width: widget.isMobile ? 10 : 12),
           Expanded(
             child: _buildIconButton(
               icon: Icons.link_rounded,
@@ -671,34 +673,39 @@ class _DeveloperCardState extends State<_DeveloperCard>
       );
     }
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.1),
-          width: 1.5,
+    return Center(
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: widget.isMobile ? 8 : 12,
+          horizontal: widget.isMobile ? 12 : 20,
         ),
-      ),
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.arrow_forward_rounded,
-            size: 16,
-            color: Colors.grey,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(widget.isMobile ? 10 : 12),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.1),
+            width: 1.5,
           ),
-          SizedBox(width: 8),
-          Text(
-            'View Profile',
-            style: TextStyle(
-              fontSize: 12,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.arrow_forward_rounded,
+              size: widget.isMobile ? 12 : 16,
               color: Colors.grey,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
             ),
-          ),
-        ],
+            SizedBox(width: widget.isMobile ? 5 : 8),
+            Text(
+              'View Profile',
+              style: TextStyle(
+                fontSize: widget.isMobile ? 10 : 12,
+                color: Colors.grey,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -712,37 +719,44 @@ class _DeveloperCardState extends State<_DeveloperCard>
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        padding: EdgeInsets.symmetric(
+          vertical: widget.isMobile ? 7 : 8,
+          horizontal: widget.isMobile ? 4 : 8,
+        ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              secondaryColor.withOpacity(0.1),
-              secondaryColor.withOpacity(0.05),
+              secondaryColor.withOpacity(0.15),
+              secondaryColor.withOpacity(0.08),
             ],
           ),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(widget.isMobile ? 8 : 10),
           border: Border.all(
-            color: secondaryColor.withOpacity(0.3),
+            color: secondaryColor.withOpacity(0.4),
             width: 1.5,
           ),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
               color: secondaryColor,
-              size: 16,
+              size: widget.isMobile ? 15 : 16,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: widget.isMobile ? 3 : 4),
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 9,
+              style: TextStyle(
+                fontSize: widget.isMobile ? 8 : 9,
                 color: secondaryColor,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
                 letterSpacing: 0.3,
               ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
