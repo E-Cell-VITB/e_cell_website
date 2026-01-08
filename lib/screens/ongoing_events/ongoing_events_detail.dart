@@ -54,7 +54,6 @@ class _OngoingEventDetailsState extends State<OngoingEventDetails> {
 
     return ChangeNotifierProvider(
       create: (context) {
-        
         _provider = OngoingEventProvider();
         return _provider!;
       },
@@ -120,10 +119,8 @@ class _OngoingEventDetailsState extends State<OngoingEventDetails> {
                       ),
                     );
                   }
-                 
 
                   return Stack(children: [
-
                     SingleChildScrollView(
                       child: Padding(
                         padding: EdgeInsets.all(isMobile
@@ -211,45 +208,46 @@ class _OngoingEventDetailsState extends State<OngoingEventDetails> {
                           ),
                         ),
                       ),
-                    ),          
-                    (event.isResultLive)?                  
-                      Positioned(
-                        bottom: 20,
-                        left: 20,                      
-                        child: SizedBox(
-                          height: 50,
-                          width: 200,
-                          child: GradientButton(
-                            text: "View Results",
-                             onPressed: () {
-                              //dialog to show results
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return Dialog(
-                                    shadowColor: Colors.black.withOpacity(0.1),
-                                    child: GradientBox(
-                                      width:isMobile?screenWidth: screenWidth * 0.7,
-                                      height:isMobile?560: 550,
-                                      radius: 16,
-                                      child: ResultsScreen(
-                                        eventId: widget.eventId,
-                                        isMobile: isMobile,
-                                        isTablet: isTablet,
-                                        // Pass the eventId
-                                    )
-                                    ),
-                                  );
-                                },
-                              );
-                             },
-                             isMobile: isMobile,
-                              isTablet: isTablet),
-                        )
-                      ):SizedBox(
-                        height: 0,
-                      ),
-                         
+                    ),
+                    (event.isResultLive)
+                        ? Positioned(
+                            bottom: 20,
+                            left: 20,
+                            child: SizedBox(
+                              height: 50,
+                              width: 200,
+                              child: GradientButton(
+                                  text: "View Results",
+                                  onPressed: () {
+                                    //dialog to show results
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          shadowColor:
+                                              Colors.black.withOpacity(0.1),
+                                          child: GradientBox(
+                                              width: isMobile
+                                                  ? screenWidth
+                                                  : screenWidth * 0.7,
+                                              height: isMobile ? 560 : 550,
+                                              radius: 16,
+                                              child: ResultsScreen(
+                                                eventId: widget.eventId,
+                                                isMobile: isMobile,
+                                                isTablet: isTablet,
+                                                // Pass the eventId
+                                              )),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  isMobile: isMobile,
+                                  isTablet: isTablet),
+                            ))
+                        : const SizedBox(
+                            height: 0,
+                          ),
                     if (event.socialLink.isNotEmpty)
                       Positioned(
                         bottom: 30,

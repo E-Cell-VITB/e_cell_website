@@ -405,7 +405,6 @@ class _EventDetailsState extends State<EventDetails> {
               ),
             ),
           )
-          
         ],
       ),
     );
