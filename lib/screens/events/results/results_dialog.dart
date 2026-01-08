@@ -1,39 +1,26 @@
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
+import 'package:e_cell_website/screens/ongoing_events/results/results_page.dart';
 import 'package:flutter/material.dart';
 
 // Reusable Animated Flip Dialog
 class FlipDialog {
-  static void show(BuildContext context, {List<MessageData>? messages}) {
+  static void show(BuildContext context, {String? eventId}) {
     showDialog(
       context: context,
       barrierDismissible: true,
       barrierColor: Colors.black.withOpacity(0.5),
       builder: (BuildContext context) {
-        return _AnimatedFlipDialog(messages: messages);
+        return _AnimatedFlipDialog(eventId: eventId);
       },
     );
   }
 }
 
-// Data model for messages
-class MessageData {
-  final String sender;
-  final String message;
-  final String time;
-  final IconData icon;
-
-  MessageData({
-    required this.sender,
-    required this.message,
-    required this.time,
-    required this.icon,
-  });
-}
-
 class _AnimatedFlipDialog extends StatefulWidget {
-  final List<MessageData>? messages;
+  final String? eventId;
 
-  const _AnimatedFlipDialog({this.messages});
+  const _AnimatedFlipDialog({this.eventId});
 
   @override
   State<_AnimatedFlipDialog> createState() => _AnimatedFlipDialogState();
@@ -146,33 +133,6 @@ class _AnimatedFlipDialogState extends State<_AnimatedFlipDialog>
     });
   }
 
-  List<MessageData> get _defaultMessages => [
-        MessageData(
-          sender: 'John Doe',
-          message: 'Meeting tomorrow at 10 AM',
-          time: '2 min ago',
-          icon: Icons.person,
-        ),
-        MessageData(
-          sender: 'Sarah Wilson',
-          message: 'Project update required',
-          time: '1 hour ago',
-          icon: Icons.work,
-        ),
-        MessageData(
-          sender: 'Team Lead',
-          message: 'Code review completed',
-          time: '3 hours ago',
-          icon: Icons.code,
-        ),
-        MessageData(
-          sender: 'HR Department',
-          message: 'Monthly report submission',
-          time: '1 day ago',
-          icon: Icons.business,
-        ),
-      ];
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -202,12 +162,18 @@ class _AnimatedFlipDialogState extends State<_AnimatedFlipDialog>
                     ..rotateY(_flipAnimation.value * 3.14159),
                   child: SizedBox(
                     width: _showFront
-                        ? MediaQuery.of(context).size.width * 0.4
+                        ? (MediaQuery.of(context).size.width < 600
+                            ? MediaQuery.of(context).size.width * 0.9
+                            : MediaQuery.of(context).size.width * 0.4)
                         : MediaQuery.of(context).size.width * 0.85,
                     height: _showFront
-                        ? 450
-                        : MediaQuery.of(context).size.width * 0.75,
-                    child: _showFront ? _buildFrontCard() : _buildBackCard(),
+                        ? (MediaQuery.of(context).size.width < 600 ? 450 : 450)
+                        : (MediaQuery.of(context).size.width < 600
+                            ? MediaQuery.of(context).size.height * 0.7
+                            : MediaQuery.of(context).size.width * 0.75),
+                    child: _showFront
+                        ? _buildFrontCard()
+                        : _buildBackCard(eventId: widget.eventId),
                   ),
                 ),
               ),
@@ -277,165 +243,78 @@ class _AnimatedFlipDialogState extends State<_AnimatedFlipDialog>
     );
   }
 
-  Widget _buildBackCard() {
-    final messages = widget.messages ?? _defaultMessages;
+  Widget _buildBackCard({required String? eventId}) {
+    final bool isMobile = MediaQuery.of(context).size.width < 600;
+    final bool isTablet = MediaQuery.of(context).size.width >= 600 &&
+        MediaQuery.of(context).size.width < 1024;
+    if (eventId == null) {
+      return Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.identity()
+          ..setEntry(3, 2, 0.001)
+          ..rotateY(3.14159),
+        child: Card(
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: linerGradient,
+              ),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.info_outline,
+                    size: 60,
+                    color: Colors.black54,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'No Data Available',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Event ID not found',
+                    style: TextStyle(
+                      color: Colors.black.withOpacity(0.6),
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return Transform(
       alignment: Alignment.center,
       transform: Matrix4.identity()
         ..setEntry(3, 2, 0.001)
-        ..rotateY(_flipAnimation.value >= 0.5 ? 3.14159 : 0),
-      child: Card(
-        elevation: 20,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Row(
-                    children: [
-                      Icon(Icons.inbox, color: Colors.white, size: 24),
-                      SizedBox(width: 10),
-                      Text(
-                        'Messages',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    onPressed: _closeDialog,
-                    icon: const Icon(Icons.close, color: Colors.white70),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                ],
-              ),
-              Text(
-                '${messages.length} unread messages',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
-                  fontSize: 12,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final message = messages[index];
-                    return _buildMessageItem(
-                      message.sender,
-                      message.message,
-                      message.time,
-                      message.icon,
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton.icon(
-                    onPressed: () {
-                      // Handle mark all as read
-                      _closeDialog();
-                    },
-                    icon: const Icon(Icons.done_all,
-                        color: Colors.white70, size: 18),
-                    label: const Text(
-                      'Mark All Read',
-                      style: TextStyle(color: Colors.white70, fontSize: 12),
-                    ),
-                  ),
-                  TextButton.icon(
-                    onPressed: _closeDialog,
-                    icon: const Icon(Icons.close,
-                        color: Colors.white70, size: 18),
-                    label: const Text(
-                      'Close',
-                      style: TextStyle(color: Colors.white70, fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMessageItem(
-      String sender, String message, String time, IconData icon) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 18,
-            backgroundColor: Colors.white.withOpacity(0.2),
-            child: Icon(icon, color: Colors.white, size: 18),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  sender,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  message,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 11,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          Text(
-            time,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.6),
-              fontSize: 10,
-            ),
-          ),
-        ],
-      ),
+        ..rotateY(3.14159),
+      child: GradientBox(
+          width: double.infinity,
+          height: double.infinity,
+          radius: 16,
+          child: ResultsScreen(
+            eventId: eventId,
+            isMobile: isMobile,
+            isTablet: isTablet,
+          )),
     );
   }
 }

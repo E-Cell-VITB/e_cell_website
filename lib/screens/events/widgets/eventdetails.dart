@@ -392,19 +392,20 @@ class _EventDetailsState extends State<EventDetails> {
               right: 20,
               child: _floatingActionLinks(),
             ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            child: IconButton(
-              onPressed: () {
-                FlipDialog.show(context);
-              },
-              icon: Icon(
-                Icons.markunread_sharp,
-                size: 30,
+          if (widget.event.isResultLive)
+            Positioned(
+              bottom: 20,
+              left: 20,
+              child: IconButton(
+                onPressed: () {
+                  FlipDialog.show(context, eventId: widget.event.id);
+                },
+                icon: Icon(
+                  Icons.markunread_sharp,
+                  size: 30,
+                ),
               ),
-            ),
-          )
+            )
         ],
       ),
     );

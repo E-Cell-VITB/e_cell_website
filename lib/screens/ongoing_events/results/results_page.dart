@@ -183,7 +183,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
         scrollDirection: Axis.horizontal,
         child: DataTable(
           // border: TableBorder.all(color: Colors.grey),
-          headingRowHeight: 60,
+          headingRowHeight: 75,
           columnSpacing: 15,
           dataRowMinHeight: 40, // Reduce the minimum height of the data rows
           dataRowMaxHeight: 60,
