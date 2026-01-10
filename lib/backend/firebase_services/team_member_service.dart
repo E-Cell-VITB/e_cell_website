@@ -53,4 +53,13 @@ class TeamMemberService {
 
     return members;
   }
+
+  Stream<List<AlumniTeamModel>> get getAlumniMembersStream {
+    return _firestore.collection('alumni_members').snapshots().map((snapshot) {
+      List<AlumniTeamModel> members = snapshot.docs
+          .map((doc) => AlumniTeamModel.fromDocumentSnapshot(doc))
+          .toList();
+      return members;
+    });
+  }
 }

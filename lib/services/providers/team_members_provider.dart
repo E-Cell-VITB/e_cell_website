@@ -13,4 +13,7 @@ class TeamProvider extends ChangeNotifier {
 
   Stream<List<TeamMemberModel>> get teamMembersStream =>
       teamMemberService.teamMembersStream;
+
+  Stream<List<AlumniTeamModel>> get alumniMembersStream =>
+      teamMemberService.getAlumniMembersStream;
 }

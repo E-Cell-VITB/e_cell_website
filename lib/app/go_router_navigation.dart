@@ -1,5 +1,6 @@
 import 'package:e_cell_website/backend/models/event.dart';
 import 'package:e_cell_website/const/theme.dart';
+import 'package:e_cell_website/screens/alumni/ecell_alumni.dart';
 import 'package:e_cell_website/screens/blogs/blogs_screen.dart';
 import 'package:e_cell_website/screens/events/events_screen.dart';
 import 'package:e_cell_website/screens/events/widgets/eventdetails.dart';
@@ -126,6 +127,11 @@ final GoRouter appRouter = GoRouter(
               path: 'recruitment',
               name: 'recruitmentScreen',
               builder: (context, state) => const UserOpenRecruitmentsList(),
+            ),
+            GoRoute(
+              path: 'alumni',
+              name: 'alumniScreen',
+              builder: (context, state) => const EcellAlumni(),
             ),
             GoRoute(
               path: 'recruitment/:id/:department',
