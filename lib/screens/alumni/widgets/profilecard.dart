@@ -25,7 +25,7 @@ class AlumniProfileCard extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: Container(
                 width: 228,
-                height: 260,
+                height: 300,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
@@ -48,7 +48,7 @@ class AlumniProfileCard extends StatelessWidget {
                           ))),
                   errorWidget: (context, url, error) => Image.asset(
                     "assets/icons/logo.png",
-                    height: 260,
+                    height: 240,
                     width: 222,
                   ),
                   height: 260,
@@ -57,118 +57,122 @@ class AlumniProfileCard extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 3),
-              child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 80,
-                    width: 224,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(12),
-                          bottomRight: Radius.circular(12)),
-                      color: Colors.black,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(
-                              0.96), // Shadow color (with some transparency)
-                          offset: const Offset(0,
-                              -15), // Negative y-offset to move shadow to the top
-                          blurRadius: 16, // Blur radius to soften the shadow
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14.0, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            // width: 200,
-                            height: 24,
-                            child: Text(
-                              textAlign: TextAlign.start,
-                              teamMember.name,
-                              style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              LinearGradientText(
-                                  child: Text(
-                                getDesignationDisplay(
-                                  teamMember.department,
-                                ),
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w700),
-                              )),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Material(
-                                    color: Colors.transparent,
-                                    shape: const CircleBorder(),
-                                    child: InkWell(
-                                      onTap: () {
-                                        launchEmail(
-                                            teamMember.email,
-                                            "Contact Request",
-                                            "Hello, I would like to contact you for the following reason: ...");
-                                      },
-                                      splashColor: primaryColor,
-                                      child: SizedBox(
-                                        width: 24,
-                                        height: 24,
-                                        child: Image.asset(
-                                          "assets/icons/Email_Icon.png",
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  Material(
-                                    color: Colors.transparent,
-                                    shape: const CircleBorder(),
-                                    child: InkWell(
-                                      onTap: () {
-                                        launchURL(
-                                            teamMember.linkedInProfileURL);
-                                      },
-                                      splashColor: primaryColor,
-                                      child: SizedBox(
-                                        width: 24,
-                                        height: 24,
-                                        child: Image.asset(
-                                          "assets/icons/linkdein_icon.png",
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+            Positioned(
+              bottom: -30,
+              left: 5,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 1),
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: 80,
+                      width: 224,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(12),
+                            bottomRight: Radius.circular(12)),
+                        color: Colors.black,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(
+                                0.96), // Shadow color (with some transparency)
+                            // Negative y-offset to move shadow to the top
+                            blurRadius: 16, // Blur radius to soften the shadow
                           ),
                         ],
                       ),
-                    ),
-                  )),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14.0, vertical: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              // width: 200,
+                              height: 24,
+                              child: Text(
+                                textAlign: TextAlign.start,
+                                teamMember.name,
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                LinearGradientText(
+                                    child: Text(
+                                  getDesignationDisplay(
+                                    teamMember.department,
+                                  ),
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700),
+                                )),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Material(
+                                      color: Colors.transparent,
+                                      shape: const CircleBorder(),
+                                      child: InkWell(
+                                        onTap: () {
+                                          launchEmail(
+                                              teamMember.email,
+                                              "Contact Request",
+                                              "Hello, I would like to contact you for the following reason: ...");
+                                        },
+                                        splashColor: primaryColor,
+                                        child: SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: Image.asset(
+                                            "assets/icons/Email_Icon.png",
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Material(
+                                      color: Colors.transparent,
+                                      shape: const CircleBorder(),
+                                      child: InkWell(
+                                        onTap: () {
+                                          launchURL(
+                                              teamMember.linkedInProfileURL);
+                                        },
+                                        splashColor: primaryColor,
+                                        child: SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: Image.asset(
+                                            "assets/icons/linkdein_icon.png",
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    )),
+              ),
             ),
           ],
         ),
