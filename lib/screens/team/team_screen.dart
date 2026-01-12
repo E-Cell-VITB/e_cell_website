@@ -165,7 +165,7 @@ class TeamScreen extends StatelessWidget {
                       Icon(Icons.arrow_forward, color: backgroundColor),
                       SizedBox(width: 8),
                       Text(
-                        "Explore E-Cell Alumini",
+                        "Our Alumni",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

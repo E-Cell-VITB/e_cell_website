@@ -93,7 +93,8 @@ class EcellAlumni extends StatelessWidget {
                 // Group alumni by passoutYear
                 Map<int, List<AlumniTeamModel>> groupedByYear = {};
                 for (var member in allMembers) {
-                  int year = int.tryParse(member.passoutYear) ?? DateTime.now().year;
+                  int year =
+                      int.tryParse(member.passoutYear) ?? DateTime.now().year;
                   if (!groupedByYear.containsKey(year)) {
                     groupedByYear[year] = [];
                   }
@@ -101,7 +102,8 @@ class EcellAlumni extends StatelessWidget {
                 }
 
                 // Sort years in descending order (most recent first)
-                List<int> sortedYears = groupedByYear.keys.toList()..sort((a, b) => b.compareTo(a));
+                List<int> sortedYears = groupedByYear.keys.toList()
+                  ..sort((a, b) => b.compareTo(a));
 
                 return ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
@@ -109,9 +111,11 @@ class EcellAlumni extends StatelessWidget {
                   itemCount: sortedYears.length,
                   itemBuilder: (context, index) {
                     int passoutYear = sortedYears[index];
-                    List<AlumniTeamModel> yearMembers = groupedByYear[passoutYear]!;
-                    String yearDisplay = "${passoutYear - 1}-${passoutYear.toString().substring(2)}";
-                    
+                    List<AlumniTeamModel> yearMembers =
+                        groupedByYear[passoutYear]!;
+                    String yearDisplay =
+                        "${passoutYear - 1}-${passoutYear.toString().substring(2)}";
+
                     return Center(
                       child: Container(
                         margin: EdgeInsets.only(bottom: isMobile ? 20.0 : 40.0),
@@ -221,8 +225,11 @@ class EcellAlumni extends StatelessWidget {
                               physics: const NeverScrollableScrollPhysics(),
                               gridDelegate:
                                   SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount:
-                                    isMobile ? 1 : isTablet ? 2 : 4,
+                                crossAxisCount: isMobile
+                                    ? 1
+                                    : isTablet
+                                        ? 2
+                                        : 4,
                                 crossAxisSpacing: 20,
                                 mainAxisSpacing: 20,
                                 childAspectRatio: 1,
@@ -255,7 +262,11 @@ Widget EcellText(bool isMobile, bool isTablet) {
   return Text("E-CELL",
       style: TextStyle(
         wordSpacing: 15,
-        fontSize: isMobile ? 10 : isTablet ? 18 : 30,
+        fontSize: isMobile
+            ? 10
+            : isTablet
+                ? 18
+                : 30,
         fontWeight: FontWeight.bold,
         color: const Color.fromARGB(255, 46, 46, 46),
       ));
