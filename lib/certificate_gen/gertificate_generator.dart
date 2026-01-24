@@ -294,7 +294,7 @@ class CertificateDialogs {
                           ),
                           const SizedBox(height: 10),
                           const SelectableText(
-                            'Contact: e-cell@vishnu.edu.in',
+                            'Contact: info.ecell@vishnu.edu.in',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white70,

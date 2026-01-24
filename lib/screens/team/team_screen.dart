@@ -139,6 +139,48 @@ class TeamScreen extends StatelessWidget {
               right: 20,
               child: InkWell(
                 onTap: () {
+                  context.goNamed('alumniScreen');
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: linerGradient,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 8,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.arrow_forward, color: backgroundColor),
+                      SizedBox(width: 8),
+                      Text(
+                        "Our Alumni",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: backgroundColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )),
+          Positioned(
+              bottom: 80,
+              right: 20,
+              child: InkWell(
+                onTap: () {
                   context.goNamed('recruitmentScreen');
                 },
                 child: Container(
@@ -191,43 +233,32 @@ class ResponsiveProfileCards extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isMobile = constraints.maxWidth < 600;
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: List.generate(
-                teamMembers.length,
-                (index) => ProfileCard(
-                      teamMember: teamMembers[index],
-                    )),
-          ),
-        );
-        // return isMobile
-        //     ? SingleChildScrollView(
-        //         scrollDirection: Axis.horizontal,
-        //         child: Row(
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           mainAxisSize: MainAxisSize.min,
-        //           children: List.generate(
-        //               teamMembers.length,
-        //               (index) => ProfileCard(
-        //                     teamMember: teamMembers[index],
-        //                   )),
-        //         ),
-        //       )
-        //     : SingleChildScrollView(
-        //         scrollDirection: Axis.horizontal,
-        //         child: Row(
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           mainAxisSize: MainAxisSize.min,
-        //           children: List.generate(
-        //               teamMembers.length,
-        //               (index) => ProfileCard(
-        //                     teamMember: teamMembers[index],
-        //                   )),
-        //         ),
-        //       );
+
+        return isMobile
+            ? SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(
+                      teamMembers.length,
+                      (index) => ProfileCard(
+                            teamMember: teamMembers[index],
+                          )),
+                ),
+              )
+            : SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(
+                      teamMembers.length,
+                      (index) => ProfileCard(
+                            teamMember: teamMembers[index],
+                          )),
+                ),
+              );
       },
     );
   }

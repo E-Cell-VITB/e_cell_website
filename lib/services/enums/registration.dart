@@ -8,7 +8,6 @@ enum Department {
   aids,
   aiml,
   csbs,
-  all,
   other;
 
   @override
@@ -23,7 +22,6 @@ enum Department {
       Department.aids => 'AIDS',
       Department.aiml => 'AIML',
       Department.csbs => 'CSBS',
-      Department.all => 'All Departments',
       Department.other => 'Other',
     };
   }

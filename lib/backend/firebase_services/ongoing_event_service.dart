@@ -363,4 +363,39 @@ class OngoingEventService {
       return [];
     }
   }
+
+  /// Get evaluation template to understand round structure
+  Future<Map<int, int>> getRoundStructure(String eventId) async {
+    try {
+      DocumentSnapshot documentSnapshot =
+          await _firestore.collection(_eventsCollection).doc(eventId).get();
+
+      if (!documentSnapshot.exists) {
+        throw Exception('Event document not found.');
+      }
+
+      Map<String, dynamic>? data =
+          documentSnapshot.data() as Map<String, dynamic>?;
+      if (data == null || !data.containsKey('evaluationTemplate')) {
+        throw Exception('Event is missing evaluation template.');
+      }
+
+      List<dynamic> evaluationTemplate = data['evaluationTemplate'];
+
+      // Determine the number of criteria per round
+      final Map<int, int> roundCriteriaCounts = {};
+      for (var item in evaluationTemplate) {
+        if (item is Map<String, dynamic> && item.containsKey('roundNumber')) {
+          int roundNum = item['roundNumber'];
+          roundCriteriaCounts[roundNum] =
+              (roundCriteriaCounts[roundNum] ?? 0) + 1;
+        }
+      }
+
+      return roundCriteriaCounts;
+    } catch (e) {
+      AppLogger.error('Error getting round structure: $e');
+      throw Exception('Failed to get round structure.');
+    }
+  }
 }

@@ -392,19 +392,33 @@ class _EventDetailsState extends State<EventDetails> {
               right: 20,
               child: _floatingActionLinks(),
             ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            child: IconButton(
-              onPressed: () {
-                FlipDialog.show(context);
-              },
-              icon: Icon(
-                Icons.markunread_sharp,
-                size: 30,
+          if (widget.event.isResultLive)
+            Positioned(
+              bottom: 20,
+              left: 20,
+              child: IconButton(
+                onPressed: () {
+                  FlipDialog.show(context, eventId: widget.event.id);
+                },
+                icon: Row(
+                  children: const [
+                    Icon(
+                      Icons.markunread_sharp,
+                      size: 30,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "View Results",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          )
+            )
         ],
       ),
     );
