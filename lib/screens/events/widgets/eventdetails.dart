@@ -400,9 +400,22 @@ class _EventDetailsState extends State<EventDetails> {
                 onPressed: () {
                   FlipDialog.show(context, eventId: widget.event.id);
                 },
-                icon: Icon(
-                  Icons.markunread_sharp,
-                  size: 30,
+                icon: Row(
+                  children: const [
+                    Icon(
+                      Icons.markunread_sharp,
+                      size: 30,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "View Results",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             )
